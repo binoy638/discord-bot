@@ -4,17 +4,9 @@ const config = require("./config.json");
 // console.log(process.env.DISCORDJS_BOT_TOKEN);
 const Discord = require("discord.js");
 
-const googleSpeech = require("@google-cloud/speech");
-
-const googleSpeechClient = new googleSpeech.SpeechClient();
-
 const client = new Discord.Client();
 const cooldowns = new Discord.Collection();
 client.commands = new Discord.Collection();
-
-const { OpusEncoder } = require("@discordjs/opus");
-
-const encoder = new OpusEncoder(48000, 2);
 
 const commandFiles = fs
   .readdirSync("./src/commands")
