@@ -1,0 +1,31 @@
+const mongo = require("../mongo");
+const welcomeSchema = require("../schemas/welcome-schema");
+module.exports = {
+  name: "setwelcomemsg",
+  description: "Set welcome message for a channel",
+  args: true,
+  async execute(message, args) {
+    const { member, channel, guild } = message;
+
+    if (!member.hasPermission("ADMINISTRATOR")) {
+      channel.send("You do not have permission to run this command.");
+    }
+    let text = args.join(" ");
+
+    await mongo().then(async (mongoose) => {
+      try {
+        await welcomeSchema.findOneAndUpdate(
+          {
+            _id: guild.id,
+          },
+          { _id: guild.id, channelId: channel.id, text },
+          {
+            upsert: true,
+          }
+        );
+      } finally {
+        mongoose.connection.close();
+      }
+    });
+  },
+};
