@@ -1,13 +1,31 @@
+//Imports
+
+//basic imports
 const fs = require("fs");
+
 require("dotenv").config();
-const config = require("./config.json");
-// console.log(process.env.DISCORDJS_BOT_TOKEN);
+
+// discord imports
+
 const Discord = require("discord.js");
 
+// db import
+const mongo = require("./mongo");
+
+// misc import
+const onJoin = require("./functions/onJoin");
+const { prefix } = require("./config.json");
+
+// create a new discord client
 const client = new Discord.Client();
+
 const cooldowns = new Discord.Collection();
 client.commands = new Discord.Collection();
 
+/**
+ * readdirSync returns an array with all files in the specified directory
+ * filter the files with .js extension and store it in commandFiles
+ */
 const commandFiles = fs
   .readdirSync("./src/commands")
   .filter((file) => file.endsWith(".js"));
@@ -20,19 +38,36 @@ for (const file of commandFiles) {
   client.commands.set(command.name, command);
 }
 
-const { prefix } = require("./config.json");
+// One time function that triggers when the client is ready
 
-client.once("ready", () => {
-  console.log(`${client.user.username} has logged in.`);
+client.once("ready", async () => {
+  console.log("Bot is connected");
+  //waiting for database to connect
+  await mongo().then((mongoose) => {
+    try {
+      console.log("Connected to mongo!");
+    } finally {
+      // closing database connection
+      mongoose.connection.close();
+    }
+  });
 });
 
-client.on("message", async (message) => {
-  // if (message.content === 'hello'){
-  //     message.channel.send(`hi`)
+//function to greet new guild members when joined
 
+client.on("guildMemberAdd", (member) => {
+  onJoin(member);
+});
+
+// Function to handle users commands to the bot
+
+client.on("message", async (message) => {
+  // ignore a message that doesn't starts with prefix or its a bot message
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 
+  // extract the agruments from a message and store it in "args" as an array
   const args = message.content.slice(prefix.length).trim().split(/ +/);
+
   const commandName = args.shift().toLowerCase();
 
   const command =
@@ -91,4 +126,5 @@ client.on("message", async (message) => {
   }
 });
 
+// Login to discord bot token
 client.login(process.env.TOKEN);

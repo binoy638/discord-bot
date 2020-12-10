@@ -1,21 +1,55 @@
 const request = require("request-promise");
 const Discord = require("discord.js");
 const cheerio = require("cheerio");
+const mongo = require("../mongo");
+const valoSchema = require("../schemas/valorant-stats-schema");
+
 module.exports = {
   name: "valorant_stats",
   aliases: ["val", "valo"],
   usage: "<username> <tag>",
-  args: true,
   description: "Check valorant stats",
 
   async execute(message, args) {
     // const acc_id = "Shiroyashaa98";
     // const tag = "NA1";
 
-    const url = `https://tracker.gg/valorant/profile/riot/${args[0]}%23${args[1]}/overview`;
-    // console.log(movie);
+    const { member } = message;
 
-    // const imdbData = [];
+    let data = null;
+
+    await mongo().then(async (mongoose) => {
+      try {
+        const result = await valoSchema.findOne(
+          { _id: member.user.id },
+          (err, user) => {
+            if (err) {
+              console.log("error");
+              return;
+            }
+            if (user) {
+              console.log("got user");
+            } else {
+              console.log("nothing found");
+              return;
+            }
+          }
+        );
+
+        if (result) {
+          console.log("USER FETCHED FROM DATABASE");
+          data = [result.valo_user, result.valo_tag];
+        }
+      } finally {
+        mongoose.connection.close();
+      }
+    });
+    if (data === null) {
+      console.log("terminating...");
+      return;
+    }
+    const url = `https://tracker.gg/valorant/profile/riot/${data[0]}%23${data[1]}/overview`;
+
     try {
       const response = await request({
         uri: url,
