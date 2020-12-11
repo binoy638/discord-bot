@@ -1,8 +1,9 @@
 const { prefix } = require("../config.json");
+// var myprefix = require("../bot");
 module.exports = {
   name: "help",
   description: "List all of my commands or info about a specific command.",
-  active: true,
+  active: false,
   aliases: ["commands"],
   usage: "[command name]",
   cooldown: 5,

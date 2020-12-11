@@ -1,6 +1,6 @@
 module.exports = {
   name: "server",
-  description: "Show server description",
+  description: "Show my current server.",
   active: true,
   cooldown: "6",
   execute(message, args) {

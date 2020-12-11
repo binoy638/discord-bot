@@ -76,7 +76,8 @@ client.on("message", async (message) => {
     cache.set(`prefix-${guild.id}`, guildPrefix);
   }
 
-  const prefix = guildPrefix || Globalprefix; //
+  const prefix = guildPrefix || Globalprefix;
+  exports.prefix = prefix;
   if (!message.content.startsWith(prefix) || message.author.bot) {
     // const emojis = [
     //   "619842959931867167",
