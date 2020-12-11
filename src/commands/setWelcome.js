@@ -1,9 +1,12 @@
 const mongo = require("../mongo");
 const welcomeSchema = require("../schemas/welcome-schema");
+var cache = require("../functions/cache");
 module.exports = {
   name: "setwelcomemsg",
-  description: "Set welcome message for a channel",
+  description: "Set welcome message for new user joins.",
+  active: true,
   args: true,
+  cooldown: 86400,
   async execute(message, args) {
     const { member, channel, guild } = message;
 
@@ -16,16 +19,20 @@ module.exports = {
       try {
         await welcomeSchema.findOneAndUpdate(
           {
-            _id: guild.id,
+            _id: `welmsg${guild.id}`,
           },
-          { _id: guild.id, channelId: channel.id, text },
+          { _id: `welmsg${guild.id}`, channelId: channel.id, text },
           {
             upsert: true,
           }
         );
+        cache.clear();
       } finally {
         mongoose.connection.close();
       }
     });
+    message.channel.send(
+      `Welcome message for this guild has been set to \n\`${text}\``
+    );
   },
 };

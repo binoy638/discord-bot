@@ -3,12 +3,15 @@ const Discord = require("discord.js");
 const cheerio = require("cheerio");
 const mongo = require("../mongo");
 const valoSchema = require("../schemas/valorant-stats-schema");
+var myprefix = require("../bot");
 
 module.exports = {
-  name: "valorant_stats",
+  name: "vstats",
   aliases: ["val", "valo"],
-  usage: "<username> <tag>",
-  description: "Check valorant stats",
+  active: true,
+
+  description: "Show valorant stats of connected account.",
+  cooldown: 10,
 
   async execute(message, args) {
     // const acc_id = "Shiroyashaa98";
@@ -20,32 +23,20 @@ module.exports = {
 
     await mongo().then(async (mongoose) => {
       try {
-        const result = await valoSchema.findOne(
-          { _id: member.user.id },
-          (err, user) => {
-            if (err) {
-              console.log("error");
-              return;
-            }
-            if (user) {
-              console.log("got user");
-            } else {
-              console.log("nothing found");
-              return;
-            }
-          }
-        );
+        const result = await valoSchema.findOne({ _id: member.user.id });
 
         if (result) {
-          console.log("USER FETCHED FROM DATABASE");
           data = [result.valo_user, result.valo_tag];
+        } else {
+          return message.channel.send(
+            `Your valorant account is not connected, ${message.author}!\nuse \`${myprefix.prefix}setvalouser <username> <tag>\` to connect your valorant account.`
+          );
         }
       } finally {
         mongoose.connection.close();
       }
     });
     if (data === null) {
-      console.log("terminating...");
       return;
     }
     const url = `https://tracker.gg/valorant/profile/riot/${data[0]}%23${data[1]}/overview`;
@@ -122,34 +113,38 @@ module.exports = {
 
         .setThumbnail(`${rank_icon}`)
         .addFields(
-          { name: "Rating", value: `${rank}`, inline: true },
-          { name: "KDA Ratio", value: `${kda}`, inline: true },
-          { name: "Matches", value: `${matches}`, inline: true },
+          { name: "Rating", value: `\`${rank}\``, inline: true },
+          { name: "KDA Ratio", value: `\`${kda}\``, inline: true },
+          { name: "Matches", value: `\`${matches}\``, inline: true },
           //   { name: "Play Time", value: `${playtime}`, inline: true },
           { name: "\u200B", value: "\u200B" },
-          { name: "Wins", value: `${win}`, inline: true },
-          { name: "Lose", value: `${lose}`, inline: true },
-          { name: "Win %", value: `${win_percent}`, inline: true },
+          { name: "Wins", value: `\`${win}\``, inline: true },
+          { name: "Lose", value: `\`${lose}\``, inline: true },
+          { name: "Win %", value: `\`${win_percent}\``, inline: true },
           { name: "\u200B", value: "\u200B" },
 
           {
             name: "Kills",
-            value: `${kills}`,
+            value: `\`${kills}\``,
             inline: true,
           },
-          { name: "Deaths", value: `${deaths}`, inline: true },
-          { name: "Assists", value: `${Assists}`, inline: true },
+          { name: "Deaths", value: `\`${deaths}\``, inline: true },
+          { name: "Assists", value: `\`${Assists}\``, inline: true },
           { name: "\u200B", value: "\u200B" },
-          { name: "Most Kills", value: `${most_kills}`, inline: true },
-          { name: "Headshots", value: `${headshot}`, inline: true },
-          { name: "Headshots %", value: `${headshot_percent}%`, inline: true },
+          { name: "Most Kills", value: `\`${most_kills}\``, inline: true },
+          { name: "Headshots", value: `\`${headshot}\``, inline: true },
+          {
+            name: "Headshots %",
+            value: `\`${headshot_percent}%\``,
+            inline: true,
+          },
           { name: "\u200B", value: "\u200B" },
-          { name: "Aces", value: `${Aces}`, inline: true },
-          { name: "Clutches", value: `${Clutches}`, inline: true },
-          { name: "Flawless", value: `${Flawless}`, inline: true },
+          { name: "Aces", value: `\`${Aces}\``, inline: true },
+          { name: "Clutches", value: `\`${Clutches}\``, inline: true },
+          { name: "Flawless", value: `\`${Flawless}\``, inline: true },
           { name: "\u200B", value: "\u200B" }
         )
-        .addField("Most Played Hero", `${most_played_hero}`)
+        .addField("Most Played Hero", `\`${most_played_hero}\``)
         .setImage(most_played_hero_icon);
 
       // .setTimestamp()

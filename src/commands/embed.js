@@ -3,6 +3,7 @@ const fs = require("fs");
 module.exports = {
   name: "em",
   description: "Embed msg",
+  active: false,
   execute(message, args) {
     const exampleEmbed = new Discord.MessageEmbed()
       .setColor("#0099ff")
