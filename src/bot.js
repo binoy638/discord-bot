@@ -14,7 +14,12 @@ const mongo = require("./mongo");
 
 // misc import
 const onJoin = require("./functions/onJoin");
-const { prefix } = require("./config.json");
+const time = require("./functions/time");
+const { Globalprefix } = require("./config.json");
+const getprefix = require("./functions/getprefix");
+
+//cache
+var cache = require("./functions/cache");
 
 // create a new discord client
 const client = new Discord.Client();
@@ -63,32 +68,41 @@ client.on("guildMemberAdd", (member) => {
 
 client.on("message", async (message) => {
   // ignore a message that doesn't starts with prefix or its a bot message
-  if (!message.content.startsWith(prefix) || message.author.bot) {
-    const emojis = [
-      "619842959931867167",
-      "758716930109603861",
-      "361065875337379841",
-      "758716679449608263",
-      "758717642503618640",
-      "719159618265415704",
-      "757981987595223161",
-      "586832456427241482",
-      "785757397503180813",
-      "537725587926679552",
-      "758720169077112844",
-    ];
+  const { guild } = message;
+  let guildPrefix = cache.get(`prefix-${guild.id}`);
 
-    const rand = Math.floor(Math.random() * Math.floor(emojis.length));
-    // console.log(rand);
-    const isreact = Math.round(Math.random() * 1);
-    console.log(isreact);
-    // const emojiList = message.guild.emojis.cacheType; //<:KEKW:619842959931867167> <:pepecross:758716930109603861> <:FeelsBadMan:361065875337379841> <:FeelsStrongMen:758716679449608263>  <:pepelaugh:758717642503618640> <:pepega:719159618265415704>
-    // console.log(JSON.stringify(emojiList));
-    if (isreact === 0) {
-      setTimeout(function () {
-        message.react(emojis[rand]);
-      }, 3000);
-    }
+  if (!guildPrefix) {
+    const guildPrefix = await getprefix(`prefix-${guild.id}`);
+    cache.set(`prefix-${guild.id}`, guildPrefix);
+  }
+
+  const prefix = guildPrefix || Globalprefix; //
+  if (!message.content.startsWith(prefix) || message.author.bot) {
+    // const emojis = [
+    //   "619842959931867167",
+    //   "758716930109603861",
+    //   "361065875337379841",
+    //   "758716679449608263",
+    //   "758717642503618640",
+    //   "719159618265415704",
+    //   "757981987595223161",
+    //   "586832456427241482",
+    //   "785757397503180813",
+    //   "537725587926679552",
+    //   "758720169077112844",
+    // ];
+
+    // const rand = Math.floor(Math.random() * Math.floor(emojis.length));
+    // // console.log(rand);
+    // const isreact = Math.round(Math.random() * 1);
+    // console.log(isreact);
+    // // const emojiList = message.guild.emojis.cacheType; //<:KEKW:619842959931867167> <:pepecross:758716930109603861> <:FeelsBadMan:361065875337379841> <:FeelsStrongMen:758716679449608263>  <:pepelaugh:758717642503618640> <:pepega:719159618265415704>
+    // // console.log(JSON.stringify(emojiList));
+    // if (isreact === 0) {
+    //   setTimeout(function () {
+    //     message.react(emojis[rand]);
+    //   }, 3000);
+    // }
 
     return;
   }
@@ -104,7 +118,7 @@ client.on("message", async (message) => {
       (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
     );
 
-  if (!command || command.not_active) return;
+  if (!command || command.active !== true) return;
 
   if (command.guildOnly && message.channel.type === "dm") {
     return message.reply("I can't execute that command inside DMs!");
@@ -116,8 +130,18 @@ client.on("message", async (message) => {
     if (command.usage) {
       reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
     }
-
     return message.channel.send(reply);
+  }
+
+  if (command.args && command.args_limit) {
+    if (command.args_limit !== args.length) {
+      let reply = `I was expecting ${command.args_limit} arguments but u provided ${args.length} <:pepega:719159618265415704>, ${message.author}!`;
+      if (command.usage) {
+        reply += `\nThe proper usage would be:\n\`${prefix}${command.name} ${command.usage}\``;
+      }
+
+      return message.channel.send(reply);
+    }
   }
 
   //cooldown
@@ -134,11 +158,11 @@ client.on("message", async (message) => {
     const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
     if (now < expirationTime) {
-      const timeLeft = (expirationTime - now) / 1000;
+      let timeLeft = (expirationTime - now) / 1000;
+      timeLeft = time(timeLeft.toFixed(1));
+
       return message.reply(
-        `please wait ${timeLeft.toFixed(
-          1
-        )} more second(s) before reusing the \`${command.name}\` command.`
+        `\`!${command.name}\` is on cooldown for \`${timeLeft}\`.`
       );
     }
   }

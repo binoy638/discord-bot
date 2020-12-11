@@ -7,8 +7,10 @@ const valoSchema = require("../schemas/valorant-stats-schema");
 module.exports = {
   name: "valorant_stats",
   aliases: ["val", "valo"],
-  usage: "<username> <tag>",
+  active: true,
+
   description: "Check valorant stats",
+  cooldown: 10,
 
   async execute(message, args) {
     // const acc_id = "Shiroyashaa98";
@@ -122,34 +124,38 @@ module.exports = {
 
         .setThumbnail(`${rank_icon}`)
         .addFields(
-          { name: "Rating", value: `${rank}`, inline: true },
-          { name: "KDA Ratio", value: `${kda}`, inline: true },
-          { name: "Matches", value: `${matches}`, inline: true },
+          { name: "Rating", value: `\`${rank}\``, inline: true },
+          { name: "KDA Ratio", value: `\`${kda}\``, inline: true },
+          { name: "Matches", value: `\`${matches}\``, inline: true },
           //   { name: "Play Time", value: `${playtime}`, inline: true },
           { name: "\u200B", value: "\u200B" },
-          { name: "Wins", value: `${win}`, inline: true },
-          { name: "Lose", value: `${lose}`, inline: true },
-          { name: "Win %", value: `${win_percent}`, inline: true },
+          { name: "Wins", value: `\`${win}\``, inline: true },
+          { name: "Lose", value: `\`${lose}\``, inline: true },
+          { name: "Win %", value: `\`${win_percent}\``, inline: true },
           { name: "\u200B", value: "\u200B" },
 
           {
             name: "Kills",
-            value: `${kills}`,
+            value: `\`${kills}\``,
             inline: true,
           },
-          { name: "Deaths", value: `${deaths}`, inline: true },
-          { name: "Assists", value: `${Assists}`, inline: true },
+          { name: "Deaths", value: `\`${deaths}\``, inline: true },
+          { name: "Assists", value: `\`${Assists}\``, inline: true },
           { name: "\u200B", value: "\u200B" },
-          { name: "Most Kills", value: `${most_kills}`, inline: true },
-          { name: "Headshots", value: `${headshot}`, inline: true },
-          { name: "Headshots %", value: `${headshot_percent}%`, inline: true },
+          { name: "Most Kills", value: `\`${most_kills}\``, inline: true },
+          { name: "Headshots", value: `\`${headshot}\``, inline: true },
+          {
+            name: "Headshots %",
+            value: `\`${headshot_percent}%\``,
+            inline: true,
+          },
           { name: "\u200B", value: "\u200B" },
-          { name: "Aces", value: `${Aces}`, inline: true },
-          { name: "Clutches", value: `${Clutches}`, inline: true },
-          { name: "Flawless", value: `${Flawless}`, inline: true },
+          { name: "Aces", value: `\`${Aces}\``, inline: true },
+          { name: "Clutches", value: `\`${Clutches}\``, inline: true },
+          { name: "Flawless", value: `\`${Flawless}\``, inline: true },
           { name: "\u200B", value: "\u200B" }
         )
-        .addField("Most Played Hero", `${most_played_hero}`)
+        .addField("Most Played Hero", `\`${most_played_hero}\``)
         .setImage(most_played_hero_icon);
 
       // .setTimestamp()
