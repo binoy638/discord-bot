@@ -3,7 +3,7 @@ const welcomeSchema = require("../schemas/welcome-schema");
 var cache = require("../functions/cache");
 module.exports = {
   name: "setwelcomemsg",
-  description: "Set welcome message for a channel",
+  description: "Set welcome message for new user joins.",
   active: true,
   args: true,
   cooldown: 86400,

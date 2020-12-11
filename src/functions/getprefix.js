@@ -13,10 +13,8 @@ module.exports = async (guild_id) => {
             return;
           }
           if (user) {
-            console.log("PREFIX FETCHED FROM DATABASE");
             data = user.prefix;
           } else {
-            console.log("nothing found");
             return;
           }
         }

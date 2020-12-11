@@ -3,13 +3,14 @@ const Discord = require("discord.js");
 const cheerio = require("cheerio");
 const mongo = require("../mongo");
 const valoSchema = require("../schemas/valorant-stats-schema");
+var myprefix = require("../bot");
 
 module.exports = {
-  name: "valorant_stats",
+  name: "vstats",
   aliases: ["val", "valo"],
   active: true,
 
-  description: "Check valorant stats",
+  description: "Show valorant stats of connected account.",
   cooldown: 10,
 
   async execute(message, args) {
@@ -22,32 +23,20 @@ module.exports = {
 
     await mongo().then(async (mongoose) => {
       try {
-        const result = await valoSchema.findOne(
-          { _id: member.user.id },
-          (err, user) => {
-            if (err) {
-              console.log("error");
-              return;
-            }
-            if (user) {
-              console.log("got user");
-            } else {
-              console.log("nothing found");
-              return;
-            }
-          }
-        );
+        const result = await valoSchema.findOne({ _id: member.user.id });
 
         if (result) {
-          console.log("USER FETCHED FROM DATABASE");
           data = [result.valo_user, result.valo_tag];
+        } else {
+          return message.channel.send(
+            `Your valorant account is not connected, ${message.author}!\nuse \`${myprefix.prefix}setvalouser <username> <tag>\` to connect your valorant account.`
+          );
         }
       } finally {
         mongoose.connection.close();
       }
     });
     if (data === null) {
-      console.log("terminating...");
       return;
     }
     const url = `https://tracker.gg/valorant/profile/riot/${data[0]}%23${data[1]}/overview`;

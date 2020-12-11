@@ -3,7 +3,7 @@ const prefixSchema = require("../schemas/prefixSchema");
 var cache = require("../functions/cache");
 module.exports = {
   name: "setprefix",
-  description: "Set custom prefix for the bot.",
+  description: "Set custom prefix to use my commands.",
   usage: "<prefix> \nNote: Prefix must be of 1 character",
   active: true,
   //   cooldown: 86400,
