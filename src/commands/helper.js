@@ -28,7 +28,7 @@ module.exports = {
     activecmd.map((command) =>
       Embed.addField(
         `${myprefix.prefix}${command.name}`,
-        `${command.description}`
+        `\`${command.description}\``
       )
     );
 

@@ -34,7 +34,7 @@ module.exports = {
         }
       });
       message.channel.send(
-        "Valorant account successfully linked with your discord ID."
+        `\`${valorant_user_id}#${valorant_tag}\` successfully linked with your discord ID.`
       );
     } else {
       message.channel.send("please follow the proper format");

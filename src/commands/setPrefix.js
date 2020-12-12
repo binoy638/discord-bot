@@ -6,7 +6,7 @@ module.exports = {
   description: "Set custom prefix to use my commands.",
   usage: "<prefix> \nNote: Prefix must be of 1 character",
   active: true,
-  //   cooldown: 86400,
+  cooldown: 86400,
   args: true,
   args_limit: 1,
   async execute(message, args) {
