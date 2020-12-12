@@ -9,17 +9,17 @@ module.exports = {
   usage: "[command name]",
   cooldown: 5,
   execute(message, args) {
-    const data = [];
+    // const data = [];
     const { commands } = message.client;
     const activecmd = commands.filter((command) => command.active === true);
 
-    data.push("Here's a list of all my commands:");
-    data.push(activecmd.map((command) => command.name).join(", "));
-    data.push(
-      `\nYou can send \`${myprefix.prefix}help [command name]\` to get info on a specific command!`
-    );
+    // data.push("Here's a list of all my commands:");
+    // data.push(activecmd.map((command) => command.name).join(", "));
+    // data.push(
+    //   `\nYou can send \`${myprefix.prefix}help [command name]\` to get info on a specific command!`
+    // );
 
-    message.channel.send(data, { split: true });
+    // message.channel.send(data, { split: true });
 
     const Embed = new Discord.MessageEmbed()
       .setColor("#0099ff")
