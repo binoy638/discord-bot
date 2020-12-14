@@ -7,7 +7,7 @@ module.exports = {
   usage: "<username> <tag>",
   args: true,
   args_limit: 2,
-  args_count: 2,
+
   async execute(message, args) {
     const { member } = message;
     if (args.length === 2) {
