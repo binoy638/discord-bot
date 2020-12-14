@@ -96,7 +96,7 @@ client.on("message", async (message) => {
     const rand = Math.floor(Math.random() * Math.floor(emojis.length));
     // console.log(rand);
     const isreact = Math.round(Math.random() * 1);
-    console.log(isreact);
+
     // const emojiList = message.guild.emojis.cacheType; //<:KEKW:619842959931867167> <:pepecross:758716930109603861> <:FeelsBadMan:361065875337379841> <:FeelsStrongMen:758716679449608263>  <:pepelaugh:758717642503618640> <:pepega:719159618265415704>
     // console.log(JSON.stringify(emojiList));
     if (isreact === 0) {
