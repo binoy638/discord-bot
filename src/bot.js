@@ -68,11 +68,12 @@ client.on("guildMemberAdd", (member) => {
 
 client.on("message", async (message) => {
   // ignore a message that doesn't starts with prefix or its a bot message
+
   const { guild } = message;
   let guildPrefix = cache.get(`prefix-${guild.id}`);
 
   if (!guildPrefix) {
-    const guildPrefix = await getprefix(`prefix-${guild.id}`);
+    guildPrefix = await getprefix(`prefix-${guild.id}`);
     cache.set(`prefix-${guild.id}`, guildPrefix);
   }
 

@@ -22,9 +22,12 @@ module.exports = {
     // message.channel.send(data, { split: true });
 
     const Embed = new Discord.MessageEmbed()
-      .setColor("#0099ff")
+      .setColor("#286F81")
       .setTitle("Available Commands")
-      .setAuthor(`${message.client.user.username}`, "");
+      .setAuthor(
+        `${message.client.user.username}`,
+        "https://i.imgur.com/qHGBdPT.png"
+      );
     activecmd.map((command) =>
       Embed.addField(
         `${myprefix.prefix}${command.name}`,
