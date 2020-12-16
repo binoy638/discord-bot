@@ -2,9 +2,9 @@ const request = require("request-promise");
 const cheerio = require("cheerio");
 const Discord = require("discord.js");
 module.exports = {
-  name: "topgames",
+  name: "steamtopgames",
   description: "Check top steam games by current player count.",
-
+  usage: "<list size> \nList size Can't be more than 25.",
   active: true,
   args: true,
   args_limit: 1,
@@ -18,9 +18,11 @@ module.exports = {
         "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/768px-Steam_icon_logo.svg.png"
       );
 
+    if (isNaN(gameCount)) {
+      return message.channel.send("Invalid input.");
+    }
     if (gameCount > 25) {
-      message.channel.send("Number of games can't be more than 25.");
-      return;
+      return message.channel.send("Number of games can't be more than 25.");
     }
     const url = "https://store.steampowered.com/stats/";
 
