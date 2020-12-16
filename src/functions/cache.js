@@ -10,5 +10,8 @@ module.exports = (function () {
     clear: function () {
       cache = {};
     },
+    show: function () {
+      console.log(cache);
+    },
   };
 })();

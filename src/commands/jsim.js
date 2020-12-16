@@ -2,7 +2,7 @@ const onJoin = require("../functions/onJoin");
 
 module.exports = {
   name: "joinsim",
-  active: false,
+  active: true,
   description: "Simluate a member join",
 
   execute(message, args) {
