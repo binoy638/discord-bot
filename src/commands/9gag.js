@@ -34,7 +34,7 @@ module.exports = {
       }
       if (SentPosts.indexOf(newid) == -1) {
         SentPosts.push(newid);
-        console.log(newid);
+
         return sendgag(resp, channel, guild);
       } else {
         (async () => {
