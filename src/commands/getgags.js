@@ -11,7 +11,7 @@ module.exports = {
     const section = args[0];
     const interval = args[1];
     message.channel.send(
-      `Fetching posts from ${section} every ${interval} mins.`
+      `Fetching posts from 9gags/${section} every ${interval} mins.`
     );
   },
 };
