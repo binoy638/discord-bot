@@ -7,8 +7,13 @@ const reqString = {
 
 const ninegagSchema = mongoose.Schema({
   _id: reqString,
+  guild: reqString,
   channel: reqString,
   interval: reqString,
+  active: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("gag-channels", ninegagSchema);
