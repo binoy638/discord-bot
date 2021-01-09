@@ -10,7 +10,14 @@ const ninegagSchema = mongoose.Schema({
   guild: reqString,
   channel: reqString,
   interval: reqString,
+<<<<<<< HEAD
   active: { type: Boolean, default: false },
+=======
+  active: {
+    type: Boolean,
+    default: false,
+  },
+>>>>>>> devlopment
 });
 
 module.exports = mongoose.model("gag-channels", ninegagSchema);
