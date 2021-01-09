@@ -13,5 +13,11 @@ module.exports = (function () {
     show: function () {
       console.log(cache);
     },
+    delete: function (key) {
+      delete cache[key];
+    },
+    empty: function (key) {
+      cache[key] = [];
+    },
   };
 })();

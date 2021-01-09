@@ -15,8 +15,6 @@ module.exports = {
     axios
       .get(`https://fast-api-twitch.herokuapp.com/find/${slug}`)
       .then((res) => {
-        console.log("RES:", res.data["ID"]);
-        console.log(res.response);
         if (res.data["ID"]) {
           Embed.addField("Match ID", `${res.data["ID"]}`);
           Embed.addField(
