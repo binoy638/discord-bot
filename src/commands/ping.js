@@ -5,6 +5,12 @@ module.exports = {
   active: false,
   cooldown: 5,
   execute(message, args) {
-    message.channel.send("Pong.");
+    let embed = {
+      title: "This is the title",
+    };
+    message.channel.send(
+      { embed: embed },
+      "https://img-9gag-fun.9cache.com/photo/ajmrq98_460sv.mp4"
+    );
   },
 };
