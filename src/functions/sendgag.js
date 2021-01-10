@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-module.exports = (data, channel, guild) => {
+module.exports = (data, channel) => {
   const gag = new Discord.MessageEmbed()
     .setColor("#0099ff")
     .setTitle(data["title"])
