@@ -50,6 +50,9 @@ module.exports = {
       }
     });
 
+    message.channel.send(
+      `Posting a post from ${section} every ${args[1]} mins`
+    );
     job(section, interval, channel);
   },
 };
