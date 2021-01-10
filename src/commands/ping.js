@@ -1,16 +1,21 @@
+const nineSchema = require("../schemas/ninegagSchema");
+const mongo = require("../mongo");
 module.exports = {
   name: "ping",
   description: "Ping!",
 
   active: false,
-  cooldown: 5,
-  execute(message, args) {
-    let embed = {
-      title: "This is the title",
-    };
-    message.channel.send(
-      { embed: embed },
-      "https://img-9gag-fun.9cache.com/photo/ajmrq98_460sv.mp4"
-    );
+
+  async execute(message, args) {
+    await mongo().then(async (mongoose) => {
+      try {
+        const arr = await nineSchema.find({ active: true });
+        console.log(arr);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        mongoose.connection.close();
+      }
+    });
   },
 };

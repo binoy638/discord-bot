@@ -19,5 +19,12 @@ module.exports = (function () {
     empty: function (key) {
       cache[key] = [];
     },
+    replaceCronJob: function (key, channel_id, job) {
+      cache[key].map((x) => {
+        if (x[channel_id]) {
+          x[channel_id] = job;
+        }
+      });
+    },
   };
 })();

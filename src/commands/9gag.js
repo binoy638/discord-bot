@@ -35,7 +35,7 @@ module.exports = {
       if (SentPosts.indexOf(newid) == -1) {
         SentPosts.push(newid);
 
-        return sendgag(resp, channel, guild);
+        return sendgag(resp, channel);
       } else {
         (async () => {
           resp = await nineGagObject.getRandomPost(0);
@@ -51,7 +51,7 @@ module.exports = {
       list.push(id);
       cache.set("SentPosts", list);
 
-      return sendgag(resp, channel, guild);
+      return sendgag(resp, channel);
     } else {
       isRepeated(id);
     }

@@ -17,9 +17,13 @@ const onJoin = require("./functions/onJoin");
 const time = require("./functions/time");
 const { Globalprefix } = require("./config.json");
 const getprefix = require("./functions/getprefix");
+const getsublist = require("./functions/getsublist");
 
 //cache
 var cache = require("./functions/cache");
+const cronjob = require("./functions/cronjob");
+
+// const nineSchema = require("./schemas/ninegagSchema");
 
 // create a new discord client
 const client = new Discord.Client();
@@ -58,29 +62,18 @@ client.once("ready", async () => {
       mongoose.connection.close();
     }
   });
-  // setInterval(async function () {
-  //   channel = client.channels.cache.get(`757216229508513836`);
-  //   const t = new NineGag("anime-manga");
-  //   const resp = await t.getRandomPost(3);
-  //   const url = resp["url"];
-  //   const title = resp["title"];
-  //   const content = resp["content"];
-  //   const type = resp["type"];
-  //   // message.channel.send(url);
-  //   console.log(resp);
 
-  //   const gag = new Discord.MessageEmbed()
-  //     .setColor("#0099ff")
-  //     .setTitle(title)
-  //     .setURL(url);
+  let jobs = [];
+  cache.set("Cron Jobs", jobs);
+  const sublist = await getsublist();
 
-  //   if (type === "Photo") {
-  //     gag.setImage(content);
-  //     channel.send(gag);
-  //   } else {
-  //     channel.send(content);
-  //   }
-  // }, 10 * 1000);
+  cache.set("Ninegagsublist", sublist);
+  sublist.map((obj) => {
+    const channel = client.channels.cache.get(obj._channel);
+    // console.log(obj.interval);
+
+    cronjob(obj.section, obj.interval, channel);
+  });
 });
 
 //function to greet new guild members when joined
@@ -105,35 +98,32 @@ client.on("message", async (message) => {
   const prefix = guildPrefix || Globalprefix;
   exports.prefix = prefix;
   if (!message.content.startsWith(prefix) || message.author.bot) {
-    const emojis = [
-      "619842959931867167",
-      "758716930109603861",
-      "361065875337379841",
-      "758716679449608263",
-      "758717642503618640",
-      "719159618265415704",
-      "757981987595223161",
-      "586832456427241482",
-      "785757397503180813",
-      "537725587926679552",
-      "758720169077112844",
-    ];
-
-    const rand = Math.floor(Math.random() * Math.floor(emojis.length));
-    // console.log(rand);
-    const isreact = Math.round(Math.random() * 1);
-
-    // const emojiList = message.guild.emojis.cacheType; //<:KEKW:619842959931867167> <:pepecross:758716930109603861> <:FeelsBadMan:361065875337379841> <:FeelsStrongMen:758716679449608263>  <:pepelaugh:758717642503618640> <:pepega:719159618265415704>
-    // console.log(JSON.stringify(emojiList));
-    if (!message.author.bot) {
-      if (isreact === 0) {
-        setTimeout(function () {
-          message.react(emojis[rand]);
-        }, 3000);
-      }
-    }
-
-    return;
+    //   const emojis = [
+    //     "619842959931867167",
+    //     "758716930109603861",
+    //     "361065875337379841",
+    //     "758716679449608263",
+    //     "758717642503618640",
+    //     "719159618265415704",
+    //     "757981987595223161",
+    //     "586832456427241482",
+    //     "785757397503180813",
+    //     "537725587926679552",
+    //     "758720169077112844",
+    //   ];
+    //   const rand = Math.floor(Math.random() * Math.floor(emojis.length));
+    //   // console.log(rand);
+    //   const isreact = Math.round(Math.random() * 1);
+    //   // const emojiList = message.guild.emojis.cacheType; //<:KEKW:619842959931867167> <:pepecross:758716930109603861> <:FeelsBadMan:361065875337379841> <:FeelsStrongMen:758716679449608263>  <:pepelaugh:758717642503618640> <:pepega:719159618265415704>
+    //   // console.log(JSON.stringify(emojiList));
+    //   if (!message.author.bot) {
+    //     if (isreact === 0) {
+    //       setTimeout(function () {
+    //         message.react(emojis[rand]);
+    //       }, 3000);
+    //     }
+    //   }
+    //   return;
   }
 
   // extract the agruments from a message and store it in "args" as an array
