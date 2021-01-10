@@ -7,7 +7,7 @@ module.exports = async (section, interval, channel) => {
   const nineGagObject = new NineGag(section);
   const JobExist = getcronjob(channel.id);
   var job = new CronJob(
-    `*/${interval} * * * * *`,
+    `0 */${interval} * * * *`,
     async function () {
       let resp = await nineGagObject.getRandomPost(5);
       sendgag(resp, channel);
