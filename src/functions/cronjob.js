@@ -11,10 +11,9 @@ module.exports = async (section, interval, channel) => {
     async function () {
       let resp = await nineGagObject.getRandomPost(5);
       sendgag(resp, channel);
-    }
-    // ,
-    // null,
-    // true
+    },
+    null,
+    true
   );
 
   job.start();
