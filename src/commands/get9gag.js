@@ -17,7 +17,7 @@ module.exports = {
       return channel.send("You do not have permission to run this command.");
     }
     const section = args[0];
-    const interval = args[1] - 1;
+    const interval = args[1];
 
     const nineGagObject = new NineGag(section);
     const status = await nineGagObject.isSectionValid();

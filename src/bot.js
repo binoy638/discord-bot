@@ -96,7 +96,7 @@ client.on("message", async (message) => {
   }
 
   const prefix = guildPrefix || Globalprefix;
-  console.log(prefix);
+
   exports.prefix = prefix;
   if (!message.content.startsWith(prefix) || message.author.bot) {
     const emojis = [
