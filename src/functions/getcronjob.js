@@ -10,7 +10,7 @@ module.exports = (channel_id) => {
 
   if (job) {
     job.stop();
-
+    console.log("here");
     return true;
   } else {
     return false;

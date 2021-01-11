@@ -16,14 +16,19 @@ module.exports = async (section, interval, channel) => {
     true
   );
 
-  job.start();
+  // job.start();
   if (JobExist === true) {
+    console.log("Existing job found");
     cache.replaceCronJob("Cron Jobs", channel.id, job);
+    cache.findCronJob("Cron Jobs", channel.id).start();
+    // current_job.start();
   } else {
-    var new_job = {};
-    new_job[channel.id] = job;
-
-    var cron_job_list = cache.get("Cron Jobs");
-    cron_job_list.push(new_job);
+    // console.log("No Existing job found");
+    cache.addCronJob("Cron Jobs", channel.id, job);
+    // let current1_job = cache.get("Cron Jobs")[0][channel.id];
+    // cache.show();
+    // console.log("before running find cron");
+    cache.findCronJob("Cron Jobs", channel.id).start();
+    // current_job.start();
   }
 };
