@@ -1,6 +1,7 @@
 const checkjob = require("../functions/getcronjob");
 const mongo = require("../mongo");
 const nineSchema = require("../schemas/ninegagSchema");
+const cache = require("../functions/cache");
 module.exports = {
   name: "stop9gag",
   description: "Stop 9gag posts in a channel if it's enabled.",
@@ -28,6 +29,8 @@ module.exports = {
             }
           );
           channel.send("Ok,I won't post anymore.");
+          cache.removeCronJob("Cron Jobs", channel.id);
+          cache.show();
         } catch (e) {
           console.log("not found");
           // cache.clear();

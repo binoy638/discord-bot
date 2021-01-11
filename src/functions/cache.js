@@ -26,5 +26,13 @@ module.exports = (function () {
         }
       });
     },
+    removeCronJob: function (key, channel_id) {
+      var new_cache = cache[key].filter((x) => {
+        if (!x[channel_id]) {
+          return x;
+        }
+      });
+      cache[key] = new_cache;
+    },
   };
 })();
