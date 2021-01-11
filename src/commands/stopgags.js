@@ -29,8 +29,8 @@ module.exports = {
             }
           );
           channel.send("Ok,I won't post anymore.");
-          cache.removeCronJob("Cron Jobs", channel.id);
-          cache.show();
+          // cache.removeCronJob("Cron Jobs", channel.id);
+          // cache.show();
         } catch (e) {
           console.log("not found");
           // cache.clear();
