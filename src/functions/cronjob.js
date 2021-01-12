@@ -19,8 +19,9 @@ module.exports = async (section, interval, channel) => {
   // job.start();
   if (JobExist === true) {
     console.log("Existing job found");
-    cache.replaceCronJob("Cron Jobs", channel.id, job);
+    cache.addCronJob("Cron Jobs", channel.id, job);
     cache.findCronJob("Cron Jobs", channel.id).start();
+
     // current_job.start();
   } else {
     // console.log("No Existing job found");

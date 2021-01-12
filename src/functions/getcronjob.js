@@ -1,4 +1,5 @@
 var cache = require("./cache");
+var cron = require("cron");
 module.exports = (channel_id) => {
   const CronJobsList = cache.get("Cron Jobs");
   let job = null;
@@ -10,8 +11,8 @@ module.exports = (channel_id) => {
 
   if (job) {
     job.stop();
+
     cache.removeCronJob("Cron Jobs", channel_id);
-    console.log("Job Stopped");
 
     return true;
   } else {
