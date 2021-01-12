@@ -3,13 +3,19 @@ module.exports = (function () {
   var manager = new CronJobManager();
   return {
     add: function (key, time, taskfunction) {
-      manager.add(key, time, taskfunction);
+      manager.add(key, time, taskfunction, {
+        start: false,
+        timeZone: "Asia/Kolkata",
+      });
     },
     show: function () {
       console.log(manager);
     },
     update: function (key, time, taskfunction) {
-      manager.update(key, time, taskfunction);
+      manager.update(key, time, taskfunction, {
+        start: false,
+        timeZone: "Asia/Kolkata",
+      });
     },
     start: function (key) {
       manager.start(key);
