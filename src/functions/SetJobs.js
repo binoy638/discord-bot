@@ -7,7 +7,7 @@ module.exports = async (section, interval, channel) => {
   const JobId = `job-${channel.id}`;
   const time = `0 */${interval} * * * *`;
   const taskfunction = async () => {
-    let resp = await nineGagObject.getRandomPost(5);
+    let resp = await nineGagObject.getRandomPost(20);
     sendgag(resp, channel);
   };
 
