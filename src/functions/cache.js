@@ -27,6 +27,8 @@ module.exports = (function () {
       });
     },
     removeCronJob: function (key, channel_id) {
+      console.log("before remove");
+      console.log(cache[key]);
       var new_cache = cache[key].filter((x) => {
         //filter returns array thats why this is not working
         if (!x[channel_id]) {
@@ -34,6 +36,8 @@ module.exports = (function () {
         }
       });
       cache[key] = new_cache;
+      console.log("after remove");
+      console.log(cache[key]);
     },
     addCronJob: function (key, channel_id, job) {
       let new_job = {};

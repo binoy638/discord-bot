@@ -10,7 +10,9 @@ module.exports = (channel_id) => {
 
   if (job) {
     job.stop();
-    console.log("here");
+    cache.removeCronJob("Cron Jobs", channel_id);
+    console.log("Job Stopped");
+
     return true;
   } else {
     return false;
