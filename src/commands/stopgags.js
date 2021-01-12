@@ -1,7 +1,7 @@
-const checkjob = require("../functions/getcronjob");
+const job = require("../functions/JobManager");
 const mongo = require("../mongo");
 const nineSchema = require("../schemas/ninegagSchema");
-const cache = require("../functions/cache");
+
 module.exports = {
   name: "stop9gag",
   description: "Stop 9gag posts in a channel if it's enabled.",
@@ -13,7 +13,8 @@ module.exports = {
     if (!member.hasPermission("ADMINISTRATOR")) {
       return channel.send("You do not have permission to run this command.");
     }
-    const check = checkjob(channel.id);
+    const JobId = `job-${channel.id}`;
+    const check = job.exists(JobId);
     if (check === true) {
       await mongo().then(async (mongoose) => {
         try {
@@ -28,12 +29,12 @@ module.exports = {
               upsert: true,
             }
           );
+
+          job.delete(JobId);
+          console.log(`${JobId} Deleted`);
           channel.send("Ok,I won't post anymore.");
-          // cache.removeCronJob("Cron Jobs", channel.id);
-          // cache.show();
         } catch (e) {
           console.log("not found");
-          // cache.clear();
         } finally {
           mongoose.connection.close();
         }

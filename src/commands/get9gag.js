@@ -1,4 +1,4 @@
-const job = require("../functions/cronjob");
+const job = require("../functions/SetJobs");
 const NineGag = require("../functions/ninegag");
 const mongo = require("../mongo");
 const nineSchema = require("../schemas/ninegagSchema");
