@@ -21,7 +21,7 @@ const getsublist = require("./functions/getsublist");
 
 //cache
 var cache = require("./functions/cache");
-const cronjob = require("./functions/cronjob");
+const cronjob = require("./functions/SetJobs");
 
 // const nineSchema = require("./schemas/ninegagSchema");
 
@@ -30,8 +30,6 @@ const client = new Discord.Client();
 
 const cooldowns = new Discord.Collection();
 client.commands = new Discord.Collection();
-
-const NineGag = require("./functions/ninegag");
 
 /**
  * readdirSync returns an array with all files in the specified directory
@@ -63,14 +61,10 @@ client.once("ready", async () => {
     }
   });
 
-  let jobs = [];
-  cache.set("Cron Jobs", jobs);
   const sublist = await getsublist();
 
-  cache.set("Ninegagsublist", sublist);
   sublist.map((obj) => {
     const channel = client.channels.cache.get(obj._channel);
-    // console.log(obj.interval);
 
     cronjob(obj.section, obj.interval, channel);
   });

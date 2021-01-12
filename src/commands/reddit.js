@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const api = require("imageapi.js");
-
+var job = require("../functions/JobManager");
 module.exports = {
   name: "meme",
   description: "Get a random image from r/memes,r/meme or r/funny.",
@@ -14,5 +14,6 @@ module.exports = {
     const Embed = new Discord.MessageEmbed().setColor("RANDOM").setImage(img);
 
     message.channel.send(Embed);
+    job.show();
   },
 };
