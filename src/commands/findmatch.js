@@ -1,7 +1,7 @@
 const axios = require("axios");
 const Discord = require("discord.js");
 module.exports = {
-  name: "find",
+  name: "findmatchd2",
   description: "Find dota 2 match from twitch clip",
   usage: "<twitch clip url>",
   args: true,
