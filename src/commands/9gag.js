@@ -30,10 +30,15 @@ module.exports = {
 
     const isRepeated = (newid) => {
       if (SentPosts.length >= PostListCount) {
-        cache.empty("SentPosts");
+        empty = [];
+        cache.set("SentPosts", empty);
+        SentPosts = cache.get("SentPosts");
       }
       if (SentPosts.indexOf(newid) == -1) {
-        SentPosts.push(newid);
+        let newList = SentPosts;
+        newList.push(newid);
+
+        cache.set("SentPosts", newList);
 
         return sendgag(resp, channel);
       } else {
@@ -44,7 +49,7 @@ module.exports = {
       }
     };
 
-    const SentPosts = cache.get("SentPosts");
+    let SentPosts = cache.get("SentPosts");
 
     if (!SentPosts) {
       let list = [];

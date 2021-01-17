@@ -1,22 +1,17 @@
-const nineSchema = require("../schemas/ninegagSchema");
-const mongo = require("../mongo");
-// var exports = require("../bot");
-// var CronJobManager = require("cron-job-manager");
-// var manager = new CronJobManager();
-var job = require("../functions/JobManager");
+var cache = require("../functions/cache");
 module.exports = {
   name: "ping",
   description: "Ping!",
-  active: false,
+  active: true,
   async execute(message, args) {
-    // manager = exports.manager;
-    // console.log(manager);
-    job.add("key", "* 30 * * * *", () => {
-      console.log("listen carefully.. I will say this only once!");
-    });
-    console.log(job.exists("key"));
-    console.log(job.exists("keys"));
-    job.show();
-    message.channel.send("hello");
+    let check = cache.has("myKey");
+    if (check) {
+      value = cache.get("myKey");
+      console.log(value);
+      return;
+    }
+    obj = { my: "Special", variable: 42 };
+    success = cache.set("myKey", obj, 10);
+    console.log(success);
   },
 };
