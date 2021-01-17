@@ -2,7 +2,7 @@ var cache = require("../functions/cache");
 module.exports = {
   name: "ping",
   description: "Ping!",
-  active: true,
+  active: false,
   async execute(message, args) {
     let check = cache.has("myKey");
     if (check) {
