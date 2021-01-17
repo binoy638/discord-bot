@@ -15,14 +15,14 @@ module.exports = async (section, interval, channel) => {
     const isRepeated = (newid) => {
       if (SentPosts.length >= 10) {
         empty = [];
-        cache.set("SublistPosts", empty);
-        SentPosts = cache.get("SublistPosts");
+        cache.set(`SublistPosts-${channel.id}`, empty);
+        SentPosts = cache.get(`SublistPosts-${channel.id}`);
       }
       if (SentPosts.indexOf(newid) == -1) {
         let newList = SentPosts;
         newList.push(newid);
 
-        cache.set("SublistPosts", newList);
+        cache.set(`SublistPosts-${channel.id}`, newList);
 
         sendgag(resp, channel);
       } else {
@@ -32,11 +32,11 @@ module.exports = async (section, interval, channel) => {
         })();
       }
     };
-    let SentPosts = cache.get("SublistPosts");
+    let SentPosts = cache.get(`SublistPosts-${channel.id}`);
     if (!SentPosts) {
       let list = [];
       list.push(id);
-      cache.set("SublistPosts", list);
+      cache.set(`SublistPosts-${channel.id}`, list);
 
       sendgag(resp, channel);
     } else {
