@@ -21,8 +21,9 @@ const getsublist = require("./functions/getsublist");
 
 //cache
 var cache = require("./functions/cache");
-const cronjob = require("./functions/SetJobs");
 
+const cronjob = require("./functions/SetJobs");
+const job = require("./functions/JobManager");
 // const nineSchema = require("./schemas/ninegagSchema");
 
 // create a new discord client
@@ -61,6 +62,11 @@ client.once("ready", async () => {
     }
   });
 
+  job.add("Cache-Flusher", "0 0 * * 0", () => {
+    cache.flushAll();
+  });
+  job.start("Cache-Flusher");
+
   const sublist = await getsublist();
 
   sublist.map((obj) => {
@@ -82,6 +88,7 @@ client.on("message", async (message) => {
   // ignore a message that doesn't starts with prefix or its a bot message
 
   const { guild } = message;
+
   let guildPrefix = cache.get(`prefix-${guild.id}`);
 
   if (!guildPrefix) {
@@ -89,35 +96,36 @@ client.on("message", async (message) => {
     cache.set(`prefix-${guild.id}`, guildPrefix);
   }
 
+  // console.log(cache);
   const prefix = guildPrefix || Globalprefix;
 
   exports.prefix = prefix;
   if (!message.content.startsWith(prefix) || message.author.bot) {
-    const emojis = [
-      "619842959931867167",
-      "758716930109603861",
-      "361065875337379841",
-      "758716679449608263",
-      "758717642503618640",
-      "719159618265415704",
-      "757981987595223161",
-      "586832456427241482",
-      "785757397503180813",
-      "537725587926679552",
-      "758720169077112844",
-    ];
-    const rand = Math.floor(Math.random() * Math.floor(emojis.length));
-    // console.log(rand);
-    const isreact = Math.round(Math.random() * 1);
-    // const emojiList = message.guild.emojis.cacheType; //<:KEKW:619842959931867167> <:pepecross:758716930109603861> <:FeelsBadMan:361065875337379841> <:FeelsStrongMen:758716679449608263>  <:pepelaugh:758717642503618640> <:pepega:719159618265415704>
-    // console.log(JSON.stringify(emojiList));
-    if (!message.author.bot) {
-      if (isreact === 0) {
-        setTimeout(function () {
-          message.react(emojis[rand]);
-        }, 3000);
-      }
-    }
+    // const emojis = [
+    //   "619842959931867167",
+    //   "758716930109603861",
+    //   "361065875337379841",
+    //   "758716679449608263",
+    //   "758717642503618640",
+    //   "719159618265415704",
+    //   "757981987595223161",
+    //   "586832456427241482",
+    //   "785757397503180813",
+    //   "537725587926679552",
+    //   "758720169077112844",
+    // ];
+    // const rand = Math.floor(Math.random() * Math.floor(emojis.length));
+    // // console.log(rand);
+    // const isreact = Math.round(Math.random() * 1);
+    // // const emojiList = message.guild.emojis.cacheType; //<:KEKW:619842959931867167> <:pepecross:758716930109603861> <:FeelsBadMan:361065875337379841> <:FeelsStrongMen:758716679449608263>  <:pepelaugh:758717642503618640> <:pepega:719159618265415704>
+    // // console.log(JSON.stringify(emojiList));
+    // if (!message.author.bot) {
+    //   if (isreact === 0) {
+    //     setTimeout(function () {
+    //       message.react(emojis[rand]);
+    //     }, 3000);
+    //   }
+    // }
     return;
   }
 

@@ -31,7 +31,7 @@ module.exports = {
               upsert: true,
             }
           );
-          cache.clear();
+          cache.set(`prefix-${guild.id}`, prefix);
         } finally {
           mongoose.connection.close();
         }

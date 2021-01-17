@@ -26,7 +26,7 @@ module.exports = {
             upsert: true,
           }
         );
-        cache.clear();
+        cache.set(`welmsg${guild.id}`, [channel.id, text]);
       } finally {
         mongoose.connection.close();
       }

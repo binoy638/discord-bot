@@ -1,6 +1,6 @@
 const mongo = require("../mongo");
 const nineSchema = require("../schemas/ninegagSchema");
-var cache = require("./cache");
+
 module.exports = async () => {
   let data = [];
   await mongo().then(async (mongoose) => {
