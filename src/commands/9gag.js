@@ -31,14 +31,14 @@ module.exports = {
     const isRepeated = (newid) => {
       if (SentPosts.length >= PostListCount) {
         empty = [];
-        cache.set("SentPosts", empty);
-        SentPosts = cache.get("SentPosts");
+        cache.set(`SentPosts-${channel.id}`, empty);
+        SentPosts = cache.get(`SentPosts-${channel.id}`);
       }
       if (SentPosts.indexOf(newid) == -1) {
         let newList = SentPosts;
         newList.push(newid);
 
-        cache.set("SentPosts", newList);
+        cache.set(`SentPosts-${channel.id}`, newList);
 
         return sendgag(resp, channel);
       } else {
@@ -49,12 +49,12 @@ module.exports = {
       }
     };
 
-    let SentPosts = cache.get("SentPosts");
+    let SentPosts = cache.get(`SentPosts-${channel.id}`);
 
     if (!SentPosts) {
       let list = [];
       list.push(id);
-      cache.set("SentPosts", list);
+      cache.set(`SentPosts-${channel.id}`, list);
 
       return sendgag(resp, channel);
     } else {
