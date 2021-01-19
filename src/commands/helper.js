@@ -1,6 +1,6 @@
 var myprefix = require("../bot");
 const Discord = require("discord.js");
-const attachment = new Discord.MessageAttachment(".", "bot.png");
+
 module.exports = {
   name: "help",
   description: "List all of my commands.",
