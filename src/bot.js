@@ -18,12 +18,14 @@ const time = require("./functions/time");
 const { Globalprefix } = require("./config.json");
 const getprefix = require("./functions/getprefix");
 const getsublist = require("./functions/getsublist");
+const getalertsublist = require("./functions/animeAlerts/alertsublist");
 
 //cache
 var cache = require("./functions/cache");
 
 const cronjob = require("./functions/SetJobs");
 const job = require("./functions/JobManager");
+const alertjob = require("./functions/animeAlerts/setJobs");
 // const nineSchema = require("./schemas/ninegagSchema");
 
 // create a new discord client
@@ -73,6 +75,12 @@ client.once("ready", async () => {
     const channel = client.channels.cache.get(obj._channel);
 
     cronjob(obj.section, obj.interval, channel);
+  });
+
+  const alertsublist = await getalertsublist();
+  alertsublist.map((obj) => {
+    const channel = client.channels.cache.get(obj.channelId);
+    alertjob(obj.anime_id, obj.anime_title, obj.cron_time, channel);
   });
 });
 

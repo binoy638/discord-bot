@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { data } = require("./cache");
+
 module.exports = async (query) => {
   return axios
     .get(`https://api.jikan.moe/v3/search/anime?q=${query}&status=airing`)

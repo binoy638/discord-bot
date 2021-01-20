@@ -2,11 +2,12 @@ var CronJobManager = require("cron-job-manager");
 module.exports = (function () {
   var manager = new CronJobManager();
   return {
-    add: function (key, time, taskfunction) {
-      manager.add(key, time, taskfunction, {
+    add: function (key, time, taskfunction, options) {
+      options = options || {
         start: false,
         timeZone: "Asia/Kolkata",
-      });
+      };
+      manager.add(key, time, taskfunction, options);
     },
     show: function () {
       console.log(manager);

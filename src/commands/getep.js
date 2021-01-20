@@ -16,7 +16,7 @@ module.exports = {
       .then((res) => {
         if (res.data["title"]) {
           Embed.setTitle(`${res.data["title"]}-${res.data["episode"]}`)
-            .setURL("https://myanimelist.net/")
+            .setURL(`https://myanimelist.net/anime/${id}`)
             .addFields(
               {
                 name: "480p",
