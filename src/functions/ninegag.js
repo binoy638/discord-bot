@@ -85,9 +85,19 @@ class NineGag {
     };
 
     if (Post["type"] === "Photo") {
-      Post["content"] = Posts[i]["images"]["image700"]["url"];
+      try {
+        Post["content"] = Posts[i]["images"]["image700"]["url"];
+      } catch (err) {
+        console.log(err);
+        console.log(Post);
+      }
     } else {
-      Post["content"] = Posts[i]["images"]["image460sv"]["url"];
+      try {
+        Post["content"] = Posts[i]["images"]["image460sv"]["url"];
+      } catch (err) {
+        console.log(err);
+        console.log(Post);
+      }
     }
     return Post;
   }
