@@ -29,32 +29,29 @@ module.exports = {
     const id = resp["id"];
 
     const isRepeated = (newid) => {
-      if (SentPosts.length >= PostListCount) {
-        empty = [];
-        cache.set(`SentPosts-${channel.id}`, empty);
-        SentPosts = cache.get(`SentPosts-${channel.id}`);
+      if (SentPosts.size >= PostListCount) {
+        SentPosts.clear();
+        cache.set(`SentPosts-${channel.id}`, SentPosts);
       }
-      if (SentPosts.indexOf(newid) == -1) {
-        let newList = SentPosts;
-        newList.push(newid);
-
-        cache.set(`SentPosts-${channel.id}`, newList);
-
-        return sendgag(resp, channel);
-      } else {
+      if (SentPosts.has(newid)) {
         (async () => {
-          resp = await nineGagObject.getRandomPost(0);
+          resp = await nineGagObject.getRandomPost(PostFetchIteration);
           isRepeated(resp["id"]);
         })();
+      } else {
+        SentPosts.add(newid);
+        cache.set(`SentPosts-${channel.id}`, SentPosts);
+
+        return sendgag(resp, channel);
       }
     };
 
     let SentPosts = cache.get(`SentPosts-${channel.id}`);
 
     if (!SentPosts) {
-      let list = [];
-      list.push(id);
-      cache.set(`SentPosts-${channel.id}`, list);
+      let set = new Set();
+      set.add(id);
+      cache.set(`SentPosts-${channel.id}`, set);
 
       return sendgag(resp, channel);
     } else {

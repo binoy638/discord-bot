@@ -1,5 +1,8 @@
 const Discord = require("discord.js");
-module.exports = (data, channel, isfirst) => {
+var job = require("../JobManager");
+const mongo = require("../../mongo");
+const animeAlertSchema = require("../../schemas/animeAlertSchema");
+module.exports = async (data, channel, isfirst) => {
   let {
     480: res480,
     720: res720,
@@ -38,5 +41,23 @@ module.exports = (data, channel, isfirst) => {
       `Yay! New epside of ${title} out.\nNext episode will be out on next \`${day} at ${IST}(IST)\``
     );
   }
+
   channel.send(alert);
+  if (!data["Airing"]) {
+    channel.send(`This is the last episode of ${title} :(`);
+    await mongo().then(async (mongoose) => {
+      try {
+        await animeAlertSchema.findOneAndDelete({
+          _id: `${channel.id}-${id}`,
+        });
+
+        job.delete(`Alerts-${channel.id}-${id}`);
+        console.log(`Alerts-${channel.id}-${id} Deleted`);
+      } catch (e) {
+        console.log("not found");
+      } finally {
+        mongoose.connection.close();
+      }
+    });
+  }
 };
