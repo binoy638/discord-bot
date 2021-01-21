@@ -25,7 +25,7 @@ module.exports = async (section, interval, channel) => {
       } else {
         SentPosts.add(newid);
         cache.set(`SublistPosts-${channel.id}`, SentPosts);
-        console.log(cache.get(`SublistPosts-${channel.id}`));
+
         return sendgag(resp, channel);
       }
     };
