@@ -1,5 +1,5 @@
-const job = require("../functions/SetJobs");
-const NineGag = require("../functions/ninegag");
+const job = require("../functions/ninegag/SetJobs");
+const NineGag = require("../functions/ninegag/ninegag");
 const mongo = require("../mongo");
 const nineSchema = require("../schemas/ninegagSchema");
 

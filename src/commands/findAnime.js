@@ -1,4 +1,4 @@
-var search = require("../functions/searchAnime");
+var search = require("../functions/animeAlerts/searchAnime");
 const Discord = require("discord.js");
 module.exports = {
   name: "findanime",

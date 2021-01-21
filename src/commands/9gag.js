@@ -1,6 +1,6 @@
-const NineGag = require("../functions/ninegag");
+const NineGag = require("../functions/ninegag/ninegag");
 var cache = require("../functions/cache");
-const sendgag = require("../functions/sendgag");
+const sendgag = require("../functions/ninegag/sendgag");
 module.exports = {
   name: "9gag",
   description: "Random post from 9gags anime-manga section",

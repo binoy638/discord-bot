@@ -17,13 +17,13 @@ const onJoin = require("./functions/onJoin");
 const time = require("./functions/time");
 const { Globalprefix } = require("./config.json");
 const getprefix = require("./functions/getprefix");
-const getsublist = require("./functions/getsublist");
+const getsublist = require("./functions/ninegag/getsublist");
 const getalertsublist = require("./functions/animeAlerts/alertsublist");
 
 //cache
 var cache = require("./functions/cache");
 
-const cronjob = require("./functions/SetJobs");
+const cronjob = require("./functions/ninegag/SetJobs");
 const job = require("./functions/JobManager");
 const alertjob = require("./functions/animeAlerts/setJobs");
 // const nineSchema = require("./schemas/ninegagSchema");
