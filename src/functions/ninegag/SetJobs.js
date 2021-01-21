@@ -1,7 +1,7 @@
 const NineGag = require("./ninegag");
 const sendgag = require("./sendgag");
-var job = require("./JobManager");
-var cache = require("./cache");
+var job = require("../JobManager");
+var cache = require("../cache");
 
 module.exports = async (section, interval, channel) => {
   const nineGagObject = new NineGag(section);
