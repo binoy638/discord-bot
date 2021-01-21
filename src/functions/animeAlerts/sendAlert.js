@@ -8,7 +8,7 @@ module.exports = async (data, channel, isfirst) => {
     720: res720,
     1080: res1080,
     IST: IST,
-    day: day,
+    IST_Day: day,
     episode: episode,
     title: title,
     anime_id: id,
