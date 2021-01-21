@@ -7,7 +7,7 @@ module.exports = async (guild_id) => {
     try {
       await prefixSchema.findOne({ _id: guild_id }, (err, user) => {
         if (err) {
-          console.log("error");
+          console.log(err);
           return;
         }
         if (user) {
