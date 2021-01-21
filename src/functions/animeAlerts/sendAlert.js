@@ -38,7 +38,7 @@ module.exports = async (data, channel, isfirst) => {
     channel.send(`Next episode will be out on next \`${day} at ${IST}(IST)\``);
   } else {
     channel.send(
-      `Yay! New epside of ${title} out.\nNext episode will be out on next \`${day} at ${IST}(IST)\``
+      `Yay! New episode of ${title} is out.\nNext episode will be out on next \`${day} at ${IST}(IST)\``
     );
   }
 
