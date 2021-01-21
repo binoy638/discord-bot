@@ -13,30 +13,27 @@ module.exports = async (section, interval, channel) => {
     const id = resp["id"];
 
     const isRepeated = (newid) => {
-      if (SentPosts.length >= 10) {
-        empty = [];
-        cache.set(`SublistPosts-${channel.id}`, empty);
-        SentPosts = cache.get(`SublistPosts-${channel.id}`);
+      if (SentPosts.size >= 200) {
+        SentPosts.clear();
+        cache.set(`SublistPosts-${channel.id}`, SentPosts);
       }
-      if (SentPosts.indexOf(newid) == -1) {
-        let newList = SentPosts;
-        newList.push(newid);
-
-        cache.set(`SublistPosts-${channel.id}`, newList);
-
-        sendgag(resp, channel);
-      } else {
+      if (SentPosts.has(newid)) {
         (async () => {
-          resp = await nineGagObject.getRandomPost(0);
+          resp = await nineGagObject.getRandomPost(20);
           isRepeated(resp["id"]);
         })();
+      } else {
+        SentPosts.add(newid);
+        cache.set(`SublistPosts-${channel.id}`, SentPosts);
+        console.log(cache.get(`SublistPosts-${channel.id}`));
+        return sendgag(resp, channel);
       }
     };
     let SentPosts = cache.get(`SublistPosts-${channel.id}`);
     if (!SentPosts) {
-      let list = [];
-      list.push(id);
-      cache.set(`SublistPosts-${channel.id}`, list);
+      let set = new Set();
+      set.add(id);
+      cache.set(`SublistPosts-${channel.id}`, set);
 
       sendgag(resp, channel);
     } else {
