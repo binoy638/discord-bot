@@ -17,7 +17,7 @@ module.exports = async (section, interval, channel) => {
         SentPosts.clear();
         cache.set(`SublistPosts-${channel.id}`, SentPosts);
       }
-      if (SentPosts.has(newid)) {
+      if (SentPosts.has(newid) || resp["type"] == "Article") {
         (async () => {
           resp = await nineGagObject.getRandomPost(20);
           isRepeated(resp["id"]);

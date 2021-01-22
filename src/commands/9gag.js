@@ -33,7 +33,7 @@ module.exports = {
         SentPosts.clear();
         cache.set(`SentPosts-${channel.id}`, SentPosts);
       }
-      if (SentPosts.has(newid)) {
+      if (SentPosts.has(newid) || resp["type"] == "Article") {
         (async () => {
           resp = await nineGagObject.getRandomPost(PostFetchIteration);
           isRepeated(resp["id"]);
