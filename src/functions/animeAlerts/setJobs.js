@@ -16,7 +16,7 @@ module.exports = async (id, title, cron_time, channel) => {
           `${title}'s new episode got delayed.\nUse \`${prefix}getep ${id}\` to get latest episode manually.`
         );
       }
-
+      episode["anime_id"] = id;
       sendAlert(episode, channel, false);
     },
     {
