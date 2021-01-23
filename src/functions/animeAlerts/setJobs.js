@@ -17,6 +17,7 @@ module.exports = async (id, title, cron_time, channel) => {
         );
       }
 
+      episode["anime_id"] = id;
       sendAlert(episode, channel, false);
     },
     {
