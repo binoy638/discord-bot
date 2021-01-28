@@ -3,7 +3,7 @@ const findep = require("./findepisode");
 const sendAlert = require("./sendAlert");
 var myprefix = require("../../bot");
 module.exports = async (id, title, cron_time, channel) => {
-  let prefix = myprefix.prefix || "#";
+  let prefix = myprefix.prefix || "<prefix>";
   job_id = `Alerts-${channel.id}-${id}`;
   job.add(
     job_id,
@@ -13,7 +13,7 @@ module.exports = async (id, title, cron_time, channel) => {
 
       if (!episode) {
         return channel.send(
-          `${title}'s new episode got delayed.\nUse \`${prefix}getep ${id}\` to get latest episode manually.`
+          `${title}'s new episode got delayed.\nUse \`${prefix}getep ${id}\` to get the last released episode.`
         );
       }
       episode["anime_id"] = id;
