@@ -12,7 +12,7 @@ module.exports = {
     let id = args[0];
     const Embed = new Discord.MessageEmbed().setColor("#0099ff");
     axios
-      .get(`https://udility.herokuapp.com/anime/${id}`)
+      .get(`https://udility.herokuapp.com/anime_first/${id}`)
       .then((res) => {
         if (res.data["title"]) {
           Embed.setTitle(`${res.data["title"]}-${res.data["episode"]}`)
