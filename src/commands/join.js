@@ -4,11 +4,11 @@ const {
   GRASSHOPPER,
   BUMBLEBEE,
 } = require("@picovoice/porcupine-node/builtin_keywords");
-const voice_cmd = require("../functions/audio/voice_cmd");
+const voice_cmd = require("../functions/voice/voice_cmd");
 module.exports = {
   name: "join",
   description: "Make the bot join your voice channel.",
-  active: true,
+  active: false,
   async execute(message, args) {
     function chunkArray(array, size) {
       return Array.from(
@@ -75,6 +75,7 @@ module.exports = {
             if (index !== -1) {
               if (index == 0) {
                 voice_cmd(connection, message.channel, user);
+
                 message.channel.send("GRASSHOPPER");
               } else if (index == 1) {
                 voice_cmd(connection, message.channel, user);
