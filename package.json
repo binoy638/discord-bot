@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/opus": "^0.4.0",
+    "@picovoice/porcupine-node": "^1.9.0",
     "axios": "^0.21.0",
     "cheerio": "^1.0.0-rc.3",
     "cron": "^1.8.2",
@@ -19,12 +21,16 @@
     "discord.js": "^12.4.1",
     "discord.js-commando": "^0.11.1",
     "dotenv": "^8.2.0",
+    "ffmpeg-static": "^4.2.7",
     "got": "^11.8.1",
     "imageapi.js": "^1.0.19",
     "mongoose": "^5.11.5",
     "node-cache": "^5.1.2",
+    "node-witai-speech": "^1.0.2",
     "nodemon": "^2.0.6",
+    "prism-media": "^1.2.3",
     "request": "^2.88.2",
-    "request-promise": "^4.2.6"
+    "request-promise": "^4.2.6",
+    "underscore": "^1.12.0"
   }
 }

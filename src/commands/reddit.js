@@ -14,6 +14,5 @@ module.exports = {
     const Embed = new Discord.MessageEmbed().setColor("RANDOM").setImage(img);
 
     message.channel.send(Embed);
-    job.show();
   },
 };

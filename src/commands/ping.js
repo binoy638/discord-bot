@@ -1,22 +1,13 @@
-var cache = require("../functions/cache");
-var job = require("../functions/JobManager");
 module.exports = {
   name: "ping",
   description: "Ping!",
-  active: false,
+  active: true,
   async execute(message, args) {
-    job.add(
-      "Test",
-      "44 0 * * *",
-      () => {
-        console.log("hi");
-      },
-      {
-        start: false,
-        timeZone: "America/Los_Angeles",
-      }
-    );
-    job.start("Test");
-    job.show();
+    const voiceChannel = message.member.voice.channel;
+    if (!voiceChannel) return message.channel.send("No voice channel.");
+    voiceChannel.join().then((connection) => {
+      console.log("playing..");
+      connection.play("./sound.mp3");
+    });
   },
 };
