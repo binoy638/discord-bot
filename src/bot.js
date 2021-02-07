@@ -165,7 +165,7 @@ client.on("message", async (message) => {
 
   if (command.args && command.args_limit) {
     if (command.args_limit !== args.length) {
-      let reply = `I was expecting ${command.args_limit} arguments but u provided ${args.length} <:pepega:719159618265415704>, ${message.author}!`;
+      let reply = `I was expecting ${command.args_limit} arguments but u provided ${args.length}, ${message.author}!`;
       if (command.usage) {
         reply += `\nThe proper usage would be:\n\`${prefix}${command.name} ${command.usage}\``;
       }
