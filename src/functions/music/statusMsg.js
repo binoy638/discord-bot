@@ -1,16 +1,15 @@
 const Discord = require("discord.js");
-module.exports = (data, channel) => {
+module.exports = (data, channel, status) => {
   const musicEmbed = new Discord.MessageEmbed()
     .setTitle(data.title)
-    .setDescription("Playing :notes:")
+
     .setURL(data.link)
     .setThumbnail(data.image);
 
-  //   if (data["type"] === "Photo") {
-
+  if (status === "playing") {
+    musicEmbed.setDescription("Playing 🎵");
+  } else if (status === "paused") {
+    musicEmbed.setDescription("Paused ⏸️");
+  }
   channel.send(musicEmbed);
-  //   } else {
-  //     channel.send({ embed: gag });
-  //     channel.send(data["content"]);
-  //   }
 };

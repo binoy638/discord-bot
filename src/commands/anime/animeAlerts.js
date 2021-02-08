@@ -1,13 +1,14 @@
 const Discord = require("discord.js");
-const mongo = require("../mongo");
-const animeAlertSchema = require("../schemas/animeAlertSchema");
-const getanime = require("../functions/animeAlerts/getanime");
-const job = require("../functions/animeAlerts/setJobs");
-const sendAlert = require("../functions/animeAlerts/sendAlert");
+const mongo = require("../../mongo");
+const animeAlertSchema = require("../../schemas/animeAlertSchema");
+const getanime = require("../../functions/animeAlerts/getanime");
+const job = require("../../functions/animeAlerts/setJobs");
+const sendAlert = require("../../functions/animeAlerts/sendAlert");
 module.exports = {
   name: "start_anime_alert",
   description: "Get notified when new episode is out.",
-  usage: "<anime id>",
+  category: "Anime",
+  usage: "[anime id]",
   args: true,
   active: true,
   args_limit: 1,

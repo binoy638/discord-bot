@@ -1,11 +1,12 @@
-const job = require("../functions/JobManager");
-const mongo = require("../mongo");
-const animeAlertSchema = require("../schemas/animeAlertSchema");
+const job = require("../../functions/JobManager");
+const mongo = require("../../mongo");
+const animeAlertSchema = require("../../schemas/animeAlertSchema");
 
 module.exports = {
   name: "stop_anime_alert",
   description: "Stop anime alerts",
-  usage: "<anime id>",
+  category: "Anime",
+  usage: "[anime id]",
   args: true,
   active: true,
   args_limit: 1,

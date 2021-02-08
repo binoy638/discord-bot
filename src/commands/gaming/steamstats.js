@@ -4,7 +4,8 @@ const Discord = require("discord.js");
 module.exports = {
   name: "steamtopgames",
   description: "Check top steam games by current player count.",
-  usage: "<list size> \nList size Can't be more than 25.",
+  category: "Gaming",
+  usage: "[list size]",
   active: true,
   args: true,
   args_limit: 1,

@@ -13,7 +13,9 @@ var opts = {
 module.exports = async (query) => {
   const spotifyQuery = await spotifySearch(query);
   let new_query = query;
+  let isSpotifyFound = false;
   if (spotifyQuery) {
+    isSpotifyFound = true;
     new_query = spotifyQuery.search_query;
     var image = spotifyQuery.image;
     var title = `${spotifyQuery.artist} - ${spotifyQuery.track}`;
@@ -23,8 +25,13 @@ module.exports = async (query) => {
   if (response.results) {
     const link = response.results[0].link;
     // const title = response.results[0].title;
-
-    return { link, title, image };
+    // console.log(response.results[0].thumbnails);
+    const thumbnail = response.results[0].thumbnails.default.url;
+    const yt_title = response.results[0].title;
+    if (isSpotifyFound) {
+      return { link, title, image };
+    }
+    return { link, title: yt_title, image: thumbnail };
   }
   return undefined;
 };

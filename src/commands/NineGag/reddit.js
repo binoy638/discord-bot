@@ -1,9 +1,10 @@
 const Discord = require("discord.js");
 const api = require("imageapi.js");
-var job = require("../functions/JobManager");
+var job = require("../../functions/JobManager");
 module.exports = {
   name: "meme",
   description: "Get a random image from r/memes,r/meme or r/funny.",
+  category: "Memes",
   active: true,
   async execute(message, args) {
     let subreddits = ["memes", "meme", "funny"];

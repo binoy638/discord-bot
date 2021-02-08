@@ -1,10 +1,11 @@
-const job = require("../functions/JobManager");
-const mongo = require("../mongo");
-const nineSchema = require("../schemas/ninegagSchema");
+const job = require("../../functions/JobManager");
+const mongo = require("../../mongo");
+const nineSchema = require("../../schemas/ninegagSchema");
 
 module.exports = {
   name: "stop9gag",
   description: "Stop 9gag posts in a channel if it's enabled.",
+  category: "Memes",
 
   active: true,
 

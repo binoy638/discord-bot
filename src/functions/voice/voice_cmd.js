@@ -3,7 +3,7 @@ var transcribe = require("./transcribe");
 const path = require("path");
 const { setTimeout } = require("timers");
 module.exports = async (connection, channel, user) => {
-  connection.play(path.join("src/static", "sound.mp3"));
+  // connection.play(path.join("src/static", "sound.mp3"));
 
   setTimeout(() => {
     const audioStream = connection.receiver.createStream(user, {

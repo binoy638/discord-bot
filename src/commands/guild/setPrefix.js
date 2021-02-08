@@ -1,10 +1,11 @@
-const mongo = require("../mongo");
-const prefixSchema = require("../schemas/prefixSchema");
-var cache = require("../functions/cache");
+const mongo = require("../../mongo");
+const prefixSchema = require("../../schemas/prefixSchema");
+var cache = require("../../functions/cache");
 module.exports = {
   name: "setprefix",
   description: "Set custom prefix to use my commands.",
-  usage: "<prefix> \nNote: Prefix must be of 1 character",
+  category: "Guild",
+  usage: "[prefix]",
   active: true,
   cooldown: 86400,
   args: true,
