@@ -3,7 +3,8 @@ const Discord = require("discord.js");
 module.exports = {
   name: "findmatchd2",
   description: "Find dota 2 match from twitch clip",
-  usage: "<twitch clip url>",
+  category: "Gaming",
+  usage: "[twitch clip url]",
   args: true,
   active: true,
   args_limit: 1,

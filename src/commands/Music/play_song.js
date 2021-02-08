@@ -1,9 +1,13 @@
 const ytdl = require("discord-ytdl-core");
-const search = require("../functions/music/search");
-const statusMsg = require("../functions/music/statusMsg");
+const MusicPlayer = require("../../functions/music/musicPlayer");
+
+const search = require("../../functions/music/search");
+const statusMsg = require("../../functions/music/statusMsg");
+const cache = require("../../functions/cache");
 module.exports = {
   name: "play",
-  usage: "<song name>",
+  usage: "[song name]",
+  category: "Music",
   description: "Play music in a voice channel",
   active: true,
   args: true,
@@ -23,11 +27,15 @@ module.exports = {
       filter: "audioonly",
       opusEncoded: true,
     });
-    voiceChannel.join().then((connection) => {
-      connection.play(stream, {
-        type: "opus",
-      });
-      statusMsg(result, message.channel);
-    });
+
+    let dispatcher = await voiceChannel.join();
+
+    dispatcher.play(stream, { type: "opus" });
+    statusMsg(result, message.channel, "playing");
+
+    const musicPlayer = new MusicPlayer(message.channel.id, voiceChannel.id);
+    musicPlayer.addSong(result);
+
+    cache.set(message.channel.id, musicPlayer);
   },
 };

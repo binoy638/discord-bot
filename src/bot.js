@@ -38,16 +38,19 @@ client.commands = new Discord.Collection();
  * readdirSync returns an array with all files in the specified directory
  * filter the files with .js extension and store it in commandFiles
  */
-const commandFiles = fs
-  .readdirSync("./src/commands")
-  .filter((file) => file.endsWith(".js"));
+const commandFolders = fs.readdirSync("./src/commands");
 
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
+for (const folder of commandFolders) {
+  const subdir = fs
+    .readdirSync(`./src/commands/${folder}`)
+    .filter((file) => file.endsWith(".js"));
+  for (const file of subdir) {
+    const command = require(`./commands/${folder}/${file}`);
+    client.commands.set(command.name, command);
+  }
 
   // set a new item in the Collection
   // with the key as the command name and the value as the exported module
-  client.commands.set(command.name, command);
 }
 
 // One time function that triggers when the client is ready

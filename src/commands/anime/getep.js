@@ -3,7 +3,8 @@ const Discord = require("discord.js");
 module.exports = {
   name: "getep",
   description: "Get download link of lastest episode of an anime.",
-  usage: "<anime id>",
+  category: "Anime",
+  usage: "[anime id]",
   args: true,
   active: true,
   args_limit: 1,

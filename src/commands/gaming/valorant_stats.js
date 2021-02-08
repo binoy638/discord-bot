@@ -1,13 +1,14 @@
 const request = require("request-promise");
 const Discord = require("discord.js");
 const cheerio = require("cheerio");
-const mongo = require("../mongo");
-const valoSchema = require("../schemas/valorant-stats-schema");
-var myprefix = require("../bot");
+const mongo = require("../../mongo");
+const valoSchema = require("../../schemas/valorant-stats-schema");
+var myprefix = require("../../bot");
 
 module.exports = {
   name: "vstats",
   aliases: ["val", "valo"],
+  category: "Gaming",
   active: true,
 
   description: "Show valorant stats of connected account.",

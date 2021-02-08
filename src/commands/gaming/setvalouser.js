@@ -1,10 +1,11 @@
-const mongo = require("../mongo");
-const valoSchema = require("../schemas/valorant-stats-schema");
+const mongo = require("../../mongo");
+const valoSchema = require("../../schemas/valorant-stats-schema");
 module.exports = {
   name: "setvalouser",
   description: "Connect a valorant account with your discord ID.",
+  category: "Gaming",
   active: true,
-  usage: "<username> <tag>",
+  usage: "[username] [tag]",
   args: true,
   args_limit: 2,
 

@@ -1,9 +1,10 @@
-var search = require("../functions/animeAlerts/searchAnime");
+var search = require("../../functions/animeAlerts/searchAnime");
 const Discord = require("discord.js");
 module.exports = {
   name: "findanime",
   description: "Find currently airing anime from MAL",
-  usage: "<anime title>",
+  category: "Anime",
+  usage: "[anime title]",
   active: true,
   args: true,
   async execute(message, args) {

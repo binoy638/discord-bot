@@ -1,12 +1,13 @@
-const job = require("../functions/ninegag/SetJobs");
-const NineGag = require("../functions/ninegag/ninegag");
-const mongo = require("../mongo");
-const nineSchema = require("../schemas/ninegagSchema");
+const job = require("../../functions/ninegag/SetJobs");
+const NineGag = require("../../functions/ninegag/ninegag");
+const mongo = require("../../mongo");
+const nineSchema = require("../../schemas/ninegagSchema");
 
 module.exports = {
   name: "get9gag",
   description: "Get regular posts from your favrouite 9gag section.",
-  usage: "<section> <interval(in mins)>",
+  category: "Memes",
+  usage: "[section] [interval(in mins)]",
   active: true,
   args: true,
   args_limit: 2,

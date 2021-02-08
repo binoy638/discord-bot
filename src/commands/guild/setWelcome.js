@@ -1,9 +1,10 @@
-const mongo = require("../mongo");
-const welcomeSchema = require("../schemas/welcome-schema");
-var cache = require("../functions/cache");
+const mongo = require("../../mongo");
+const welcomeSchema = require("../../schemas/welcome-schema");
+var cache = require("../../functions/cache");
 module.exports = {
   name: "setwelcomemsg",
   description: "Set welcome message for new user joins.",
+  category: "Guild",
   active: true,
   args: true,
   cooldown: 86400,
