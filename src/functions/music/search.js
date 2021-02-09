@@ -11,15 +11,15 @@ var opts = {
 };
 
 module.exports = async (query) => {
-  const spotifyQuery = await spotifySearch(query);
+  // const spotifyQuery = await spotifySearch(query);
   let new_query = query;
-  let isSpotifyFound = false;
-  if (spotifyQuery) {
-    isSpotifyFound = true;
-    new_query = spotifyQuery.search_query;
-    var image = spotifyQuery.image;
-    var title = `${spotifyQuery.artist} - ${spotifyQuery.track}`;
-  }
+  // let isSpotifyFound = false;
+  // if (spotifyQuery) {
+  //   isSpotifyFound = true;
+  //   new_query = spotifyQuery.search_query;
+  //   var image = spotifyQuery.image;
+  //   var title = `${spotifyQuery.artist} - ${spotifyQuery.track}`;
+  // }
 
   const response = await search(new_query, opts);
   if (response.results) {
@@ -28,9 +28,9 @@ module.exports = async (query) => {
     // console.log(response.results[0].thumbnails);
     const thumbnail = response.results[0].thumbnails.default.url;
     const yt_title = response.results[0].title;
-    if (isSpotifyFound) {
-      return { link, title, image };
-    }
+    // if (isSpotifyFound) {
+    //   return { link, title, image };
+    // }
     return { link, title: yt_title, image: thumbnail };
   }
   return undefined;
