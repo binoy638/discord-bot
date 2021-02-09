@@ -44,7 +44,7 @@ module.exports = {
         return;
       }
 
-      console.log(`I'm listening to ${user.username}`);
+      // console.log(`I'm listening to ${user.username}`);
 
       const userStreams = connection.receiver.createStream(user, {
         mode: "opus",
@@ -79,9 +79,10 @@ module.exports = {
             let index = userHandlers.process(frame);
             if (index !== -1) {
               if (index == 0) {
-                voice_cmd(connection, message.channel, user);
                 console.log("listening..");
+                voice_cmd(connection, message.channel, user);
               } else if (index == 1) {
+                console.log("listening..");
                 voice_cmd(connection, message.channel, user);
               }
             }
