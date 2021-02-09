@@ -14,7 +14,13 @@ module.exports = {
 
   async execute(message, args) {
     const query = args.join(" ");
-    const result = await search(query);
+    let result = cache.get(`SongQuery:${query}`);
+    if (!result) {
+      result = await search(query);
+
+      cache.set(`SongQuery:${query}`, result);
+    }
+
     if (!result) {
       message.channel.send("No results found");
     }
