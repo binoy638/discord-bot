@@ -34,6 +34,9 @@ module.exports = {
     statusMsg(result, message.channel, "playing");
 
     const musicPlayer = new MusicPlayer(message.channel.id, voiceChannel.id);
+    if (!musicPlayer.isQueueEmpty()) {
+      musicPlayer.clearQueue();
+    }
     musicPlayer.addSong(result);
 
     cache.set(message.channel.id, musicPlayer);
