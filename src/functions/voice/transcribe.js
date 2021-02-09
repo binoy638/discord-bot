@@ -17,7 +17,7 @@ module.exports = async (buffer, channel, username, connection) => {
   // check in the promise for the completion of call to witai
   parseSpeech
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       extractIntent(data, channel, connection);
     })
     .catch((err) => {
