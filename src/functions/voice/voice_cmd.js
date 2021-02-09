@@ -28,7 +28,7 @@ module.exports = async (connection, channel, user) => {
       try {
         let new_buffer = await convert_audio(buffer);
 
-        transcribe(new_buffer, channel, user.username);
+        transcribe(new_buffer, channel, user.username, connection);
 
         // let out = await transcribe(new_buffer);
         // if (out != null) process_commands_query(out, mapKey, user.id);

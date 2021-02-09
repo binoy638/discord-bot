@@ -24,7 +24,7 @@ module.exports = {
     }
 
     const connection = await voice.channel.join();
-    const userHandlers = new Porcupine([GRASSHOPPER, BUMBLEBEE], [0.9, 0.85]);
+    const userHandlers = new Porcupine([GRASSHOPPER, BUMBLEBEE], [0.9, 0.9]);
     const frameLength = userHandlers.frameLength;
 
     // const userStreams = connection.receiver.createStream(user, {
@@ -80,7 +80,7 @@ module.exports = {
                 message.channel.send("GRASSHOPPER");
               } else if (index == 1) {
                 voice_cmd(connection, message.channel, user);
-                message.channel.send("BUMBELBEE");
+                message.channel.send("Listening....");
               }
             }
           }

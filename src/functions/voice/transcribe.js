@@ -1,7 +1,8 @@
 const { Readable } = require("stream");
 const API_KEY = process.env.WITAI_KEY;
 const WitSpeech = require("node-witai-speech");
-module.exports = async (buffer, channel, username) => {
+const extractIntent = require("./extractIntent");
+module.exports = async (buffer, channel, username, connection) => {
   var stream = Readable.from(buffer);
   const content_type =
     "audio/raw;encoding=signed-integer;bits=16;rate=48k;endian=little";
@@ -17,8 +18,7 @@ module.exports = async (buffer, channel, username) => {
   parseSpeech
     .then((data) => {
       console.log(data);
-      let text = data.text;
-      channel.send(`${username}:${text}`);
+      extractIntent(data, channel, connection);
     })
     .catch((err) => {
       console.log(err);
