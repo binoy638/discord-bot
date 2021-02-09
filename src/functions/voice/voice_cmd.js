@@ -22,7 +22,7 @@ module.exports = async (connection, channel, user) => {
       const duration = buffer.length / 48000 / 4;
       console.log("duration: " + duration);
 
-      if (duration < 1.0 || duration > 6) {
+      if (duration > 6) {
         // 20 seconds max dur
         console.log("TOO SHORT / TOO LONG; SKPPING");
         return;
