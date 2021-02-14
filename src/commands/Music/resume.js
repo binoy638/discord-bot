@@ -9,6 +9,7 @@ module.exports = class AddCommand extends (
     super(client, {
       name: "resume",
       group: "music",
+      aliases: ["rs"],
       memberName: "resume",
       description: "Resume currently paused song.",
     });
