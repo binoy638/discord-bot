@@ -1,19 +1,21 @@
 const job = require("../../functions/JobManager");
 const mongo = require("../../mongo");
 const animeAlertSchema = require("../../schemas/animeAlertSchema");
-
-module.exports = {
-  name: "stop_anime_alert",
-  description: "Stop anime alerts",
-  category: "Anime",
-  usage: "[anime id]",
-  args: true,
-  active: true,
-  args_limit: 1,
-
-  async execute(message, args) {
+const Commando = require("discord.js-commando");
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "stop_anime_alerts",
+      group: "anime",
+      memberName: "stop_anime_alerts",
+      description: "Stop anime alerts.",
+    });
+  }
+  async run(message, args) {
     let channel_id = message.channel.id;
-    let anime_id = args[0];
+    let anime_id = args;
 
     const JobId = `Alerts-${channel_id}-${anime_id}`;
 
@@ -42,5 +44,5 @@ module.exports = {
         `Anime notification not enabled for #${anime_id}`
       );
     }
-  },
+  }
 };

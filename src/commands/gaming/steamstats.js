@@ -1,17 +1,20 @@
 const request = require("request-promise");
 const cheerio = require("cheerio");
 const Discord = require("discord.js");
-module.exports = {
-  name: "steamtopgames",
-  description: "Check top steam games by current player count.",
-  category: "Gaming",
-  usage: "[list size]",
-  active: true,
-  args: true,
-  args_limit: 1,
-  cooldown: 5,
-  execute(message, args) {
-    const gameCount = Number(args[0]);
+const Commando = require("discord.js-commando");
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "steamtop",
+      group: "gaming",
+      memberName: "steamtop",
+      description: "Get steam top games",
+    });
+  }
+  async run(message, args) {
+    const gameCount = Number(args);
     const Embed = new Discord.MessageEmbed()
       .setTitle(`Top ${gameCount} Steam games by current player count.`)
       .setURL("https://store.steampowered.com/stats/")
@@ -63,5 +66,5 @@ module.exports = {
         console.log("an error occured: ", e);
       }
     })();
-  },
+  }
 };

@@ -1,16 +1,18 @@
 const axios = require("axios");
-const Discord = require("discord.js");
-module.exports = {
-  name: "getep",
-  description: "Get download link of lastest episode of an anime.",
-  category: "Anime",
-  usage: "[anime id]",
-  args: true,
-  active: true,
-  args_limit: 1,
-
-  async execute(message, args) {
-    let id = args[0];
+const Commando = require("discord.js-commando");
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "episode",
+      group: "anime",
+      memberName: "episode",
+      description: "Get the last released anime.",
+    });
+  }
+  async run(message, args) {
+    let id = args;
     const Embed = new Discord.MessageEmbed().setColor("#0099ff");
     axios
       .get(`https://udility.herokuapp.com/anime_first/${id}`)
@@ -45,5 +47,5 @@ module.exports = {
         console.error("Sever error 500");
         message.channel.send("Episode not found!");
       });
-  },
+  }
 };

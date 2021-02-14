@@ -1,20 +1,26 @@
 const mongo = require("../../mongo");
 const welcomeSchema = require("../../schemas/welcome-schema");
 var cache = require("../../functions/cache");
-module.exports = {
-  name: "setwelcomemsg",
-  description: "Set welcome message for new user joins.",
-  category: "Guild",
-  active: true,
-  args: true,
-  cooldown: 86400,
-  async execute(message, args) {
+const Commando = require("discord.js-commando");
+
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "welcome",
+      group: "guild",
+      memberName: "welcome",
+      description: "Set welcome message for new user join.",
+    });
+  }
+  async run(message, args) {
     const { member, channel, guild } = message;
 
     if (!member.hasPermission("ADMINISTRATOR")) {
       channel.send("You do not have permission to run this command.");
     }
-    let text = args.join(" ");
+    let text = args;
 
     await mongo().then(async (mongoose) => {
       try {
@@ -35,5 +41,5 @@ module.exports = {
     message.channel.send(
       `Welcome message for this guild has been set to \n\`${text}\``
     );
-  },
+  }
 };

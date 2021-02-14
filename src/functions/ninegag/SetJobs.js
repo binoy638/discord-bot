@@ -41,15 +41,17 @@ module.exports = async (section, interval, channel) => {
     }
   };
 
-  if (job.exists(JobId)) {
-    job.update(JobId, time, taskfunction);
-    job.start(JobId);
-    console.log(`${JobId} Started`);
-    // job.show();
-  } else {
-    job.add(JobId, time, taskfunction);
-    job.start(JobId);
-    // job.show();
-    console.log(`${JobId} Started`);
-  }
+  // if (job.exists(JobId)) {
+  //   console.log(JobId);
+  //   console.log(time);
+  //   console.log(taskfunction);
+  //   job.update(JobId, time, taskfunction);
+  //   job.start(JobId);
+  //   console.log(`${JobId} Started`);
+  //   // job.show();
+  // } else {
+  job.add(JobId, time, taskfunction);
+  job.start(JobId);
+  // job.show();
+  console.log(`${JobId} Started`);
 };

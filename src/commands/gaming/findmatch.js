@@ -1,16 +1,20 @@
 const axios = require("axios");
 const Discord = require("discord.js");
-module.exports = {
-  name: "findmatchd2",
-  description: "Find dota 2 match from twitch clip",
-  category: "Gaming",
-  usage: "[twitch clip url]",
-  args: true,
-  active: true,
-  args_limit: 1,
+const Commando = require("discord.js-commando");
 
-  async execute(message, args) {
-    let url = args[0];
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "findmatch",
+      group: "gaming",
+      memberName: "findmatch",
+      description: "Get regular memes from a specific 9gag section",
+    });
+  }
+  async run(message, args) {
+    let url = args;
     let slug = url.split("/").pop();
     const Embed = new Discord.MessageEmbed().setColor("#0099ff");
     axios
@@ -39,5 +43,5 @@ module.exports = {
         console.error("Sever error 500");
         message.channel.send("Match not found!");
       });
-  },
+  }
 };

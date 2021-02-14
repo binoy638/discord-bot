@@ -2,18 +2,23 @@ const job = require("../../functions/JobManager");
 const mongo = require("../../mongo");
 const nineSchema = require("../../schemas/ninegagSchema");
 
-module.exports = {
-  name: "stop9gag",
-  description: "Stop 9gag posts in a channel if it's enabled.",
-  category: "Memes",
+const Commando = require("discord.js-commando");
 
-  active: true,
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "stop_autoposts",
+      group: "fun",
+      memberName: "stop_autoposts",
+      description: "Stop the bot from autoposting.",
+      userPermissions: ["ADMINISTRATOR"],
+    });
+  }
+  async run(message) {
+    const { channel } = message;
 
-  async execute(message, args) {
-    const { member, channel } = message;
-    if (!member.hasPermission("ADMINISTRATOR")) {
-      return channel.send("You do not have permission to run this command.");
-    }
     const JobId = `job-${channel.id}`;
     const check = job.exists(JobId);
     if (check === true) {
@@ -43,5 +48,5 @@ module.exports = {
     } else {
       return channel.send("get9gag not enabled in this channel");
     }
-  },
+  }
 };

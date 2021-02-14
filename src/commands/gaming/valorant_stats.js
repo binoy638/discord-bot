@@ -4,17 +4,19 @@ const cheerio = require("cheerio");
 const mongo = require("../../mongo");
 const valoSchema = require("../../schemas/valorant-stats-schema");
 var myprefix = require("../../bot");
-
-module.exports = {
-  name: "vstats",
-  aliases: ["val", "valo"],
-  category: "Gaming",
-  active: true,
-
-  description: "Show valorant stats of connected account.",
-  cooldown: 10,
-
-  async execute(message, args) {
+const Commando = require("discord.js-commando");
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "stats",
+      group: "gaming",
+      memberName: "stats",
+      description: "Check your valorant stats.",
+    });
+  }
+  async run(message, args) {
     // const acc_id = "Shiroyashaa98";
     // const tag = "NA1";
 
@@ -158,5 +160,5 @@ module.exports = {
       console.log("an error occured:", e);
       message.channel.send("Invaild Username/Tag or Private Profile");
     }
-  },
+  }
 };

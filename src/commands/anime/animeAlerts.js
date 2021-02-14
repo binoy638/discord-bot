@@ -4,17 +4,21 @@ const animeAlertSchema = require("../../schemas/animeAlertSchema");
 const getanime = require("../../functions/animeAlerts/getanime");
 const job = require("../../functions/animeAlerts/setJobs");
 const sendAlert = require("../../functions/animeAlerts/sendAlert");
-module.exports = {
-  name: "start_anime_alert",
-  description: "Get notified when new episode is out.",
-  category: "Anime",
-  usage: "[anime id]",
-  args: true,
-  active: true,
-  args_limit: 1,
-
-  async execute(message, args) {
-    let id = args[0];
+const Commando = require("discord.js-commando");
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "get_anime_alerts",
+      group: "anime",
+      memberName: "get_anime_alerts",
+      description:
+        "Get notification with download link when a new episode of the selected anime is released.",
+    });
+  }
+  async run(message, args) {
+    let id = args;
     let channel_id = message.channel.id;
 
     const anime = await getanime(id);
@@ -56,5 +60,5 @@ module.exports = {
         mongoose.connection.close();
       }
     });
-  },
+  }
 };

@@ -16,6 +16,7 @@
     "@picovoice/porcupine-node": "^1.9.0",
     "axios": "^0.21.0",
     "cheerio": "^1.0.0-rc.3",
+    "commando-provider-mongo": "^2.0.2",
     "cron": "^1.8.2",
     "cron-job-manager": "^2.1.4",
     "discord-ytdl-core": "^5.0.0",

@@ -6,13 +6,21 @@ const {
 } = require("@picovoice/porcupine-node/builtin_keywords");
 const voice_cmd = require("../../functions/voice/voice_cmd");
 const msg = require("../../functions/voice/message");
-module.exports = {
-  name: "join",
-  description:
-    "Make the bot join your voice channel and use as a voice assistant",
-  category: "Misc",
-  active: true,
-  async execute(message, args) {
+const Commando = require("discord.js-commando");
+
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "join",
+      group: "misc",
+      memberName: "join",
+      description: "Make the voice assistant join a VC.",
+      ownerOnly: true,
+    });
+  }
+  async run(message, args) {
     function chunkArray(array, size) {
       return Array.from(
         { length: Math.ceil(array.length / size) },
@@ -92,5 +100,5 @@ module.exports = {
         console.error(error);
       }
     });
-  },
+  }
 };

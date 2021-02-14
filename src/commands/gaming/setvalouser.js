@@ -1,15 +1,20 @@
 const mongo = require("../../mongo");
 const valoSchema = require("../../schemas/valorant-stats-schema");
-module.exports = {
-  name: "setvalouser",
-  description: "Connect a valorant account with your discord ID.",
-  category: "Gaming",
-  active: true,
-  usage: "[username] [tag]",
-  args: true,
-  args_limit: 2,
-
-  async execute(message, args) {
+const Commando = require("discord.js-commando");
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "user",
+      group: "gaming",
+      memberName: "user",
+      description: "Link valorant user ID with your discord ID.",
+      argsType: "multiple",
+      argsCount: 2,
+    });
+  }
+  async run(message, args) {
     const { member } = message;
     if (args.length === 2) {
       const valorant_user_id = args[0];
@@ -40,5 +45,5 @@ module.exports = {
     } else {
       message.channel.send("please follow the proper format");
     }
-  },
+  }
 };
