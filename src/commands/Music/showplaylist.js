@@ -3,9 +3,7 @@ const getplaylist = require("../../functions/music/getplaylist");
 const cache = require("../../functions/cache");
 const Discord = require("discord.js");
 
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "showplaylist",
@@ -45,6 +43,7 @@ module.exports = class AddCommand extends (
     }
     const totaltracks = data.tracks.length;
     const page = args.page;
+    const index = args.page - 1;
     const tracks = pagination(data.tracks, page, 10);
     const maxpages = Math.ceil(totaltracks / 10);
     const Embed = new Discord.MessageEmbed()
@@ -61,7 +60,10 @@ module.exports = class AddCommand extends (
       );
     } else {
       tracks.map((item, i) =>
-        Embed.addField(`${i + 1}. ${item.track}`, `${item.artists}`)
+        Embed.addField(
+          `${i + index * 10 + 1}. ${item.track}`,
+          `${item.artists}`
+        )
       );
     }
     if (maxpages > page) {
