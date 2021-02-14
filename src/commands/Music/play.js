@@ -12,6 +12,7 @@ module.exports = class AddCommand extends (
     super(client, {
       name: "play",
       group: "music",
+      aliases: ["p"],
       memberName: "play",
       description: "Play a song.",
       args: [

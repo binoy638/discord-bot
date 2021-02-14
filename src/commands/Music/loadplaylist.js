@@ -1,5 +1,6 @@
 const Commando = require("discord.js-commando");
 const getplaylist = require("../../functions/music/getplaylist");
+const cache = require("../../functions/cache");
 const Discord = require("discord.js");
 
 module.exports = class AddCommand extends (
@@ -7,10 +8,11 @@ module.exports = class AddCommand extends (
 ) {
   constructor(client) {
     super(client, {
-      name: "search_playlist",
+      name: "loadplaylist",
       group: "music",
-      memberName: "search_playlist",
-      description: "Search a spotify playlist.",
+      memberName: "loadplaylist",
+      aliases: ["lpl", "loadlist"],
+      description: "load a spotify playlist.",
       args: [
         {
           key: "url",
@@ -21,6 +23,7 @@ module.exports = class AddCommand extends (
     });
   }
   async run(message, args) {
+    const { member } = message;
     let url = args.url;
 
     let slug = url.split("/").pop();
@@ -29,18 +32,17 @@ module.exports = class AddCommand extends (
     if (!data) {
       message.channel.send("Can't fetch playlist.");
     }
-    const tracks = data.tracks;
+    // const tracks = data.tracks;
     // console.log(data.playlistInfo);
     const Embed = new Discord.MessageEmbed()
       .setColor("RANDOM")
       .setTitle(data.playlistInfo.title)
       .setDescription(
-        `Playing owner:\`${data.playlistInfo.owner}\`\nTotal tracks:\`${data.tracks.length}\``
+        `Owner:\`${data.playlistInfo.owner}\`\nTracks:\`${data.tracks.length}\``
       )
-      .setThumbnail(data.playlistInfo.playlistimage);
-    tracks.map((item, i) =>
-      Embed.addField(`${i + 1}. ${item.track}`, `${item.artists}`)
-    );
+      .setThumbnail(data.playlistInfo.playlistimage)
+      .setFooter("Playlist successfully loaded");
+    cache.set(`Playlist-${member.id}`, data);
     message.channel.send(Embed);
   }
 };
