@@ -7,15 +7,22 @@ module.exports = class AddCommand extends (
 ) {
   constructor(client) {
     super(client, {
-      name: "stop_anime_alerts",
+      name: "ani_stop",
       group: "anime",
-      memberName: "stop_anime_alerts",
-      description: "Stop anime alerts.",
+      memberName: "ani_stop",
+      description: "Stop new episode release notification of an anime.",
+      args: [
+        {
+          key: "animeID",
+          prompt: "Please enter the ID of the anime.",
+          type: "integer",
+        },
+      ],
     });
   }
   async run(message, args) {
     let channel_id = message.channel.id;
-    let anime_id = args;
+    let anime_id = args.animeID;
 
     const JobId = `Alerts-${channel_id}-${anime_id}`;
 
@@ -31,7 +38,7 @@ module.exports = class AddCommand extends (
           job.delete(JobId);
           console.log(`${JobId} Deleted`);
           message.channel.send(
-            `Ok,I won't send anime notification anymore for #${anime_id}.`
+            `\`Anime notification disabled for anime ID: ${anime_id}.\``
           );
         } catch (e) {
           console.log("not found");
@@ -41,7 +48,7 @@ module.exports = class AddCommand extends (
       });
     } else {
       return message.channel.send(
-        `Anime notification not enabled for #${anime_id}`
+        `\`Anime notification not enabled for anime ID:${anime_id}\``
       );
     }
   }

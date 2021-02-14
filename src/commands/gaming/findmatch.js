@@ -7,25 +7,39 @@ module.exports = class AddCommand extends (
 ) {
   constructor(client) {
     super(client, {
-      name: "findmatch",
+      name: "findd2match",
       group: "gaming",
-      memberName: "findmatch",
-      description: "Get regular memes from a specific 9gag section",
+      memberName: "findd2match",
+      description: "Find dota 2 match id of a twitch clip.",
+      args: [
+        {
+          key: "matchurl",
+          prompt: "Please provide a twitch clip url or slug.",
+          type: "string",
+        },
+      ],
     });
   }
   async run(message, args) {
-    let url = args;
+    let url = args.matchurl;
     let slug = url.split("/").pop();
     const Embed = new Discord.MessageEmbed().setColor("#0099ff");
+    Embed.setTitle("Searching...").setDescription(
+      "This might take few seconds."
+    );
+    let firstmsg = await message.channel.send(Embed);
     axios
       .get(`https://fast-api-twitch.herokuapp.com/find/${slug}`)
       .then((res) => {
         if (res.data["ID"]) {
-          Embed.addField("Match ID", `${res.data["ID"]}`);
-          Embed.addField(
-            "Opendota",
-            `https://www.opendota.com/matches/${res.data["ID"]}`
-          );
+          Embed.setTitle("Match Found")
+            .setDescription("")
+            .addField("ID", `${res.data["ID"]}`)
+
+            .addField(
+              "Opendota",
+              `https://www.opendota.com/matches/${res.data["ID"]}`
+            );
           Embed.addField(
             "Dotabuff",
             `https://www.dotabuff.com/matches/${res.data["ID"]}`
@@ -34,14 +48,18 @@ module.exports = class AddCommand extends (
             "Stratz",
             `https://stratz.com/matches/${res.data["ID"]}`
           );
-          message.channel.send(Embed);
+
+          firstmsg.edit(Embed);
         } else {
-          message.channel.send("Match not found!");
+          Embed.setTitle("Sorry, I couldn't a match").setDescription("");
+          firstmsg.edit(Embed);
         }
       })
       .catch((err) => {
         console.error("Sever error 500");
-        message.channel.send("Match not found!");
+
+        Embed.setTitle("Sorry, I couldn't a match").setDescription("");
+        firstmsg.edit(Embed);
       });
   }
 };

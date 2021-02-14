@@ -1,18 +1,26 @@
 const axios = require("axios");
+const Discord = require("discord.js");
 const Commando = require("discord.js-commando");
 module.exports = class AddCommand extends (
   Commando.Command
 ) {
   constructor(client) {
     super(client, {
-      name: "episode",
+      name: "ani_ep",
       group: "anime",
-      memberName: "episode",
-      description: "Get the last released anime.",
+      memberName: "ani_ep",
+      description: "Get the last released episode of an anime.",
+      args: [
+        {
+          key: "animeID",
+          prompt: "Please enter the ID of the anime u want the episode of.",
+          type: "integer",
+        },
+      ],
     });
   }
   async run(message, args) {
-    let id = args;
+    let id = args.animeID;
     const Embed = new Discord.MessageEmbed().setColor("#0099ff");
     axios
       .get(`https://udility.herokuapp.com/anime_first/${id}`)

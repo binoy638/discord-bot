@@ -1,4 +1,3 @@
-var myprefix = require("../../bot");
 const Discord = require("discord.js");
 const Commando = require("discord.js-commando");
 

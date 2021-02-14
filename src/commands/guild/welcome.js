@@ -12,6 +12,13 @@ module.exports = class AddCommand extends (
       group: "guild",
       memberName: "welcome",
       description: "Set welcome message for new user join.",
+      args: [
+        {
+          key: "welmsg",
+          prompt: "Please enter a welcome message.",
+          type: "string",
+        },
+      ],
     });
   }
   async run(message, args) {
@@ -20,7 +27,7 @@ module.exports = class AddCommand extends (
     if (!member.hasPermission("ADMINISTRATOR")) {
       channel.send("You do not have permission to run this command.");
     }
-    let text = args;
+    let text = args.welmsg;
 
     await mongo().then(async (mongoose) => {
       try {

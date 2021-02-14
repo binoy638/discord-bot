@@ -13,8 +13,8 @@ module.exports = class AddCommand extends (
       ownerOnly: true,
     });
   }
-  async run(message, args) {
+  async run(message) {
     const usage = process.memoryUsage().heapUsed / 1024 / 1024;
-    message.send(`Memory usage: ${usage}`);
+    message.channel.send(`Current memory usage: ${usage.toFixed(2)} MB`);
   }
 };
