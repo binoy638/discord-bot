@@ -24,8 +24,8 @@ module.exports = async (query) => {
   if (response.statusCode === 200) {
     const title = response.body.name;
     const owner = response.body.owner.display_name;
-    const playlistimage = response.body.images[2].url;
-    const playlistInfo = { title, owner, playlistimage };
+    // const playlistimage = response.body.images[2].url;
+    const playlistInfo = { title, owner };
     data.playlistInfo = playlistInfo;
     data.tracks = [];
     let playlist = response.body.tracks.items;

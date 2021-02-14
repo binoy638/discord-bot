@@ -3,9 +3,7 @@ const getplaylist = require("../../functions/music/getplaylist");
 const cache = require("../../functions/cache");
 const Discord = require("discord.js");
 
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "loadplaylist",
@@ -40,7 +38,7 @@ module.exports = class AddCommand extends (
       .setDescription(
         `Owner:\`${data.playlistInfo.owner}\`\nTracks:\`${data.tracks.length}\``
       )
-      .setThumbnail(data.playlistInfo.playlistimage)
+      // .setThumbnail(data.playlistInfo.playlistimage)
       .setFooter("Playlist successfully loaded");
     cache.set(`Playlist-${member.id}`, data);
     message.channel.send(Embed);
