@@ -36,13 +36,10 @@ const client = new Commando.Client({
 
 client
   .setProvider(
-    MongoClient.connect(
-      "mongodb+srv://binoy638:wGLoa2WaFJePEcYQ@mongodb-discord.jwzgt.mongodb.net",
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
-    ).then((client) => new MongoDBProvider(client, "discord-bot-db-dev"))
+    MongoClient.connect(process.env.DB_LINK, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }).then((client) => new MongoDBProvider(client, process.env.DB_NAME))
   )
   .catch(console.error);
 

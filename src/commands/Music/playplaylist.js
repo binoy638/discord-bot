@@ -41,7 +41,7 @@ module.exports = class AddCommand extends (
     }
     const trackinfo = tracks[id];
     const query = `${trackinfo.artists} ${trackinfo.track}`;
-
+    console.log(query);
     const { voice } = message.member;
     if (!voice.channelID) {
       message.reply("You must be in a voice channel");
