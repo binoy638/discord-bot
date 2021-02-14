@@ -10,21 +10,27 @@ module.exports = class AddCommand extends (
 ) {
   constructor(client) {
     super(client, {
-      name: "get_anime_alerts",
+      name: "ani_start",
       group: "anime",
-      memberName: "get_anime_alerts",
-      description:
-        "Get notification with download link when a new episode of the selected anime is released.",
+      memberName: "ani_start",
+      description: "Start new episode release notication of an anime.",
+      args: [
+        {
+          key: "animeID",
+          prompt: "Please enter the ID of the anime.",
+          type: "integer",
+        },
+      ],
     });
   }
   async run(message, args) {
-    let id = args;
+    let id = args.animeID;
     let channel_id = message.channel.id;
 
     const anime = await getanime(id);
     if (!anime) {
       return message.channel.send(
-        `Anime Alerts is not available for anime id:${id}`
+        `\`Service not available for anime id:${id}\``
       );
     }
 

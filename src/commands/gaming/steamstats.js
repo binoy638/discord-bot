@@ -11,10 +11,19 @@ module.exports = class AddCommand extends (
       group: "gaming",
       memberName: "steamtop",
       description: "Get steam top games",
+      args: [
+        {
+          key: "size",
+          prompt: "How many games u want me to fetch?",
+          type: "integer",
+          min: 1,
+          max: 25,
+        },
+      ],
     });
   }
   async run(message, args) {
-    const gameCount = Number(args);
+    const gameCount = args.size;
     const Embed = new Discord.MessageEmbed()
       .setTitle(`Top ${gameCount} Steam games by current player count.`)
       .setURL("https://store.steampowered.com/stats/")

@@ -44,7 +44,7 @@ module.exports = async (data, channel, isfirst) => {
 
   channel.send(alert);
   if (!data["Airing"]) {
-    channel.send(`This is the last episode of ${title} :(`);
+    channel.send(`This was the last episode of ${title} :(`);
     await mongo().then(async (mongoose) => {
       try {
         await animeAlertSchema.findOneAndDelete({

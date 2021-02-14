@@ -14,10 +14,17 @@ module.exports = class AddCommand extends (
       group: "music",
       memberName: "play",
       description: "Play a song.",
+      args: [
+        {
+          key: "query",
+          prompt: "What do you want me to play?",
+          type: "string",
+        },
+      ],
     });
   }
   async run(message, args) {
-    const query = args;
+    const query = args.query;
     let result = cache.get(`SongQuery:${query}`);
     if (!result) {
       result = await search(query);

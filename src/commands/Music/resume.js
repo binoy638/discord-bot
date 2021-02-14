@@ -13,7 +13,7 @@ module.exports = class AddCommand extends (
       description: "Resume currently paused song.",
     });
   }
-  async run(message, args) {
+  async run(message) {
     let voiceConnection = message.guild.me.voice.connection;
 
     if (!voiceConnection) {

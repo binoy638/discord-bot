@@ -5,9 +5,9 @@ module.exports = class AddCommand extends (
 ) {
   constructor(client) {
     super(client, {
-      name: "leave",
-      group: "misc",
-      memberName: "leave",
+      name: "disconnect",
+      group: "music",
+      memberName: "disconnect",
       description: "Make the bot leave a voice channel.",
     });
   }

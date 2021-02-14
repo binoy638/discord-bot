@@ -1,21 +1,29 @@
 var search = require("../../functions/animeAlerts/searchAnime");
 const Commando = require("discord.js-commando");
+const Discord = require("discord.js");
 module.exports = class AddCommand extends (
   Commando.Command
 ) {
   constructor(client) {
     super(client, {
-      name: "find",
+      name: "ani_search",
       group: "anime",
-      memberName: "find",
+      memberName: "ani_search",
       description: "Search currently airing anime.",
+      args: [
+        {
+          key: "query",
+          prompt: "Which anime you want to search?",
+          type: "string",
+        },
+      ],
     });
   }
   async run(message, args) {
-    const query = args;
+    const query = args.query;
     let data = await search(query);
     if (!data) {
-      return message.channel.send("no data found");
+      return message.reply(`No matching anime found`);
     }
     let {
       mal_id: id,
