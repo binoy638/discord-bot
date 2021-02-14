@@ -1,18 +1,22 @@
 const NineGag = require("../../functions/ninegag/ninegag");
 var cache = require("../../functions/cache");
 const sendgag = require("../../functions/ninegag/sendgag");
-module.exports = {
-  name: "9gag",
-  description: "Random post from 9gags anime-manga section",
-  category: "Memes",
-  usage: "[section name]",
-  active: true,
-  args: true,
-  args_limit: 1,
+const Commando = require("discord.js-commando");
 
-  async execute(message, args) {
-    const { channel, guild } = message;
-    const section = args[0];
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "9gag",
+      group: "fun",
+      memberName: "9gag",
+      description: "Get a meme from a specific 9gag section",
+    });
+  }
+  async run(message, args) {
+    const { channel } = message;
+    const section = args;
     const PostFetchIteration = 5;
     const PostListCount = 9 + PostFetchIteration * 10;
 
@@ -58,5 +62,5 @@ module.exports = {
     } else {
       isRepeated(id);
     }
-  },
+  }
 };

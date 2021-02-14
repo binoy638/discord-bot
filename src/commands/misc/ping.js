@@ -1,31 +1,27 @@
 var cache = require("../../functions/cache");
 const Queue = require("../../functions/utils/queue");
 var queue = new Queue();
-module.exports = {
-  name: "ping",
-  description: "Ping!",
-  category: "Misc",
-  active: false,
+const Commando = require("discord.js-commando");
 
-  execute(message, args) {
-    let songQueue = {
-      textChannel: message.channel,
-      // voiceChannel: voiceChannel,
-      connection: null,
-      songs: queue,
-      playing: true,
-    };
-    songQueue.songs.enqueue("Eminem");
-    songQueue.songs.enqueue({
-      title: "Eminem",
-      link: "somelink",
-      Image: "someimage",
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "test",
+      group: "misc",
+      memberName: "test",
+      description: "test features",
+      ownerOnly: true,
     });
-    console.log(songQueue.songs.show());
-    // queue.enqueue(14);
-    // queue.enqueue(13);
-    // queue.enqueue(13);
-    // queue.enqueue(11);
-    // console.log(queue.show());
-  },
+  }
+  async run(message, args) {
+    const { guild } = message;
+    console.log(guild._commandPrefix);
+    // const g = new Commando.CommandoGuild(guild.id);
+    // const current = this.client.guilds.filter(
+    //   (currentguild) => currentguild.id === guild.id
+    // );
+    // console.log(current);
+  }
 };

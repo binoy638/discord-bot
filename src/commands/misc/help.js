@@ -1,68 +1,80 @@
 var myprefix = require("../../bot");
 const Discord = require("discord.js");
+const Commando = require("discord.js-commando");
 
-module.exports = {
-  name: "help",
-  description: "List all of my commands.",
-  category: "Misc",
-  active: true,
-  aliases: ["commands"],
-  usage: "[command name]",
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    const groups = client.registry.groups
+      .filter((group) => {
+        if (group.id != "commands" && group.id != "util") {
+          return group;
+        }
+      })
+      .map((group) => group.id);
 
-  cooldown: 5,
-  execute(message, args) {
+    super(client, {
+      name: "help",
+      group: "misc",
+      memberName: "commands1",
+      description: "Display list of commands.",
+      args: [
+        {
+          key: "command_name",
+          prompt: "Please enter a command name.",
+          type: "string",
+          oneOf: groups,
+          default: "",
+        },
+      ],
+    });
+  }
+  async run(message, args) {
+    const commands = this.client.registry.commands.filter(
+      (cmd) => cmd.ownerOnly != true
+    );
+    const prefix = message.guild._commandPrefix;
+    const groups = this.client.registry.groups;
+
     const Embed = new Discord.MessageEmbed();
-    const categories = [
-      { title: "Music", description: "🎧 commands to play music 🎧" },
-      { title: "Memes", description: "🐸 commands to get memes 🐸" },
-      { title: "Anime", description: "💠 anime specific commands 💠" },
-      { title: "Gaming", description: "🎮 gaming specific commands 🎮" },
-      { title: "Guild", description: "🔴 guild specific commands 🔴" },
-      { title: "Misc", description: "🔘 miscellaneous commands 🔘" },
-    ];
-    let cmdarg = args.join(" ");
+
+    let cmdarg = args.command_name.toLowerCase();
     if (!cmdarg) {
       Embed.setColor("RANDOM").setAuthor(
-        `${message.client.user.username}`,
+        `${this.client.user.username}`,
         "https://i.imgur.com/qHGBdPT.png"
       );
-      // activecmd.map((command) =>
-      //   Embed.addField(
-      //     `${myprefix.prefix}${command.name}`,
-      //     `\`${command.description}\``
-      //   )
-      // );
-      categories.map((category) =>
-        Embed.addField(`${category.title}`, `\`${category.description}\``)
-      );
+
+      groups.map((group) => {
+        if (group.id != "commands" && group.id != "util") {
+          Embed.addField(`${group.id}`, `\`${group.name}\``);
+        }
+      });
 
       return message.channel.send(Embed);
     }
-    cmdarg = cmdarg[0].toUpperCase() + cmdarg.substring(1);
 
-    const isvaildcmdarg = categories.some((cat) => cat.title === cmdarg);
-    if (isvaildcmdarg) {
-      const { commands } = message.client;
-      const activecmd = commands.filter(
-        (command) => command.active === true && command.category === cmdarg
+    Embed.setColor("RANDOM")
+      .setTitle(cmdarg)
+      .setAuthor(
+        `${this.client.user.username}`,
+        "https://i.imgur.com/qHGBdPT.png"
       );
-      Embed.setColor("RANDOM")
-        .setTitle(cmdarg)
-        .setAuthor(
-          `${message.client.user.username}`,
-          "https://i.imgur.com/qHGBdPT.png"
-        );
-      activecmd.map((command) =>
+    commands.map((command) => {
+      if (command.groupID === cmdarg) {
         Embed.addField(
-          `${myprefix.prefix}${command.name} ${
-            command.usage ? command.usage : " "
-          }`,
+          `${prefix}${command.name}`,
           `\`${command.description}\``
-        )
-      );
-      return message.channel.send(Embed);
-    }
-    return message.channel.send("Invalid command type!");
-    // console.log(isvaildcmdarg);
-  },
+        );
+        if (command.groupID === "guild") {
+          Embed.addField(
+            `${prefix}prefix`,
+            "`change command prefix for this guild`"
+          );
+        }
+      }
+    });
+    return message.channel.send(Embed);
+  }
 };

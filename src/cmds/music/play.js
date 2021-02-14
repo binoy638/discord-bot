@@ -4,16 +4,20 @@ const MusicPlayer = require("../../functions/music/musicPlayer");
 const search = require("../../functions/music/search");
 const statusMsg = require("../../functions/music/statusMsg");
 const cache = require("../../functions/cache");
-module.exports = {
-  name: "play",
-  usage: "[song name]",
-  category: "Music",
-  description: "Play music in a voice channel",
-  active: true,
-  args: true,
-
-  async execute(message, args) {
-    const query = args.join(" ");
+const Commando = require("discord.js-commando");
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "play",
+      group: "music",
+      memberName: "play",
+      description: "Play a song.",
+    });
+  }
+  async run(message, args) {
+    const query = args;
     let result = cache.get(`SongQuery:${query}`);
     if (!result) {
       result = await search(query);
@@ -46,5 +50,5 @@ module.exports = {
     musicPlayer.addSong(result);
 
     cache.set(message.channel.id, musicPlayer);
-  },
+  }
 };

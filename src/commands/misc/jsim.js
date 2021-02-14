@@ -1,12 +1,20 @@
 const onJoin = require("../../functions/onJoin");
 
-module.exports = {
-  name: "joinsim",
-  category: "Misc",
-  active: false,
-  description: "Simluate a member join",
+const Commando = require("discord.js-commando");
 
-  execute(message, args) {
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "jsim",
+      group: "misc",
+      memberName: "jsim",
+      description: "Simulate a memeber join.",
+      ownerOnly: true,
+    });
+  }
+  async run(message, args) {
     onJoin(message.member);
-  },
+  }
 };

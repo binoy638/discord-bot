@@ -1,12 +1,19 @@
 const cache = require("../../functions/cache");
 const statusMsg = require("../../functions/music/statusMsg");
+const Commando = require("discord.js-commando");
 
-module.exports = {
-  name: "resume",
-  description: "Resume the currently playing song.",
-  category: "Music",
-  active: true,
-  async execute(message, args) {
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "resume",
+      group: "music",
+      memberName: "resume",
+      description: "Resume currently paused song.",
+    });
+  }
+  async run(message, args) {
     let voiceConnection = message.guild.me.voice.connection;
 
     if (!voiceConnection) {
@@ -29,5 +36,5 @@ module.exports = {
       return statusMsg(currentSong, message.channel, "playing");
     }
     message.channel.send("`Resumed 🎵`");
-  },
+  }
 };

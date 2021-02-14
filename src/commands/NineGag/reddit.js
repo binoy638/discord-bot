@@ -1,12 +1,20 @@
 const Discord = require("discord.js");
 const api = require("imageapi.js");
-var job = require("../../functions/JobManager");
-module.exports = {
-  name: "meme",
-  description: "Get a random image from r/memes,r/meme or r/funny.",
-  category: "Memes",
-  active: true,
-  async execute(message, args) {
+
+const Commando = require("discord.js-commando");
+
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
+  constructor(client) {
+    super(client, {
+      name: "meme",
+      group: "fun",
+      memberName: "meme",
+      description: "Get a random meme from a reddit",
+    });
+  }
+  async run(message) {
     let subreddits = ["memes", "meme", "funny"];
     let subreddit = subreddits[Math.floor(Math.random() * subreddits.length)];
 
@@ -15,5 +23,5 @@ module.exports = {
     const Embed = new Discord.MessageEmbed().setColor("RANDOM").setImage(img);
 
     message.channel.send(Embed);
-  },
+  }
 };
