@@ -3,6 +3,7 @@ const MusicPlayer = require("../../functions/music/musicPlayer");
 const search = require("../../functions/music/search");
 const statusMsg = require("../../functions/music/statusMsg");
 const cache = require("../../functions/cache");
+
 const Commando = require("discord.js-commando");
 
 module.exports = class AddCommand extends (
@@ -49,14 +50,31 @@ module.exports = class AddCommand extends (
     let dispatcher = await voiceChannel.join();
 
     dispatcher.play(stream, { type: "opus" });
+
+    try {
+      let info = await ytdl.getBasicInfo(result.link);
+      // console.log(info.videoDetails);
+      const song = info.videoDetails.media.song;
+      const artist = info.videoDetails.media.artist;
+      // console.log(song);
+      // console.log(artist);
+      if (song && artist) {
+        result["song"] = song;
+        result["artist"] = artist;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+
     statusMsg(result, message.channel, "playing");
 
-    const musicPlayer = new MusicPlayer(message.channel.id, voiceChannel.id);
+    const musicPlayer = new MusicPlayer(message.channel.id);
     if (!musicPlayer.isQueueEmpty()) {
       musicPlayer.clearQueue();
     }
     musicPlayer.addSong(result);
 
-    cache.set(message.channel.id, musicPlayer);
+    cache.set(`MusicPlayer-${message.channel.guild.id}`, musicPlayer);
+    console.log(musicPlayer.showQueue());
   }
 };
