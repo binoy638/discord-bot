@@ -1,9 +1,10 @@
 var SpotifyWebApi = require("spotify-web-api-node");
 var cache = require("../cache.js");
+const search = require("./search.js");
 const spotify_access_token = require("./spotify_access_token.js");
 var spotifyApi = new SpotifyWebApi();
 
-module.exports = async (query) => {
+module.exports = async (slug) => {
   let accessToken = cache.get("spotify-access-token");
   if (!accessToken) {
     const result = await spotify_access_token();
@@ -17,7 +18,7 @@ module.exports = async (query) => {
   }
 
   spotifyApi.setAccessToken(accessToken);
-  var response = await spotifyApi.getPlaylist(query);
+  var response = await spotifyApi.getPlaylist(slug);
   //   console.log(response);
 
   let data = {};
@@ -29,36 +30,22 @@ module.exports = async (query) => {
     data.playlistInfo = playlistInfo;
     data.tracks = [];
     let playlist = response.body.tracks.items;
-    playlist.map((tracks) => {
+    playlist.map((tracks, index) => {
       const artists = tracks.track.artists.map((artist) => artist.name).join();
-      const image = tracks.track.album.images[2];
+      // const image = tracks.track.album.images[2];
+      const track = tracks.track.name;
+      const _id = index + 1;
       const obj = {
-        track: tracks.track.name,
+        _id,
+        track,
         artists,
-        image,
+        // playerInfo,
+        // source: "spotify",
+        // image,
       };
       data.tracks.push(obj);
     });
     return data;
   }
   return null;
-  //   console.log(data);
-  //     const artist = response.body.tracks.items[0].artists[0].name;
-  //     // const artistsarray = response.body.tracks.items[0].artists;
-
-  //     // const artists = artistsarray.map((artist) => {
-  //     //   return artist.name;
-  //     // });
-
-  //     const track = response.body.tracks.items[0].name;
-  //     const image = response.body.tracks.items[0].album.images[2].url;
-  //     const search_query = `${artist} ${track}`;
-
-  //     return {
-  //       artist: artist,
-  //       track: track,
-  //       image: image,
-  //       search_query: search_query,
-  //     };
-  //   }
 };

@@ -1,6 +1,7 @@
 const cache = require("../../functions/cache");
 const statusMsg = require("../../functions/music/statusMsg");
 const Commando = require("discord.js-commando");
+const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
 
 module.exports = class AddCommand extends (
   Commando.Command
@@ -30,7 +31,8 @@ module.exports = class AddCommand extends (
     dispatcher.resume();
     dispatcher.pause();
     dispatcher.resume();
-    const musicPlayer = cache.get(message.channel.id);
+
+    const musicPlayer = musicPlayerInstance(message.channel);
     if (musicPlayer) {
       const currentSong = musicPlayer.currentSong();
 

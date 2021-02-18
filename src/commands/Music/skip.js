@@ -8,10 +8,10 @@ module.exports = class AddCommand extends (
 ) {
   constructor(client) {
     super(client, {
-      name: "pause",
+      name: "skip",
       group: "music",
-      aliases: ["ps"],
-      memberName: "pause",
+      aliases: ["fs"],
+      memberName: "skip",
       description: "Pause currently playing song.",
     });
   }
@@ -19,23 +19,15 @@ module.exports = class AddCommand extends (
     let voiceConnection = message.guild.me.voice.connection;
 
     if (!voiceConnection) {
-      return message.channel.send("`No Song is playing to pause! ⏸️`");
+      return message.channel.send("`No Song is playing to skip ⏭️`");
     }
     let dispatcher = voiceConnection.dispatcher;
     if (!dispatcher) {
-      return message.channel.send("`No Song is playing to pause! ⏸️`");
+      return message.channel.send("`No Song is playing to skip ⏭️`");
     }
-    if (dispatcher.paused) {
-      return message.channel.send("`Song is already paused! ⏸️`");
-    }
-    dispatcher.pause();
 
-    const musicPlayer = musicPlayerInstance(message.channel);
-    if (musicPlayer) {
-      const currentSong = musicPlayer.currentSong();
+    dispatcher.end();
 
-      return statusMsg(currentSong, message.channel, "paused");
-    }
-    message.channel.send("`Paused ⏸️`");
+    message.channel.send("`Skipped ⏭️`");
   }
 };
