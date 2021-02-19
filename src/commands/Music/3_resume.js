@@ -10,7 +10,7 @@ module.exports = class AddCommand extends (
       name: "resume",
       group: "music",
       aliases: ["rs"],
-      memberName: "resume",
+      memberName: "3resume",
       description: "Resume currently paused song.",
     });
   }

@@ -9,9 +9,9 @@ module.exports = class AddCommand extends (
     super(client, {
       name: "playlistadd",
       group: "music",
-      memberName: "playlistadd",
+      memberName: "8playlistadd",
       aliases: ["playlistadd", "playlist_add", "addtrack", "add"],
-      description: "Manage your playlist.",
+      description: "Add tracks to your playlist.",
       args: [
         {
           key: "track",

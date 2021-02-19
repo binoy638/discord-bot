@@ -1,10 +1,6 @@
 const Commando = require("discord.js-commando");
-const Discord = require("discord.js");
-const cache = require("../../functions/cache");
 const ytdl = require("discord-ytdl-core");
-
 const find = require("../../functions/music/playlist/find");
-const MusicPlayer = require("../../functions/music/musicPlayer");
 const statusMsg = require("../../functions/music/statusMsg");
 const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
 const search = require("../../functions/music/search");
@@ -16,15 +12,16 @@ module.exports = class AddCommand extends (
     super(client, {
       name: "playlistplay",
       group: "music",
-      memberName: "playlistplay",
+      memberName: "6playlistplay",
       aliases: ["plp", "playlist_play", "playplaylist"],
-      description: "Play your playlist",
+      description: "Play your tracks from your playlist",
       args: [
         {
           key: "id",
           prompt: "Which track you want to play?",
           type: "integer",
-          default: "1",
+          default: 1,
+          min: 1,
         },
       ],
     });
@@ -47,10 +44,15 @@ module.exports = class AddCommand extends (
 
     musicPlayer.clearQueue();
     musicPlayer.addplaylist(playlist);
+    const status = musicPlayer.setCurrentSong(trackno);
+    if (status === false) {
+      return message.reply(`Can't find \`track ${trackno}\` in your playlist.`);
+    }
 
     const connection = await voice.channel.join();
     async function playSong(connection, channel, musicPlayer) {
       let currentSong = musicPlayer.currentSong();
+
       if (!currentSong.playerInfo) {
         const searchQuery = `${currentSong.artists} ${currentSong.track}`;
         const playerInfo = await search(searchQuery);
@@ -62,11 +64,9 @@ module.exports = class AddCommand extends (
         opusEncoded: true,
       });
       const dispatcher = connection.play(stream, { type: "opus" });
-      console.log(musicPlayer.showQueue());
       statusMsg(currentSong, channel, "playing");
       dispatcher.on("finish", () => {
-        musicPlayer.skipSong();
-        console.log("skipping song");
+        musicPlayer.nextSong();
         if (musicPlayer.isQueueEmpty === true) {
           connection.disconnect();
         } else {

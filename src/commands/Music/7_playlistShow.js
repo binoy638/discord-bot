@@ -12,7 +12,7 @@ module.exports = class AddCommand extends (
       name: "playlistshow",
       aliases: ["pls", "playlist_show", "showplaylist", "show"],
       group: "music",
-      memberName: "playlistshow",
+      memberName: "7playlistshow",
       description: "View your playlist.",
       args: [
         {

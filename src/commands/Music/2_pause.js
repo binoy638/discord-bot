@@ -10,7 +10,7 @@ module.exports = class AddCommand extends (
       name: "pause",
       group: "music",
       aliases: ["ps"],
-      memberName: "pause",
+      memberName: "2pause",
       description: "Pause currently playing song.",
     });
   }

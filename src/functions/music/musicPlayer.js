@@ -1,48 +1,55 @@
-const Queue = require("../utils/queue");
-
-const queue = new Queue();
 class MusicPlayer {
   constructor(textChannel) {
     this.playerInfo = {
       textChannel,
-      // voiceChannel,
-      songs: queue,
+      songs: [],
       current: 0,
-      // playing: true,
     };
   }
 
   addSong(obj) {
-    this.playerInfo.songs.enqueue(obj);
+    this.playerInfo.songs.push(obj);
   }
   skipSong() {
-    console.log("skipping song");
-    this.playerInfo.songs.dequeue();
+    if (!this.playerInfo.songs.length == 0) {
+      this.playerInfo.songs.shift();
+    }
+  }
+  setCurrentSong(no) {
+    if (no > this.playerInfo.songs.length) {
+      return false;
+    }
+    const trackno = no - 1;
+    this.playerInfo.current = trackno;
+    return true;
   }
   nextSong() {
-    const totaltracks = this.playerInfo.songs.size();
-    if (this.playerInfo.current <= totaltracks - 1) {
+    const totaltracks = this.playerInfo.songs.length;
+    if (this.playerInfo.current < totaltracks - 1) {
       this.playerInfo.current += 1;
     } else {
       this.playerInfo.current = 0;
     }
   }
   currentSong() {
-    return this.playerInfo.songs.front();
+    return this.playerInfo.songs[this.playerInfo.current];
   }
   clearQueue() {
-    this.playerInfo.songs.clear();
+    this.playerInfo.songs = [];
   }
   showQueue() {
-    return this.playerInfo.songs.show();
+    return this.playerInfo.songs;
   }
   addplaylist(playlist) {
     playlist.map((track) => {
-      this.playerInfo.songs.enqueue(track);
+      this.playerInfo.songs.push(track);
     });
   }
   isQueueEmpty() {
-    return this.playerInfo.songs.isEmpty();
+    if (this.playerInfo.songs.length == 0) {
+      return true;
+    }
+    return false;
   }
 }
 
