@@ -23,14 +23,17 @@ module.exports = class AddCommand extends (
   }
   async run(message, args) {
     const choice = args.choice;
+    const prefix = message.guild._commandPrefix;
     const { id } = message.member.user;
     if (choice === "yes") {
       const playlist = await find(id);
       if (!playlist) {
-        return message.channel.send("You don't have a playlist.");
+        return message.reply(
+          `You don't have any playlist currently.\nUse \`${prefix}playlistadd\` to create a playlist.`
+        );
       }
       await clear(id);
-      message.channel.send("Playlist deleted.");
+      message.reply("Playlist deleted.");
     }
   }
 };

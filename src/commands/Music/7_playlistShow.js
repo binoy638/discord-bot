@@ -37,7 +37,9 @@ module.exports = class AddCommand extends (
     }
 
     if (!playlist) {
-      return message.reply("You don't have a active playlist.");
+      return message.reply(
+        `You don't have any playlist currently.\nUse \`${prefix}playlistadd\` to create a playlist.`
+      );
     }
 
     const totaltracks = playlist.length;
