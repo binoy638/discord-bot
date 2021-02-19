@@ -67,11 +67,9 @@ module.exports = class AddCommand extends (
       opusEncoded: true,
     });
 
-    let dispatcher = await voiceChannel.join();
-    dispatcher.on("finish", () => {
-      dispatcher.disconnect();
-    });
-    dispatcher.play(stream, { type: "opus" });
+    let connection = await voiceChannel.join();
+
+    const dispatcher = connection.play(stream, { type: "opus" });
 
     statusMsg(track, message.channel, "playing");
 
