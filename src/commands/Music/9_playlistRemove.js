@@ -9,7 +9,7 @@ module.exports = class AddCommand extends (
     super(client, {
       name: "playlistremove",
       group: "music",
-      memberName: "playlistremove",
+      memberName: "9playlistremove",
       aliases: ["plr", "playlist_remove", "remove"],
       description: "Remove track from your playlist.",
       args: [

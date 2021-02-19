@@ -8,7 +8,7 @@ module.exports = class AddCommand extends (
       name: "disconnect",
       group: "music",
       aliases: ["dc"],
-      memberName: "disconnect",
+      memberName: "4disconnect",
       description: "Make the bot leave a voice channel.",
     });
   }

@@ -30,9 +30,14 @@ module.exports = class AddCommand extends (
     });
   }
   async run(message, args) {
+    // const q = this.client.registry.findGroups("music");
+
+    // const group = q.map((commands) => )
+
     const commands = this.client.registry.commands.filter(
       (cmd) => cmd.ownerOnly != true
     );
+
     const prefix = message.guild._commandPrefix;
     const groups = this.client.registry.groups;
 
@@ -60,6 +65,7 @@ module.exports = class AddCommand extends (
         `${this.client.user.username}`,
         "https://i.imgur.com/qHGBdPT.png"
       );
+
     commands.map((command) => {
       if (command.groupID === cmdarg) {
         Embed.addField(
@@ -74,6 +80,7 @@ module.exports = class AddCommand extends (
         }
       }
     });
+
     return message.channel.send(Embed);
   }
 };

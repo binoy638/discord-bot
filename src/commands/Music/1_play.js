@@ -13,8 +13,8 @@ module.exports = class AddCommand extends (
     super(client, {
       name: "play",
       group: "music",
-      aliases: ["p"],
-      memberName: "play",
+      aliases: ["p", "song", "music"],
+      memberName: "1play",
       description: "Play a song.",
       args: [
         {
@@ -68,7 +68,9 @@ module.exports = class AddCommand extends (
     });
 
     let dispatcher = await voiceChannel.join();
-
+    dispatcher.on("finish", () => {
+      dispatcher.disconnect();
+    });
     dispatcher.play(stream, { type: "opus" });
 
     statusMsg(track, message.channel, "playing");

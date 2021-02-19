@@ -8,8 +8,8 @@ module.exports = class AddCommand extends (
       name: "skip",
       group: "music",
       aliases: ["fs"],
-      memberName: "skip",
-      description: "Pause currently playing song.",
+      memberName: "5skip",
+      description: "Skip currently playing song.",
     });
   }
   async run(message) {
