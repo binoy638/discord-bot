@@ -1,5 +1,6 @@
 const mongo = require("../../mongo");
 const playlistSchema = require("../../schemas/playlistSchema");
+const cache = require("../cache");
 
 module.exports = async (id, trackInfo) => {
   await mongo().then(async (mongoose) => {
@@ -16,6 +17,7 @@ module.exports = async (id, trackInfo) => {
           },
         }
       );
+
       console.log("added playlist info");
     } finally {
       mongoose.connection.close();

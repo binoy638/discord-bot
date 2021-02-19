@@ -17,7 +17,7 @@ module.exports = class AddCommand extends (
       description: "Play your tracks from your playlist",
       args: [
         {
-          key: "id",
+          key: "track",
           prompt: "Which track you want to play?",
           type: "integer",
           default: 1,
@@ -27,7 +27,7 @@ module.exports = class AddCommand extends (
     });
   }
   async run(message, args) {
-    const trackno = args.id;
+    const trackno = args.track;
     const prefix = message.guild._commandPrefix;
     const { id } = message.member.user;
     const { voice } = message.member;
@@ -55,8 +55,9 @@ module.exports = class AddCommand extends (
     const connection = await voice.channel.join();
     async function playSong(connection, channel, musicPlayer) {
       let currentSong = musicPlayer.currentSong();
-
+      console.log(currentSong);
       if (!currentSong.playerInfo) {
+        console.log("inside current song");
         const searchQuery = `${currentSong.artists} ${currentSong.track}`;
         const playerInfo = await search(searchQuery);
         currentSong.playerInfo = playerInfo;
