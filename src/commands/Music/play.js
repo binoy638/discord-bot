@@ -1,10 +1,10 @@
 const ytdl = require("discord-ytdl-core");
-const MusicPlayer = require("../../functions/music/musicPlayer");
 const search = require("../../functions/music/search");
 const statusMsg = require("../../functions/music/statusMsg");
 const cache = require("../../functions/cache");
 
 const Commando = require("discord.js-commando");
+const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
 
 module.exports = class AddCommand extends (
   Commando.Command
@@ -27,22 +27,42 @@ module.exports = class AddCommand extends (
   }
   async run(message, args) {
     const query = args.query;
-    let result = cache.get(`SongQuery:${query}`);
-    if (!result) {
-      result = await search(query);
+    let track = cache.get(`SongQuery:${query}`);
+    if (!track) {
+      const result = await search(query);
+      if (result) {
+        let info = await ytdl.getBasicInfo(result.link);
 
-      cache.set(`SongQuery:${query}`, result);
+        const song = info.videoDetails.media.song;
+        const artist = info.videoDetails.media.artist;
+
+        if (song && artist) {
+          result["song"] = song;
+          result["artist"] = artist;
+        }
+        track = {
+          track: result.song ? result.song : result.title,
+          artists: result.artist ? result.artist : "",
+          playerInfo: {
+            link: result.link,
+            title: result.title,
+            image: result.image,
+          },
+        };
+      }
+
+      cache.set(`SongQuery:${query}`, track);
     }
 
-    if (!result) {
+    if (!track) {
       message.channel.send("No results found");
     }
-    if (!ytdl.validateURL(result.link)) {
+    if (!ytdl.validateURL(track.playerInfo.link)) {
       message.channel.send("No results found");
     }
     const voiceChannel = message.member.voice.channel;
     if (!voiceChannel) return message.channel.send("No voice channel.");
-    let stream = ytdl(result.link, {
+    let stream = ytdl(track.playerInfo.link, {
       filter: "audioonly",
       opusEncoded: true,
     });
@@ -51,30 +71,12 @@ module.exports = class AddCommand extends (
 
     dispatcher.play(stream, { type: "opus" });
 
-    try {
-      let info = await ytdl.getBasicInfo(result.link);
-      // console.log(info.videoDetails);
-      const song = info.videoDetails.media.song;
-      const artist = info.videoDetails.media.artist;
-      // console.log(song);
-      // console.log(artist);
-      if (song && artist) {
-        result["song"] = song;
-        result["artist"] = artist;
-      }
-    } catch (e) {
-      console.log(e);
-    }
+    statusMsg(track, message.channel, "playing");
 
-    statusMsg(result, message.channel, "playing");
-
-    const musicPlayer = new MusicPlayer(message.channel.id);
+    let musicPlayer = musicPlayerInstance(message.channel);
     if (!musicPlayer.isQueueEmpty()) {
       musicPlayer.clearQueue();
     }
-    musicPlayer.addSong(result);
-
-    cache.set(`MusicPlayer-${message.channel.guild.id}`, musicPlayer);
-    console.log(musicPlayer.showQueue());
+    musicPlayer.addSong(track);
   }
 };

@@ -15,7 +15,7 @@ module.exports = class AddCommand extends (
   async run(message) {
     const connection = message.guild.me.voice.channel;
     if (!connection) {
-      message.reply("I am not connected to a voice channel.");
+      return message.reply("I am not connected to a voice channel.");
     }
 
     connection.leave();

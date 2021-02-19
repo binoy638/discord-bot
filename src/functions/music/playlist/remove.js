@@ -20,6 +20,9 @@ module.exports = async (id, track) => {
           new: true,
         }
       );
+      const newPlaylist = resp.playlist;
+
+      cache.set(`Playlist-${id}`, newPlaylist);
     } catch (e) {
       return false;
     } finally {

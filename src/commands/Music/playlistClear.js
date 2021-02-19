@@ -1,20 +1,15 @@
 const Commando = require("discord.js-commando");
-const Discord = require("discord.js");
-const cache = require("../../functions/cache");
-const play = require("../../functions/music/play");
 const find = require("../../functions/music/playlist/find");
-const show = require("../../functions/music/playlist/show");
-const add = require("../../functions/music/playlist/add");
-const getplaylist = require("../../functions/music/getplaylist");
 const clear = require("../../functions/music/playlist/clear");
 module.exports = class AddCommand extends (
   Commando.Command
 ) {
   constructor(client) {
     super(client, {
-      name: "playlist_clear",
+      name: "playlistclear",
       group: "music",
-      memberName: "playlist_clear",
+      memberName: "playlistclear",
+      aliases: ["playlist_clear", "playlistclr", "clear", "clr"],
       description: "Delete your playlist.",
       args: [
         {
