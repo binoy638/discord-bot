@@ -1,5 +1,4 @@
 const Commando = require("discord.js-commando");
-const getplaylist = require("../../functions/music/getplaylist");
 const cache = require("../../functions/cache");
 const Discord = require("discord.js");
 const find = require("../../functions/music/playlist/find");
@@ -10,10 +9,10 @@ module.exports = class AddCommand extends (
 ) {
   constructor(client) {
     super(client, {
-      name: "playlist_show",
-      aliases: ["spl"],
+      name: "playlistshow",
+      aliases: ["pls", "playlist_show", "showplaylist", "show"],
       group: "music",
-      memberName: "playlist_show",
+      memberName: "playlistshow",
       description: "View your playlist.",
       args: [
         {
@@ -29,18 +28,17 @@ module.exports = class AddCommand extends (
   }
   async run(message, args) {
     const prefix = message.guild._commandPrefix;
-    // const { member } = message;
     const { username } = message.member.user;
     const { id } = message.member.user;
-    // let data = cache.get(`Playlist-${member.id}`);
-    const playlist = await find(id);
+    let playlist = cache.get(`Playlist-${id}`);
     if (!playlist) {
-      return message.reply("You have no playlist currently.");
+      playlist = await find(id);
+      cache.set(`Playlist-${id}`, playlist);
     }
 
-    // console.log(data.playlistInfo);
-    // const page = args.page;
-    // const index = page * 10;
+    if (!playlist) {
+      return message.reply("You don't have a active playlist.");
+    }
 
     const totaltracks = playlist.length;
     const page = args.page;

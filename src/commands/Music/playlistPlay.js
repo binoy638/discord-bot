@@ -14,10 +14,10 @@ module.exports = class AddCommand extends (
 ) {
   constructor(client) {
     super(client, {
-      name: "playlist_play",
+      name: "playlistplay",
       group: "music",
-      memberName: "playlist_play",
-
+      memberName: "playlistplay",
+      aliases: ["plp", "playlist_play", "playplaylist"],
       description: "Play your playlist",
       args: [
         {
@@ -62,7 +62,7 @@ module.exports = class AddCommand extends (
         opusEncoded: true,
       });
       const dispatcher = connection.play(stream, { type: "opus" });
-
+      console.log(musicPlayer.showQueue());
       statusMsg(currentSong, channel, "playing");
       dispatcher.on("finish", () => {
         musicPlayer.skipSong();

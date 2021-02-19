@@ -18,34 +18,40 @@ module.exports = async (slug) => {
   }
 
   spotifyApi.setAccessToken(accessToken);
-  var response = await spotifyApi.getPlaylist(slug);
-  //   console.log(response);
 
-  let data = {};
-  if (response.statusCode === 200) {
-    const title = response.body.name;
-    const owner = response.body.owner.display_name;
-    // const playlistimage = response.body.images[2].url;
-    const playlistInfo = { title, owner };
-    data.playlistInfo = playlistInfo;
-    data.tracks = [];
-    let playlist = response.body.tracks.items;
-    playlist.map((tracks, index) => {
-      const artists = tracks.track.artists.map((artist) => artist.name).join();
-      // const image = tracks.track.album.images[2];
-      const track = tracks.track.name;
-      const _id = index + 1;
-      const obj = {
-        _id,
-        track,
-        artists,
-        // playerInfo,
-        // source: "spotify",
-        // image,
-      };
-      data.tracks.push(obj);
-    });
-    return data;
+  try {
+    const response = await spotifyApi.getPlaylist(slug);
+
+    let data = {};
+    if (response.statusCode === 200) {
+      const title = response.body.name;
+      const owner = response.body.owner.display_name;
+      // const playlistimage = response.body.images[2].url;
+      const playlistInfo = { title, owner };
+      data.playlistInfo = playlistInfo;
+      data.tracks = [];
+      let playlist = response.body.tracks.items;
+      playlist.map((tracks, index) => {
+        const artists = tracks.track.artists
+          .map((artist) => artist.name)
+          .join();
+        // const image = tracks.track.album.images[2];
+        const track = tracks.track.name;
+
+        const obj = {
+          track,
+          artists,
+          // playerInfo,
+          // source: "spotify",
+          // image,
+        };
+        data.tracks.push(obj);
+      });
+      return data;
+    }
+
+    return null;
+  } catch (error) {
+    console.log("Invalid playlist id");
   }
-  return null;
 };
