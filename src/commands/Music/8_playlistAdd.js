@@ -43,7 +43,9 @@ module.exports = class AddCommand extends (
           );
         }
       } catch {
-        return message.reply("No music is playing currently");
+        return message.reply(
+          "No music is playing currently to add to your playlist.\nPlay a song before you use this command or provide a spotify playlist."
+        );
       }
 
       return message.channel.reply(

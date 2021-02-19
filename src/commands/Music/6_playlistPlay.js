@@ -28,11 +28,14 @@ module.exports = class AddCommand extends (
   }
   async run(message, args) {
     const trackno = args.id;
+    const prefix = message.guild._commandPrefix;
     const { id } = message.member.user;
     const { voice } = message.member;
     const playlist = await find(id);
     if (!playlist) {
-      return message.reply("You don't have a playlist.");
+      return message.reply(
+        `You don't have any playlist currently.\nUse \`${prefix}playlistadd\` to create a playlist.`
+      );
     }
 
     if (!voice.channelID) {

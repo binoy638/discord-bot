@@ -25,10 +25,16 @@ module.exports = class AddCommand extends (
   async run(message, args) {
     const trackno = args.track - 1;
     const { id } = message.member.user;
-
+    const prefix = message.guild._commandPrefix;
     let playlist = cache.get(`Playlist-${id}`);
     if (!playlist) {
       playlist = await find(id);
+    }
+
+    if (!playlist) {
+      return message.reply(
+        `You don't have any playlist currently.\nUse \`${prefix}playlistadd\` to create a playlist.`
+      );
     }
 
     const track = playlist[trackno];

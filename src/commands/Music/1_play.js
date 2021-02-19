@@ -70,7 +70,9 @@ module.exports = class AddCommand extends (
     let connection = await voiceChannel.join();
 
     const dispatcher = connection.play(stream, { type: "opus" });
-
+    dispatcher.on("finish", () => {
+      musicPlayer.clearQueue();
+    });
     statusMsg(track, message.channel, "playing");
 
     let musicPlayer = musicPlayerInstance(message.channel);
