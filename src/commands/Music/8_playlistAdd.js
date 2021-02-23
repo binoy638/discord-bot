@@ -28,7 +28,13 @@ module.exports = class AddCommand extends (
     if (!url) {
       try {
         let musicPlayer = musicPlayerInstance(message.channel);
-
+        console.log("inside add");
+        console.log(musicPlayer.showQueue());
+        if (musicPlayer.isQueueEmpty()) {
+          return message.reply(
+            "No music is playing currently to add to your playlist.\nPlay a song before you use this command or provide a spotify playlist."
+          );
+        }
         const currentTrack = musicPlayer.currentSong();
 
         const response = await add(id, currentTrack);
