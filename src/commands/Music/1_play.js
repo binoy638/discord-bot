@@ -79,6 +79,10 @@ module.exports = class AddCommand extends (
     if (!musicPlayer.isQueueEmpty()) {
       musicPlayer.clearQueue();
     }
+    console.log("inside play");
+    console.log(musicPlayer.isQueueEmpty());
     musicPlayer.addSong(track);
+
+    console.log(musicPlayer.showQueue());
   }
 };
