@@ -21,6 +21,7 @@ module.exports = class AddCommand extends (
     });
   }
   async run(message, args) {
+    let master = message.member.user;
     function chunkArray(array, size) {
       return Array.from(
         { length: Math.ceil(array.length / size) },
@@ -51,9 +52,10 @@ module.exports = class AddCommand extends (
       if (speaking.bitfield == 0 || user.bot) {
         return;
       }
-
-      // console.log(`I'm listening to ${user.username}`);
-
+      if (user != master) {
+        return;
+      }
+      console.log(`listening to ${user.username}`);
       const userStreams = connection.receiver.createStream(user, {
         mode: "opus",
       });
@@ -87,11 +89,13 @@ module.exports = class AddCommand extends (
             let index = userHandlers.process(frame);
             if (index !== -1) {
               if (index == 0) {
-                console.log("listening..");
-                voice_cmd(connection, message.channel, user);
+                console.log("wakeword detected");
+                // voice_cmd(connection, message.channel, user);
+                message.channel.send(`Listening to ${master.username}`);
               } else if (index == 1) {
-                console.log("listening..");
-                voice_cmd(connection, message.channel, user);
+                console.log("wakeword detected");
+                message.channel.send(`Listening to ${master.username}`);
+                // voice_cmd(connection, message.channel, user);
               }
             }
           }
