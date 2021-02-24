@@ -32,7 +32,7 @@ module.exports = class AddCommand extends (
           `You don't have any playlist currently.\nUse \`${prefix}playlistadd\` to create a playlist.`
         );
       }
-      await clear(id);
+      await clear(id, message.channel);
       message.reply("Playlist deleted.");
     }
   }

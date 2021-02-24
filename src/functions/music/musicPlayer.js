@@ -55,6 +55,9 @@ class MusicPlayer {
   }
 
   currentSong() {
+    if (this.playerInfo.playlist.length === 0) {
+      return;
+    }
     return this.playerInfo.playlist[this.playerInfo.current];
   }
   clearQueue() {
