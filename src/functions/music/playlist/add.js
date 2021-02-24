@@ -1,7 +1,8 @@
 const mongo = require("../../../mongo");
 const playlistSchema = require("../../../schemas/playlistSchema");
 const cache = require("../../cache");
-module.exports = async (id, playlist) => {
+const musicPlayerInstance = require("../musicPlayerInstance");
+module.exports = async (id, playlist, channel) => {
   let resp;
   await mongo().then(async (mongoose) => {
     try {
@@ -31,6 +32,15 @@ module.exports = async (id, playlist) => {
   });
 
   if (resp) {
+    let musicPlayer = musicPlayerInstance(channel);
+    if (musicPlayer) {
+      const plst = cache.get(`Playlist-${id}`);
+      musicPlayer.flushcache();
+      musicPlayer.addplaylist(plst);
+      if (musicPlayer.isShuffled === true) {
+        musicPlayer.shufflePlaylist();
+      }
+    }
     return true;
   }
   return false;

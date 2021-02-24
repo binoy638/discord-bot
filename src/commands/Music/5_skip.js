@@ -25,6 +25,6 @@ module.exports = class AddCommand extends (
 
     dispatcher.end();
 
-    message.channel.send("`Skipped ⏭️`");
+    // message.channel.send("`Skipped ⏭️`");
   }
 };

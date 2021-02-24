@@ -35,7 +35,7 @@ module.exports = class AddCommand extends (
         }
         const currentTrack = musicPlayer.currentSong();
 
-        const response = await add(id, currentTrack);
+        const response = await add(id, currentTrack, message.channel);
 
         if (response === true) {
           return message.reply(
@@ -62,7 +62,7 @@ module.exports = class AddCommand extends (
       if (!playlist) {
         return message.reply("Can't fetch playlist.\nCheck your playlist url.");
       }
-      const response = await add(id, playlist.tracks);
+      const response = await add(id, playlist.tracks, message.channel);
 
       if (response === true) {
         return message.reply("Spotify playlist added.");

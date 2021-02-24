@@ -81,7 +81,5 @@ module.exports = class AddCommand extends (
     }
 
     musicPlayer.addSong(track);
-
-    console.log(musicPlayer.showQueue());
   }
 };
