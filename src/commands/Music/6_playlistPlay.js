@@ -54,6 +54,9 @@ module.exports = class AddCommand extends (
     const connection = await voice.channel.join();
     async function playSong(connection, channel, musicPlayer) {
       let currentSong = musicPlayer.currentSong();
+      if (!currentSong) {
+        return;
+      }
       if (!currentSong.playerInfo) {
         const searchQuery = `${currentSong.artists} ${currentSong.track}`;
         const playerInfo = await search(searchQuery);
