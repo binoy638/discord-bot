@@ -17,8 +17,6 @@ module.exports = async (id, trackInfo) => {
           },
         }
       );
-
-      console.log("added playlist info");
     } finally {
       mongoose.connection.close();
     }

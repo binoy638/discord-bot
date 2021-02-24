@@ -17,17 +17,16 @@ module.exports = class AddCommand extends (
       description: "Play your tracks from your playlist",
       args: [
         {
-          key: "track",
-          prompt: "Which track you want to play?",
-          type: "integer",
-          default: 1,
-          min: 1,
+          key: "shuffle",
+          prompt: "Do you want to shuffle your playlist?",
+          type: "string",
+          oneOf: ["yes", "no"],
         },
       ],
     });
   }
   async run(message, args) {
-    const trackno = args.track;
+    const shuffle = args.shuffle;
     const prefix = message.guild._commandPrefix;
     const { id } = message.member.user;
     const { voice } = message.member;
@@ -47,17 +46,15 @@ module.exports = class AddCommand extends (
 
     musicPlayer.clearQueue();
     musicPlayer.addplaylist(playlist);
-    const status = musicPlayer.setCurrentSong(trackno);
-    if (status === false) {
-      return message.reply(`Can't find \`track ${trackno}\` in your playlist.`);
+
+    if (shuffle === "yes") {
+      musicPlayer.shufflePlaylist();
     }
 
     const connection = await voice.channel.join();
     async function playSong(connection, channel, musicPlayer) {
       let currentSong = musicPlayer.currentSong();
-      console.log(currentSong);
       if (!currentSong.playerInfo) {
-        console.log("inside current song");
         const searchQuery = `${currentSong.artists} ${currentSong.track}`;
         const playerInfo = await search(searchQuery);
         currentSong.playerInfo = playerInfo;
@@ -68,9 +65,10 @@ module.exports = class AddCommand extends (
         opusEncoded: true,
       });
       const dispatcher = connection.play(stream, { type: "opus" });
-      statusMsg(currentSong, channel, "playing");
+      const msg = await statusMsg(currentSong, channel, "playing");
       dispatcher.on("finish", () => {
         musicPlayer.nextSong();
+        msg.delete();
         if (musicPlayer.isQueueEmpty === true) {
           connection.disconnect();
         } else {

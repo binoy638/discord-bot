@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-module.exports = (data, channel, status) => {
+module.exports = async (data, channel, status) => {
   const musicEmbed = new Discord.MessageEmbed()
     .setTitle(data.playerInfo.title)
 
@@ -11,5 +11,6 @@ module.exports = (data, channel, status) => {
   } else if (status === "paused") {
     musicEmbed.setDescription("Paused ⏸️");
   }
-  channel.send(musicEmbed);
+  const msg = await channel.send(musicEmbed);
+  return msg;
 };

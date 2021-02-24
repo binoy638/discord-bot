@@ -39,7 +39,7 @@ module.exports = class AddCommand extends (
 
     const track = playlist[trackno];
     if (track) {
-      const resp = await remove(id, track);
+      const resp = await remove(id, track, message.channel);
       if (resp === true) {
         return message.reply(`\`${track.track}\` removed`);
       } else {
