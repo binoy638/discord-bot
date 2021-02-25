@@ -5,9 +5,8 @@ const statusMsg = require("../../functions/music/statusMsg");
 const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
 const search = require("../../functions/music/search");
 const addplayerInfo = require("../../functions/music/addplayerInfo");
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+const cache = require("../../functions/cache");
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "playlistplay",
@@ -30,7 +29,12 @@ module.exports = class AddCommand extends (
     const prefix = message.guild._commandPrefix;
     const { id } = message.member.user;
     const { voice } = message.member;
-    const playlist = await find(id);
+    let playlist = cache.get(`Playlist-${id}`);
+    if (!playlist) {
+      playlist = await find(id);
+      cache.set(`Playlist-${id}`, playlist);
+    }
+
     if (!playlist) {
       return message.reply(
         `You don't have any playlist currently.\nUse \`${prefix}playlistadd\` to create a playlist.`
@@ -44,7 +48,7 @@ module.exports = class AddCommand extends (
 
     let musicPlayer = musicPlayerInstance(message.channel);
 
-    musicPlayer.clearQueue();
+    musicPlayer.flushcache();
     musicPlayer.addplaylist(playlist);
 
     if (shuffle === "yes") {
