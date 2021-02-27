@@ -1,14 +1,15 @@
 class MusicPlayer {
-  constructor(textChannel) {
-    textChannel = this.textChannel;
+  constructor(guildID) {
     this.playerInfo = {
-      textChannel,
+      guildID,
+      voiceChannel: null,
       playlist: [],
       isShuffled: false,
       shuffledtracksIds: [],
       current: 0,
       priority: false,
       timesPlayed: 0,
+      status: 0, //0 - stopped, 1 - playing, 2 - paused
     };
   }
 
@@ -103,14 +104,32 @@ class MusicPlayer {
   }
   flushcache() {
     this.playerInfo = {
-      textChannel: this.textChannel,
+      voiceChannel: null,
       playlist: [],
       isShuffled: false,
       shuffledtracksIds: [],
       current: 0,
       priority: false,
       timesPlayed: 0,
+      status: 0,
     };
+  }
+  setStatus(input) {
+    if (input === 0 || input === 1 || input === 2) {
+      this.playerInfo.status = input;
+    }
+  }
+  getStatus() {
+    return this.playerInfo.status;
+  }
+  setVoiceChannel(vc) {
+    this.playerInfo.voiceChannel = vc;
+  }
+  getCurrentVoiceChannel() {
+    return this.playerInfo.voiceChannel;
+  }
+  viewplayer() {
+    console.log(this.playerInfo);
   }
 }
 

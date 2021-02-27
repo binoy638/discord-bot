@@ -24,6 +24,7 @@ module.exports = class AddCommand extends (
   }
   async run(message, args) {
     const url = args.track;
+    const prefix = message.guild._commandPrefix;
     const { id } = message.member.user;
     if (!url) {
       try {
@@ -65,7 +66,9 @@ module.exports = class AddCommand extends (
       const response = await add(id, playlist.tracks, message.channel);
 
       if (response === true) {
-        return message.reply("Spotify playlist added.");
+        return message.reply(
+          `\`${playlist.tracks.length} tracks\` added to your playlist.\nUse \`${prefix}playlistshow\` to view your playlist.`
+        );
       } else {
         message.reply("Something went wrong,Playlist not added.");
       }
