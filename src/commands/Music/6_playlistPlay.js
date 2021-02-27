@@ -6,7 +6,9 @@ const musicPlayerInstance = require("../../functions/music/musicPlayerInstance")
 const search = require("../../functions/music/search");
 const addplayerInfo = require("../../functions/music/addplayerInfo");
 const cache = require("../../functions/cache");
-module.exports = class AddCommand extends Commando.Command {
+module.exports = class AddCommand extends (
+  Commando.Command
+) {
   constructor(client) {
     super(client, {
       name: "playlistplay",
@@ -19,7 +21,8 @@ module.exports = class AddCommand extends Commando.Command {
           key: "shuffle",
           prompt: "Do you want to shuffle your playlist?",
           type: "string",
-          oneOf: ["yes", "no"],
+          oneOf: ["shuffle"],
+          default: "",
         },
       ],
     });
@@ -47,11 +50,21 @@ module.exports = class AddCommand extends Commando.Command {
     }
 
     let musicPlayer = musicPlayerInstance(message.channel);
-
+    const botcurrentVC = message.guild.me.voice.channel;
+    if (botcurrentVC) {
+      const existingVc = musicPlayer.getCurrentVoiceChannel();
+      if (existingVc !== voice.channel.id) {
+        const status = musicPlayer.getStatus();
+        if (status !== 0) {
+          return message.reply("Already playing music in some other channel.");
+        }
+      }
+    }
     musicPlayer.flushcache();
+    musicPlayer.setVoiceChannel(voice.channel.id);
     musicPlayer.addplaylist(playlist);
 
-    if (shuffle === "yes") {
+    if (shuffle) {
       musicPlayer.shufflePlaylist();
     }
 
@@ -72,6 +85,7 @@ module.exports = class AddCommand extends Commando.Command {
         opusEncoded: true,
       });
       const dispatcher = connection.play(stream, { type: "opus" });
+      musicPlayer.setStatus(1);
       const msg = await statusMsg(currentSong, channel, "playing");
       dispatcher.on("finish", () => {
         musicPlayer.nextSong();

@@ -34,7 +34,7 @@ module.exports = class AddCommand extends (
     const musicPlayer = musicPlayerInstance(message.channel);
     if (musicPlayer) {
       const currentSong = musicPlayer.currentSong();
-
+      musicPlayer.setStatus(1);
       return statusMsg(currentSong, message.channel, "playing");
     }
     message.channel.send("`Resumed 🎵`");

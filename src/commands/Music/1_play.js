@@ -27,6 +27,7 @@ module.exports = class AddCommand extends (
   }
   async run(message, args) {
     const query = args.query;
+
     let track = cache.get(`SongQuery:${query}`);
     if (!track) {
       const result = await search(query);
@@ -55,13 +56,27 @@ module.exports = class AddCommand extends (
     }
 
     if (!track) {
-      message.channel.send("No results found");
+      return message.channel.send("No results found");
     }
     if (!ytdl.validateURL(track.playerInfo.link)) {
-      message.channel.send("No results found");
+      return message.channel.send("No results found");
     }
+
     const voiceChannel = message.member.voice.channel;
     if (!voiceChannel) return message.channel.send("No voice channel.");
+
+    let musicPlayer = musicPlayerInstance(message.channel, voiceChannel.id);
+    const botcurrentVC = message.guild.me.voice.channel;
+    if (botcurrentVC) {
+      const existingVc = musicPlayer.getCurrentVoiceChannel();
+      if (existingVc !== voiceChannel.id) {
+        const status = musicPlayer.getStatus();
+        if (status !== 0) {
+          return message.reply("Already playing music in some other channel.");
+        }
+      }
+    }
+
     let stream = ytdl(track.playerInfo.link, {
       filter: "audioonly",
       opusEncoded: true,
@@ -70,16 +85,16 @@ module.exports = class AddCommand extends (
     let connection = await voiceChannel.join();
 
     const dispatcher = connection.play(stream, { type: "opus" });
-    dispatcher.on("finish", () => {
-      musicPlayer.clearQueue();
-    });
-    statusMsg(track, message.channel, "playing");
-
-    let musicPlayer = musicPlayerInstance(message.channel);
     if (!musicPlayer.isQueueEmpty()) {
       musicPlayer.clearQueue();
     }
 
     musicPlayer.addSong(track);
+    musicPlayer.setStatus(1);
+    dispatcher.on("finish", () => {
+      musicPlayer.setStatus(0);
+      musicPlayer.clearQueue();
+    });
+    statusMsg(track, message.channel, "playing");
   }
 };

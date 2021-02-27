@@ -32,7 +32,7 @@ module.exports = class AddCommand extends (
     const musicPlayer = musicPlayerInstance(message.channel);
     if (musicPlayer) {
       const currentSong = musicPlayer.currentSong();
-
+      musicPlayer.setStatus(2);
       return statusMsg(currentSong, message.channel, "paused");
     }
     message.channel.send("`Paused ⏸️`");
