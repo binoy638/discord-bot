@@ -66,6 +66,7 @@ class MusicPlayer {
     this.playerInfo.playlist = [];
   }
   showQueue() {
+    console.log(this.playerInfo.playlist);
     return this.playerInfo.playlist;
   }
   addplaylist(playlist) {
@@ -74,7 +75,7 @@ class MusicPlayer {
     });
   }
   isQueueEmpty() {
-    if (this.playerInfo.playlist.length == 0) {
+    if (this.playerInfo.playlist.length === 0) {
       return true;
     }
     return false;
@@ -127,6 +128,12 @@ class MusicPlayer {
   }
   getCurrentVoiceChannel() {
     return this.playerInfo.voiceChannel;
+  }
+  queueCount() {
+    if (this.playerInfo.playlist.length === 0) {
+      return 0;
+    }
+    return this.playerInfo.playlist.length - 1;
   }
   viewplayer() {
     console.log(this.playerInfo);

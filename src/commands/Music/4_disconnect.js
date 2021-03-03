@@ -1,9 +1,5 @@
 const Commando = require("discord.js-commando");
-const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
-
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "disconnect",
@@ -18,11 +14,7 @@ module.exports = class AddCommand extends (
     if (!connection) {
       return message.reply("I am not connected to a voice channel.");
     }
-    let musicPlayer = musicPlayerInstance(message.channel);
-    if (musicPlayer) {
-      musicPlayer.setStatus(0);
-      musicPlayer.flushcache();
-    }
+
     connection.leave();
   }
 };

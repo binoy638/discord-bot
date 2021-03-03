@@ -1,14 +1,15 @@
 const Commando = require("discord.js-commando");
 const ytdl = require("discord-ytdl-core");
-const find = require("../../functions/music/playlist/find");
+const {
+  find,
+  addplayerInfo,
+} = require("../../functions/music/playlist/helper");
 const statusMsg = require("../../functions/music/statusMsg");
 const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
 const search = require("../../functions/music/search");
-const addplayerInfo = require("../../functions/music/addplayerInfo");
 const cache = require("../../functions/cache");
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+const Discordcollection = require("../../functions/utils/Discordcollection");
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "playlistplay",
@@ -76,8 +77,8 @@ module.exports = class AddCommand extends (
       }
       if (!currentSong.playerInfo) {
         const searchQuery = `${currentSong.artists} ${currentSong.track}`;
-        const playerInfo = await search(searchQuery);
-        currentSong.playerInfo = playerInfo;
+        const PlayerInfo = await search(searchQuery);
+        currentSong.playerInfo = PlayerInfo.playerInfo;
         addplayerInfo(id, currentSong);
       }
       const stream = ytdl(currentSong.playerInfo.link, {
@@ -101,5 +102,9 @@ module.exports = class AddCommand extends (
     }
 
     playSong(connection, message.channel, musicPlayer);
+    connection.on("disconnect", () => {
+      Discordcollection.delete(`MusicPlayer-${message.channel.guild.id}`);
+      musicPlayer.setStatus(0);
+    });
   }
 };

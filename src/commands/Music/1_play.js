@@ -1,14 +1,12 @@
 const ytdl = require("discord-ytdl-core");
 const search = require("../../functions/music/search");
 const statusMsg = require("../../functions/music/statusMsg");
-const cache = require("../../functions/cache");
-
 const Commando = require("discord.js-commando");
 const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
+const Discordcollection = require("../../functions/utils/Discordcollection");
+const { playlist } = require("../../functions/music/playlist/spotify");
 
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "play",
@@ -19,7 +17,7 @@ module.exports = class AddCommand extends (
       args: [
         {
           key: "query",
-          prompt: "What do you want me to play?",
+          prompt: "Please provide a song name or URL.",
           type: "string",
         },
       ],
@@ -27,39 +25,15 @@ module.exports = class AddCommand extends (
   }
   async run(message, args) {
     const query = args.query;
-
-    let track = cache.get(`SongQuery:${query}`);
-    if (!track) {
-      const result = await search(query);
-      if (result) {
-        let info = await ytdl.getBasicInfo(result.link);
-
-        const song = info.videoDetails.media.song;
-        const artist = info.videoDetails.media.artist;
-
-        if (song && artist) {
-          result["song"] = song;
-          result["artist"] = artist;
-        }
-        track = {
-          track: result.song ? result.song : result.title,
-          artists: result.artist ? result.artist : "",
-          playerInfo: {
-            link: result.link,
-            title: result.title,
-            image: result.image,
-          },
-        };
+    const urlregex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
+    const Spotifyregex = /^(?:http(s)?:\/\/open\.spotify\.com\/playlist\/)/;
+    let isPlaylist = false;
+    if (urlregex.test(query)) {
+      if (Spotifyregex.test(query)) {
+        const slug = query.split("/").pop();
+        var Playlist = await playlist(slug);
+        isPlaylist = true;
       }
-
-      cache.set(`SongQuery:${query}`, track);
-    }
-
-    if (!track) {
-      return message.channel.send("No results found");
-    }
-    if (!ytdl.validateURL(track.playerInfo.link)) {
-      return message.channel.send("No results found");
     }
 
     const voiceChannel = message.member.voice.channel;
@@ -71,30 +45,75 @@ module.exports = class AddCommand extends (
       const existingVc = musicPlayer.getCurrentVoiceChannel();
       if (existingVc !== voiceChannel.id) {
         const status = musicPlayer.getStatus();
+        console.log(status);
         if (status !== 0) {
           return message.reply("Already playing music in some other channel.");
         }
       }
     }
+    if (!isPlaylist) {
+      const track = await search(query);
+      if (!track) {
+        return message.channel.send("No results found");
+      }
+      if (!ytdl.validateURL(track.playerInfo.link)) {
+        return message.channel.send("No results found");
+      }
 
-    let stream = ytdl(track.playerInfo.link, {
-      filter: "audioonly",
-      opusEncoded: true,
-    });
+      musicPlayer.addSong(track);
+      if (musicPlayer.getStatus() !== 0) {
+        const queueCount = musicPlayer.queueCount();
+        message.reply(
+          `\`${track.track}\` Queued\nTotal Tracks in Queue:\`${queueCount}\``
+        );
+        return;
+      }
+    } else {
+      musicPlayer.addplaylist(Playlist.tracks);
+      if (musicPlayer.getStatus() !== 0) {
+        const queueCount = musicPlayer.queueCount();
+        message.reply(`\`${queueCount}\` Added to queue.`);
+        return;
+      }
+    }
 
     let connection = await voiceChannel.join();
 
-    const dispatcher = connection.play(stream, { type: "opus" });
-    if (!musicPlayer.isQueueEmpty()) {
-      musicPlayer.clearQueue();
+    async function playSong(connection, channel, musicPlayer) {
+      let currentSong = musicPlayer.currentSong();
+      if (!currentSong) {
+        return;
+      }
+      if (!currentSong.playerInfo) {
+        const searchQuery = `${currentSong.artists} ${currentSong.track}`;
+        const PlayerInfo = await search(searchQuery);
+        currentSong.playerInfo = PlayerInfo.playerInfo;
+      }
+      const stream = ytdl(currentSong.playerInfo.link, {
+        filter: "audioonly",
+        opusEncoded: true,
+      });
+      const dispatcher = connection.play(stream, { type: "opus" });
+      musicPlayer.setStatus(1);
+      const msg = await statusMsg(currentSong, channel, "playing");
+      dispatcher.on("finish", () => {
+        musicPlayer.skipSong();
+        msg.delete();
+        if (musicPlayer.isQueueEmpty() === true) {
+          connection.disconnect();
+        } else {
+          setTimeout(() => {
+            playSong(connection, channel, musicPlayer);
+          }, 1000);
+        }
+      });
     }
 
-    musicPlayer.addSong(track);
-    musicPlayer.setStatus(1);
-    dispatcher.on("finish", () => {
+    playSong(connection, message.channel, musicPlayer);
+
+    connection.on("disconnect", () => {
+      Discordcollection.delete(`MusicPlayer-${message.channel.guild.id}`);
       musicPlayer.setStatus(0);
-      musicPlayer.clearQueue();
     });
-    statusMsg(track, message.channel, "playing");
   }
 };
