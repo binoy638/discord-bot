@@ -21,6 +21,7 @@ async function setToken() {
 setToken();
 
 const playlist = async (slug) => {
+  await setToken();
   const response = await spotifyApi.getPlaylist(slug);
   let data = {};
   if (response.statusCode === 200) {
@@ -48,6 +49,7 @@ const playlist = async (slug) => {
 };
 
 const track = async (query) => {
+  await setToken();
   const response = await spotifyApi.searchTracks(query, {
     limit: 1,
     offset: 0,
