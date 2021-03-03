@@ -16,36 +16,45 @@ module.exports = async (query) => {
 
   if (!songInfo) {
     //if song is not in cahce search it using youtube-search
-    const response = await search(query, opts);
+    try {
+      const response = await search(query, opts);
 
-    if (response.results) {
-      const track = response.results[0];
-      //destructure required values from the response
-      const {
-        link,
-        title,
-        thumbnails: {
-          default: { url: thumbnail },
-        },
-      } = track;
-
-      const info = await ytdl.getBasicInfo(link); //try to find the song title and artist from the video link
-
-      const song = info.videoDetails.media.song;
-      const artist = info.videoDetails.media.artist;
-
-      songInfo = {
-        track: song ? song : title,
-        artists: artist ? artist : "",
-        playerInfo: {
+      if (response.results) {
+        const track = response.results[0];
+        //destructure required values from the response
+        const {
           link,
-          title: htmlUnescape(title),
-          image: thumbnail,
-        },
-      };
+          title,
+          thumbnails: {
+            default: { url: thumbnail },
+          },
+        } = track;
+        let song;
+        let artist;
+        try {
+          const info = await ytdl.getBasicInfo(link); //try to find the song title and artist from the video link
+          song = info.videoDetails.media.song;
+          artist = info.videoDetails.media.artist;
+        } catch (e) {
+          console.log("Cant find artist info");
+        }
 
-      cache.set(`SearchQuery:${query}`, songInfo); //save the song info in cache for future quries
+        songInfo = {
+          track: song ? song : title,
+          artists: artist ? artist : "",
+          playerInfo: {
+            link,
+            title: htmlUnescape(title),
+            image: thumbnail,
+          },
+        };
+
+        cache.set(`SearchQuery:${query}`, songInfo); //save the song info in cache for future quries
+      }
+    } catch (e) {
+      console.log("API rate limit exceeded.");
     }
   }
+
   return songInfo;
 };

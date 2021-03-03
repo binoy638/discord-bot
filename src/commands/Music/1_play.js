@@ -72,7 +72,7 @@ module.exports = class AddCommand extends Commando.Command {
       musicPlayer.addplaylist(Playlist.tracks);
       if (musicPlayer.getStatus() !== 0) {
         const queueCount = musicPlayer.queueCount();
-        message.reply(`\`${queueCount}\` Added to queue.`);
+        message.reply(`\`${queueCount}\` Tracks added to queue.`);
         return;
       }
     }
