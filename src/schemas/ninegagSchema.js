@@ -6,7 +6,8 @@ const reqString = {
 };
 
 const ninegagSchema = mongoose.Schema({
-  _channel: reqString,
+  channel: reqString,
+  guild: reqString,
   section: reqString,
   interval: reqString,
   active: {

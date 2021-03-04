@@ -29,7 +29,7 @@ module.exports = class AddCommand extends Commando.Command {
     const Spotifyregex = /^(?:http(s)?:\/\/open\.spotify\.com\/playlist\/)/;
     let isPlaylist = false;
     if (urlregex.test(query)) {
-      if (Spotifyregex.test(query)) {
+      if (query.includes("open.spotify.com/playlist")) {
         const slug = query.split("/").pop();
         var Playlist = await playlist(slug);
         isPlaylist = true;

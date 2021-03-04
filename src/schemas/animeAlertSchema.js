@@ -8,6 +8,7 @@ const reqString = {
 const animeAlerts = mongoose.Schema({
   _id: reqString,
   channelId: reqString,
+  guild: reqString,
   anime_id: reqString,
   cron_time: reqString,
   anime_title: reqString,

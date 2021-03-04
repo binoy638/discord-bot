@@ -18,7 +18,8 @@ const mongo = require("./mongo");
 const onJoin = require("./functions/onJoin");
 const getsublist = require("./functions/ninegag/getsublist");
 const getalertsublist = require("./functions/animeAlerts/alertsublist");
-
+const animesublistclear = require("./functions/animeAlerts/animesublistclear");
+const ninegagsublistclear = require("./functions/ninegag/ninegagsublistclear");
 //cache
 var cache = require("./functions/cache");
 
@@ -86,8 +87,7 @@ client.once("ready", async () => {
   const sublist = await getsublist();
 
   sublist.map((obj) => {
-    const channel = client.channels.cache.get(obj._channel);
-
+    const channel = client.channels.cache.get(obj.channel);
     cronjob(obj.section, obj.interval, channel);
   });
 
@@ -102,6 +102,11 @@ client.once("ready", async () => {
 
 client.on("guildMemberAdd", (member) => {
   onJoin(member);
+});
+
+client.on("guildDelete", (guild) => {
+  animesublistclear(guild.id);
+  ninegagsublistclear(guild.id);
 });
 
 // Login to discord bot token

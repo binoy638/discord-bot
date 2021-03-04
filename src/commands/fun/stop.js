@@ -4,9 +4,7 @@ const nineSchema = require("../../schemas/ninegagSchema");
 
 const Commando = require("discord.js-commando");
 
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "stop_autoposts",
@@ -26,7 +24,7 @@ module.exports = class AddCommand extends (
         try {
           await nineSchema.findOneAndUpdate(
             {
-              _channel: channel.id,
+              channel: channel.id,
             },
             {
               active: false,

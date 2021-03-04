@@ -28,7 +28,8 @@ module.exports = (function () {
       return manager.exists(key);
     },
     delete: function (key) {
-      return manager.deleteJob(key);
+      console.log(`Deleting job ${key}`);
+      manager.deleteJob(key);
     },
   };
 })();

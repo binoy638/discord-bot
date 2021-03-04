@@ -10,6 +10,7 @@ class MusicPlayer {
       priority: false,
       timesPlayed: 0,
       status: 0, //0 - stopped, 1 - playing, 2 - paused
+      loop:false,
     };
   }
 

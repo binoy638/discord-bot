@@ -1,4 +1,7 @@
 const Commando = require("discord.js-commando");
+const animesublistclear = require("../../functions/animeAlerts/animesublistclear");
+const queryType = require("../../functions/music/queryType");
+const ninegagsublistclear = require("../../functions/ninegag/ninegagsublistclear");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
@@ -7,19 +10,10 @@ module.exports = class AddCommand extends Commando.Command {
       memberName: "test",
       description: "test features",
       ownerOnly: true,
-      args: [
-        {
-          key: "url",
-          prompt: "Enter url",
-          type: "string",
-        },
-      ],
     });
   }
   async run(message, args) {
-    const url = args.url;
-    const regex = /^(?:http(s)?:\/\/open\.spotify\.com\/playlist\/)/;
-    const urlregex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
-    console.log(regex.test(url));
+    animesublistclear(message.channel.guild.id);
+    ninegagsublistclear(message.channel.guild.id);
   }
 };

@@ -5,9 +5,7 @@ const getanime = require("../../functions/animeAlerts/getanime");
 const job = require("../../functions/animeAlerts/setJobs");
 const sendAlert = require("../../functions/animeAlerts/sendAlert");
 const Commando = require("discord.js-commando");
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "ani_start",
@@ -50,6 +48,7 @@ module.exports = class AddCommand extends (
           await animeAlertSchema.create({
             _id: `${channel_id}-${id}`,
             channelId: channel_id,
+            guild: message.channel.guild.id,
             anime_id: id,
             cron_time: Cron_Time,
             anime_title: title,
