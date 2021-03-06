@@ -18,6 +18,8 @@ module.exports = async (section, interval, channel) => {
         cache.set(`SublistPosts-${channel.id}`, SentPosts);
       }
       if (SentPosts.has(newid) || resp["type"] == "Article") {
+        console.log("Duplicate Post detected");
+        console.log(newid);
         (async () => {
           resp = await nineGagObject.getRandomPost(20);
           isRepeated(resp["id"]);

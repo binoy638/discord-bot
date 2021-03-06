@@ -1,10 +1,11 @@
 const ytdl = require("discord-ytdl-core");
-const search = require("../../functions/music/search");
+const queryType = require("../../functions/music/queryType");
 const statusMsg = require("../../functions/music/statusMsg");
 const Commando = require("discord.js-commando");
 const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
 const Discordcollection = require("../../functions/utils/Discordcollection");
 const { playlist } = require("../../functions/music/playlist/spotify");
+const { infoFromQuery, infoFromLink } = require("../../functions/music/search");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -25,16 +26,8 @@ module.exports = class AddCommand extends Commando.Command {
   }
   async run(message, args) {
     const query = args.query;
-    const urlregex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
-    const Spotifyregex = /^(?:http(s)?:\/\/open\.spotify\.com\/playlist\/)/;
-    let isPlaylist = false;
-    if (urlregex.test(query)) {
-      if (query.includes("open.spotify.com/playlist")) {
-        const slug = query.split("/").pop();
-        var Playlist = await playlist(slug);
-        isPlaylist = true;
-      }
-    }
+
+    const QueryType = queryType(query);
 
     const voiceChannel = message.member.voice.channel;
     if (!voiceChannel) return message.channel.send("No voice channel.");
@@ -51,30 +44,62 @@ module.exports = class AddCommand extends Commando.Command {
         }
       }
     }
-    if (!isPlaylist) {
-      const track = await search(query);
-      if (!track) {
-        return message.channel.send("No results found");
-      }
-      if (!ytdl.validateURL(track.playerInfo.link)) {
-        return message.channel.send("No results found");
-      }
 
-      musicPlayer.addSong(track);
-      if (musicPlayer.getStatus() !== 0) {
+    switch (QueryType) {
+      case 0:
+        console.log("inside query");
+        const track = await infoFromQuery(query);
+        if (!track) {
+          return message.channel.send("No results found");
+        }
+        if (!ytdl.validateURL(track.playerInfo.link)) {
+          return message.channel.send("No results found");
+        }
+
+        musicPlayer.addSong(track);
+        if (musicPlayer.getStatus() !== 0) {
+          const queueCount = musicPlayer.queueCount();
+          message.reply(
+            `\`${track.track}\` Queued\nTotal Tracks in Queue:\`${queueCount}\``
+          );
+          return;
+        }
+        break;
+      case 1:
+        const slug = query.split("/").pop();
+        const { tracks } = await playlist(slug);
+        musicPlayer.addplaylist(tracks);
         const queueCount = musicPlayer.queueCount();
         message.reply(
-          `\`${track.track}\` Queued\nTotal Tracks in Queue:\`${queueCount}\``
+          `\`${tracks.length}\` Tracks added to queue.\nTotal ${queueCount} in queue.`
         );
-        return;
-      }
-    } else {
-      musicPlayer.addplaylist(Playlist.tracks);
-      if (musicPlayer.getStatus() !== 0) {
-        const queueCount = musicPlayer.queueCount();
-        message.reply(`\`${queueCount}\` Tracks added to queue.`);
-        return;
-      }
+        break;
+      case 2:
+        const Track = await infoFromLink(query);
+        if (!Track) {
+          return message.channel.send("No results found");
+        }
+        if (!ytdl.validateURL(Track.playerInfo.link)) {
+          return message.channel.send("No results found");
+        }
+
+        musicPlayer.addSong(Track);
+        if (musicPlayer.getStatus() !== 0) {
+          const queueCount = musicPlayer.queueCount();
+          message.reply(
+            `\`${Track.track}\` Queued\nTotal Tracks in Queue:\`${queueCount}\``
+          );
+          return;
+        }
+        break;
+      case 3:
+        //TODO youtube playlist
+        break;
+      case 4:
+        return message.reply("Invalid link please try again.");
+        break;
+      default:
+        return message.reply("Something went wrong, please try again.");
     }
 
     let connection = await voiceChannel.join();
@@ -86,7 +111,7 @@ module.exports = class AddCommand extends Commando.Command {
       }
       if (!currentSong.playerInfo) {
         const searchQuery = `${currentSong.artists} ${currentSong.track}`;
-        const PlayerInfo = await search(searchQuery);
+        const PlayerInfo = await infoFromQuery(searchQuery);
         currentSong.playerInfo = PlayerInfo.playerInfo;
       }
       const stream = ytdl(currentSong.playerInfo.link, {
@@ -97,7 +122,7 @@ module.exports = class AddCommand extends Commando.Command {
       musicPlayer.setStatus(1);
       const msg = await statusMsg(currentSong, channel, "playing");
       dispatcher.on("finish", () => {
-        musicPlayer.skipSong();
+        musicPlayer.nextSong();
         msg.delete();
         if (musicPlayer.isQueueEmpty() === true) {
           connection.disconnect();

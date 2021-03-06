@@ -3,20 +3,26 @@ var cache = require("../../functions/cache");
 const sendgag = require("../../functions/ninegag/sendgag");
 const Commando = require("discord.js-commando");
 
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "9gag",
       group: "fun",
       memberName: "9gag",
       description: "Get a meme from a specific 9gag section",
+      args: [
+        {
+          key: "section",
+          prompt: "Please enter a 9gag section.",
+          type: "string",
+          default: "meme",
+        },
+      ],
     });
   }
   async run(message, args) {
     const { channel } = message;
-    const section = args;
+    const section = args.section;
     const PostFetchIteration = 5;
     const PostListCount = 9 + PostFetchIteration * 10;
 

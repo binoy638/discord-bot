@@ -1,21 +1,38 @@
+const events = require("events");
+const player = new events.EventEmitter();
 class MusicPlayer {
   constructor(guildID) {
     this.playerInfo = {
       guildID,
       voiceChannel: null,
       playlist: [],
+      count: 0,
       isShuffled: false,
       shuffledtracksIds: [],
       current: 0,
       priority: false,
       timesPlayed: 0,
       status: 0, //0 - stopped, 1 - playing, 2 - paused
-      loop:false,
+      loop: false,
     };
+    player.on("playlistchange", () => {
+      this.playerInfo.count = this.playerInfo.playlist.length;
+    });
+    // player.on("next", ()=> {
+    //   if(this.playerInfo.current < this.playerInfo.count-1)
+    //   {
+    //     this.playerInfo.current += 1;
+    //   }
+    //   else
+    //   {
+    //     this.playerInfo.current = 0
+    //   }
+    // })
   }
 
   addSong(obj) {
     this.playerInfo.playlist.push(obj);
+    player.emit("playlistchange");
   }
   skipSong() {
     if (!this.playerInfo.playlist.length == 0) {
@@ -36,24 +53,43 @@ class MusicPlayer {
       this.playerInfo.priority = false;
       return;
     }
-    if (this.playerInfo.playlist.length === 0) {
+    if (this.playerInfo.count === 0) {
       return;
     }
     if (this.playerInfo.isShuffled === false) {
-      const totaltracks = this.playerInfo.playlist.length;
-      if (this.playerInfo.current < totaltracks - 1) {
+      if (this.playerInfo.current < this.playerInfo.count - 1) {
         this.playerInfo.current += 1;
       } else {
-        this.playerInfo.current = 0;
+        if (this.playerInfo.loop === true) {
+          this.playerInfo.current = 0;
+        } else {
+          this.clearQueue();
+        }
       }
       this.playerInfo.timesPlayed += 1;
       return;
+    } else {
+      this.viewplayer();
+      if (this.playerInfo.timesPlayed < this.playerInfo.count) {
+        const trackno = this.playerInfo.shuffledtracksIds[
+          this.playerInfo.timesPlayed
+        ];
+        this.playerInfo.current = trackno;
+        this.playerInfo.timesPlayed += 1;
+      } else {
+        if (this.playerInfo.loop === true) {
+          this.playerInfo.timesPlayed = 0;
+          const trackno = this.playerInfo.shuffledtracksIds[
+            this.playerInfo.timesPlayed
+          ];
+          this.playerInfo.current = trackno;
+          this.playerInfo.timesPlayed += 1;
+        } else {
+          this.clearQueue();
+        }
+      }
     }
-    const trackno = this.playerInfo.shuffledtracksIds[
-      this.playerInfo.timesPlayed
-    ];
-    this.playerInfo.current = trackno;
-    this.playerInfo.timesPlayed += 1;
+    this.viewplayer();
   }
 
   currentSong() {
@@ -65,15 +101,18 @@ class MusicPlayer {
   clearQueue() {
     this.playerInfo.shuffledtracksIds = [];
     this.playerInfo.playlist = [];
+    player.emit("playlistchange");
   }
   showQueue() {
-    console.log(this.playerInfo.playlist);
+    // console.log(this.playerInfo.playlist);
+
     return this.playerInfo.playlist;
   }
   addplaylist(playlist) {
     playlist.map((track) => {
       this.playerInfo.playlist.push(track);
     });
+    player.emit("playlistchange");
   }
   isQueueEmpty() {
     if (this.playerInfo.playlist.length === 0) {
@@ -82,6 +121,7 @@ class MusicPlayer {
     return false;
   }
   shufflePlaylist() {
+    console.log("inside suf pl");
     let length = this.playerInfo.playlist.length;
     let tracks = [...Array(length).keys()];
 
@@ -95,11 +135,12 @@ class MusicPlayer {
 
     this.playerInfo.isShuffled = true;
     this.playerInfo.shuffledtracksIds = tracks;
-    const trackno = this.playerInfo.shuffledtracksIds[
-      this.playerInfo.timesPlayed
-    ];
-    this.playerInfo.current = trackno;
-    this.playerInfo.timesPlayed += 1;
+    // const trackno = this.playerInfo.shuffledtracksIds[
+    //   this.playerInfo.timesPlayed
+    // ];
+    // this.playerInfo.current = trackno;
+    // this.playerInfo.timesPlayed += 1;
+    this.viewplayer();
   }
   isShuffled() {
     return this.playerInfo.isShuffled;
@@ -108,6 +149,7 @@ class MusicPlayer {
     this.playerInfo = {
       voiceChannel: null,
       playlist: [],
+      count: 0,
       isShuffled: false,
       shuffledtracksIds: [],
       current: 0,
@@ -130,11 +172,16 @@ class MusicPlayer {
   getCurrentVoiceChannel() {
     return this.playerInfo.voiceChannel;
   }
+
   queueCount() {
-    if (this.playerInfo.playlist.length === 0) {
-      return 0;
-    }
-    return this.playerInfo.playlist.length - 1;
+    // if (this.playerInfo.loop === true) {
+    return this.playerInfo.count;
+    // }
+    // return this.playerInfo.playlist.count - (this.playerInfo.current + 1);
+  }
+  loop() {
+    this.playerInfo.loop = !this.playerInfo.loop;
+    return this.playerInfo.loop;
   }
   viewplayer() {
     console.log(this.playerInfo);

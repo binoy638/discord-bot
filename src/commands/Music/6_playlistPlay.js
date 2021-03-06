@@ -6,7 +6,7 @@ const {
 } = require("../../functions/music/playlist/helper");
 const statusMsg = require("../../functions/music/statusMsg");
 const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
-const search = require("../../functions/music/search");
+const { infoFromQuery } = require("../../functions/music/search");
 const cache = require("../../functions/cache");
 const Discordcollection = require("../../functions/utils/Discordcollection");
 module.exports = class AddCommand extends Commando.Command {
@@ -17,19 +17,9 @@ module.exports = class AddCommand extends Commando.Command {
       memberName: "6playlistplay",
       aliases: ["plp", "playlist_play", "playplaylist"],
       description: "Play your tracks from your playlist",
-      args: [
-        {
-          key: "shuffle",
-          prompt: "Do you want to shuffle your playlist?",
-          type: "string",
-          oneOf: ["shuffle"],
-          default: "",
-        },
-      ],
     });
   }
   async run(message, args) {
-    const shuffle = args.shuffle;
     const prefix = message.guild._commandPrefix;
     const { id } = message.member.user;
     const { voice } = message.member;
@@ -65,10 +55,6 @@ module.exports = class AddCommand extends Commando.Command {
     musicPlayer.setVoiceChannel(voice.channel.id);
     musicPlayer.addplaylist(playlist);
 
-    if (shuffle) {
-      musicPlayer.shufflePlaylist();
-    }
-
     const connection = await voice.channel.join();
     async function playSong(connection, channel, musicPlayer) {
       let currentSong = musicPlayer.currentSong();
@@ -77,7 +63,8 @@ module.exports = class AddCommand extends Commando.Command {
       }
       if (!currentSong.playerInfo) {
         const searchQuery = `${currentSong.artists} ${currentSong.track}`;
-        const PlayerInfo = await search(searchQuery);
+        const PlayerInfo = await infoFromQuery(searchQuery);
+
         currentSong.playerInfo = PlayerInfo.playerInfo;
         addplayerInfo(id, currentSong);
       }

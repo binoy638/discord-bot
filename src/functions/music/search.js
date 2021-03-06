@@ -44,7 +44,7 @@ const youtubeScrape = async (query) => {
   }
 };
 
-module.exports = async (query) => {
+const infoFromQuery = async (query) => {
   let songInfo = cache.get(`SearchQuery:${query}`); //check if song is present in cache
 
   if (!songInfo) {
@@ -74,7 +74,7 @@ module.exports = async (query) => {
         }
 
         songInfo = {
-          track: song ? song : title,
+          track: song ? song : htmlUnescape(title),
           artists: artist ? artist : "",
           playerInfo: {
             link,
@@ -96,3 +96,33 @@ module.exports = async (query) => {
   }
   return songInfo;
 };
+
+const infoFromLink = async (url) => {
+  let songInfo;
+  try {
+    const info = await ytdl.getBasicInfo(url);
+    if (info.videoDetails) {
+      const {
+        title,
+        video_url: link,
+        thumbnails: [{ url: image }],
+      } = info.videoDetails;
+      let song = info.videoDetails.media.song;
+      let artist = info.videoDetails.media.artist;
+      songInfo = {
+        track: song ? song : htmlUnescape(title),
+        artists: artist ? artist : "",
+        playerInfo: {
+          link,
+          title: htmlUnescape(title),
+          image,
+        },
+      };
+    }
+  } catch (error) {
+    console.log("Cant fetch songinfo from link");
+  }
+  return songInfo;
+};
+
+module.exports = { infoFromLink, infoFromQuery };
