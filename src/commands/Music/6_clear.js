@@ -17,7 +17,7 @@ module.exports = class AddCommand extends Commando.Command {
       return message.reply("Queue is already empty.");
     }
 
-    musicPlayer.flushcache();
+    musicPlayer.flushcache_();
     message.reply("Queue cleared.");
   }
 };
