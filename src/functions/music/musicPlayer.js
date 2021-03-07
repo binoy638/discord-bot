@@ -100,6 +100,8 @@ class MusicPlayer {
   }
   clearQueue() {
     this.playerInfo.shuffledtracksIds = [];
+    this.playerInfo.current = 0;
+    this.playerInfo.timesPlayed = 0;
     this.playerInfo.playlist = [];
     player.emit("playlistchange");
   }

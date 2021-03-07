@@ -5,10 +5,10 @@ const { find, clear } = require("../../functions/music/playlist/helper");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
-      name: "playlistclear",
+      name: "playlistdelete",
       group: "music",
       memberName: "9playlistclear",
-      aliases: ["playlist_clear", "playlistclr", "clear", "clr"],
+      aliases: ["playlist_delete", "playlistdel", "delete", "del"],
       description: "Delete your playlist.",
       args: [
         {
