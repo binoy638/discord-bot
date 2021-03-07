@@ -2,11 +2,24 @@ var convert_audio = require("./convert_audio");
 var transcribe = require("./transcribe");
 const path = require("path");
 const { setTimeout } = require("timers");
-module.exports = async (connection, channel, user) => {
+module.exports = async (connection, message, user, client) => {
   // connection.play(path.join("src/static", "sound.mp3"));
+
   if (!connection.dispatcher) {
     connection.play(path.join("src/static", "sound.mp3"));
   }
+  // console.log("inside");
+  // connection.dispatcher.pause();
+  // const voiceChannel = message.member.voice.channel;
+  // await voiceChannel.join().then((con) => {
+  //   const dis = con.play(path.join("src/static", "sound.mp3"));
+  // dis.on("finish", () => {
+  //   connection.dispatcher.resume();
+  //   connection.dispatcher.pause();
+  //   connection.dispatcher.resume();
+  // });
+  // });
+  // const n = connection.play(path.join("src/static", "sound.mp3"));
 
   setTimeout(() => {
     const audioStream = connection.receiver.createStream(user, {
@@ -31,7 +44,7 @@ module.exports = async (connection, channel, user) => {
       try {
         let new_buffer = await convert_audio(buffer);
 
-        transcribe(new_buffer, channel, user.username, connection);
+        transcribe(new_buffer, message, client);
 
         // let out = await transcribe(new_buffer);
         // if (out != null) process_commands_query(out, mapKey, user.id);

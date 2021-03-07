@@ -8,9 +8,7 @@ const voice_cmd = require("../../functions/voice/voice_cmd");
 const msg = require("../../functions/voice/message");
 const Commando = require("discord.js-commando");
 
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "join",
@@ -22,6 +20,7 @@ module.exports = class AddCommand extends (
   }
   async run(message, args) {
     let master = message.member.user;
+    const client = this.client;
     function chunkArray(array, size) {
       return Array.from(
         { length: Math.ceil(array.length / size) },
@@ -68,7 +67,7 @@ module.exports = class AddCommand extends (
 
       let userFrameAccumulators = [];
       try {
-        userDecoders.on("data", (data) => {
+        userDecoders.on("data", async (data) => {
           // Two bytes per Int16 from the data buffer
           let newFrames16 = new Array(data.length / 2);
           for (let i = 0; i < data.length; i += 2) {
@@ -90,8 +89,8 @@ module.exports = class AddCommand extends (
             if (index !== -1) {
               if (index == 0) {
                 console.log("wakeword detected");
-                // voice_cmd(connection, message.channel, user);
-                message.channel.send(`Listening to ${master.username}`);
+                await voice_cmd(connection, message, user, client);
+                // message.channel.send(`Listening to ${master.username}`);
               } else if (index == 1) {
                 console.log("wakeword detected");
                 message.channel.send(`Listening to ${master.username}`);

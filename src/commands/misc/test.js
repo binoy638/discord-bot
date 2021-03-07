@@ -22,9 +22,13 @@ module.exports = class AddCommand extends Commando.Command {
     });
   }
   async run(message, args) {
-    const track = await infoFromLink(
-      "https://www.youtube.com/watch?v=T3bxbVGWy5k&list=RDT3bxbVGWy5k&start_radio=1&ab_channel=GalileoGalileiVEVO"
-    );
-    console.log(track);
+    const cmds = this.client.registry.commands;
+    // console.log(cmds);
+    cmds.map((c) => {
+      if (c.name === "mem") {
+        // console.log(c);
+        c.run(message);
+      }
+    });
   }
 };

@@ -18,11 +18,11 @@ module.exports = class AddCommand extends Commando.Command {
     const status = musicPlayer.loop();
     if (status === true) {
       message.reply(
-        "loop enabled for currently queued tracks.Use to command again to disable it."
+        "loop enabled for currently queued tracks.Use this command again to disable it."
       );
     } else {
       message.reply(
-        "loop disabled for currently queued tracks.Use to command again to enable it."
+        "loop disabled for currently queued tracks.Use this command again to enable it."
       );
     }
   }

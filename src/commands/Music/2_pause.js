@@ -2,9 +2,7 @@ const statusMsg = require("../../functions/music/statusMsg");
 const Commando = require("discord.js-commando");
 const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
 
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "pause",

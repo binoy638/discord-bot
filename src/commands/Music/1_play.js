@@ -47,7 +47,6 @@ module.exports = class AddCommand extends Commando.Command {
 
     switch (QueryType) {
       case 0:
-        console.log("inside query");
         const track = await infoFromQuery(query);
         if (!track) {
           return message.channel.send("No results found");
