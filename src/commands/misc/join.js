@@ -93,7 +93,8 @@ module.exports = class AddCommand extends Commando.Command {
                 // message.channel.send(`Listening to ${master.username}`);
               } else if (index == 1) {
                 console.log("wakeword detected");
-                message.channel.send(`Listening to ${master.username}`);
+                await voice_cmd(connection, message, user, client);
+                // message.channel.send(`Listening to ${master.username}`);
                 // voice_cmd(connection, message.channel, user);
               }
             }
