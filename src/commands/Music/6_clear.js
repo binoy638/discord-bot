@@ -1,6 +1,6 @@
 const Commando = require("discord.js-commando");
 const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
-
+const Discordcollection = require("../../functions/utils/Discordcollection");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
@@ -17,7 +17,7 @@ module.exports = class AddCommand extends Commando.Command {
       return message.reply("Queue is already empty.");
     }
 
-    musicPlayer.flushcache_();
+    Discordcollection.delete(`MusicPlayer-${message.channel.guild.id}`);
     message.reply("Queue cleared.");
   }
 };

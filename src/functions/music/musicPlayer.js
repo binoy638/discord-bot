@@ -146,32 +146,16 @@ class MusicPlayer {
     return this.playerInfo.isShuffled;
   }
   flushcache() {
-    this.playerInfo = {
-      voiceChannel: null,
-      playlist: [],
-      count: 0,
-      isShuffled: false,
-      shuffledtracksIds: [],
-      current: 0,
-      priority: false,
-      timesPlayed: 0,
-      status: 0,
-      loop: false,
-    };
+    this.playerInfo.playlist = [];
+    this.playerInfo.count = 0;
+    this.playerInfo.isShuffled = false;
+    this.playerInfo.shuffledtracksIds = [];
+    this.playerInfo.current = 0;
+    this.playerInfo.timesPlayed = 0;
+    this.playerInfo.status = 0;
+    this.playerInfo.loop = false;
   }
-  flushcache_() {
-    this.playerInfo = {
-      playlist: [],
-      count: 0,
-      isShuffled: false,
-      shuffledtracksIds: [],
-      current: 0,
-      priority: false,
-      timesPlayed: 0,
-      status: 0,
-      loop: false,
-    };
-  }
+
   setStatus(input) {
     if (input === 0 || input === 1 || input === 2) {
       this.playerInfo.status = input;

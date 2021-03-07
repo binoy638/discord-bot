@@ -47,10 +47,11 @@ module.exports = class AddCommand extends Commando.Command {
       if (existingVc !== voice.channel.id) {
         const status = musicPlayer.getStatus();
         if (status !== 0) {
-          return message.reply("Already playing music in some other channel.");
+          return message.reply("❌ already in use.");
         }
       }
     }
+
     musicPlayer.flushcache();
     musicPlayer.setVoiceChannel(voice.channel.id);
     musicPlayer.addplaylist(playlist);
