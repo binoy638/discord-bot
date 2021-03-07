@@ -100,8 +100,6 @@ class MusicPlayer {
   }
   clearQueue() {
     this.playerInfo.shuffledtracksIds = [];
-    this.playerInfo.current = 0;
-    this.playerInfo.timesPlayed = 0;
     this.playerInfo.playlist = [];
     player.emit("playlistchange");
   }
@@ -158,6 +156,20 @@ class MusicPlayer {
       priority: false,
       timesPlayed: 0,
       status: 0,
+      loop: false,
+    };
+  }
+  flushcache_() {
+    this.playerInfo = {
+      playlist: [],
+      count: 0,
+      isShuffled: false,
+      shuffledtracksIds: [],
+      current: 0,
+      priority: false,
+      timesPlayed: 0,
+      status: 0,
+      loop: false,
     };
   }
   setStatus(input) {
