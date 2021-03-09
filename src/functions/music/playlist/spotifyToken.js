@@ -1,5 +1,5 @@
-var axios = require("axios");
-var qs = require("qs");
+const axios = require("axios");
+const qs = require("qs");
 
 module.exports = async () => {
   const clientId = process.env.SPOTIFY_CLIENT_ID;

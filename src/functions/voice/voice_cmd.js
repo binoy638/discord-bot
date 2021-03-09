@@ -7,19 +7,12 @@ module.exports = async (connection, message, user, client) => {
 
   if (!connection.dispatcher) {
     connection.play(path.join("src/static", "sound.mp3"));
+  } else {
+    connection.dispatcher.setVolume(0.3);
+    setTimeout(() => {
+      connection.dispatcher.setVolume(1);
+    }, 3000);
   }
-  // console.log("inside");
-  // connection.dispatcher.pause();
-  // const voiceChannel = message.member.voice.channel;
-  // await voiceChannel.join().then((con) => {
-  //   const dis = con.play(path.join("src/static", "sound.mp3"));
-  // dis.on("finish", () => {
-  //   connection.dispatcher.resume();
-  //   connection.dispatcher.pause();
-  //   connection.dispatcher.resume();
-  // });
-  // });
-  // const n = connection.play(path.join("src/static", "sound.mp3"));
 
   setTimeout(() => {
     const audioStream = connection.receiver.createStream(user, {

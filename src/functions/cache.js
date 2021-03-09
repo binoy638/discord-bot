@@ -1,4 +1,4 @@
-var cache = require("node-cache");
+const cache = require("node-cache");
 
 module.exports = (function () {
   this.storage = new cache();
