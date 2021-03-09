@@ -69,7 +69,7 @@ class MusicPlayer {
       this.playerInfo.timesPlayed += 1;
       return;
     } else {
-      this.viewplayer();
+      // this.viewplayer();
       if (this.playerInfo.timesPlayed < this.playerInfo.count) {
         const trackno = this.playerInfo.shuffledtracksIds[
           this.playerInfo.timesPlayed
@@ -89,7 +89,7 @@ class MusicPlayer {
         }
       }
     }
-    this.viewplayer();
+    // this.viewplayer();
   }
 
   currentSong() {
@@ -121,7 +121,6 @@ class MusicPlayer {
     return false;
   }
   shufflePlaylist() {
-    console.log("inside suf pl");
     let length = this.playerInfo.playlist.length;
     let tracks = [...Array(length).keys()];
 
@@ -140,7 +139,7 @@ class MusicPlayer {
     // ];
     // this.playerInfo.current = trackno;
     // this.playerInfo.timesPlayed += 1;
-    this.viewplayer();
+    // this.viewplayer();
   }
   isShuffled() {
     return this.playerInfo.isShuffled;
