@@ -15,7 +15,7 @@ module.exports = class AddCommand extends Commando.Command {
       group: "misc",
       memberName: "join",
       description: "Make the voice assistant join a VC.",
-      ownerOnly: true,
+      // ownerOnly: true,
     });
   }
   async run(message, args) {
