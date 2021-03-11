@@ -120,6 +120,7 @@ module.exports = class AddCommand extends Commando.Command {
       const dispatcher = connection.play(stream, { type: "opus" });
       musicPlayer.setStatus(1);
       const msg = await statusMsg(currentSong, channel, "playing");
+      console.log(musicPlayer.showQueue());
       dispatcher.on("finish", () => {
         musicPlayer.nextSong();
         msg.delete();
