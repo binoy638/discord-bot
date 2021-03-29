@@ -7,7 +7,7 @@ module.exports = class AddCommand extends Commando.Command {
       group: "misc",
       memberName: "restart",
       description: "Restart the bot.",
-      //   ownerOnly: true,
+      ownerOnly: true,
     });
   }
   async run(message) {
