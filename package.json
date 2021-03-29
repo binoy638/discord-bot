@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./src/bot.js",
+    "start": "pm2-runtime start ecosystem.config.js --env production",
     "dev": "nodemon ./src/bot.js",
-    "pstart": "pm2 start ./src/bot.js",
-    "pstop":"pm2 stop ./src/bot.js"
+    "pstart": "pm2-runtime start ecosystem.config.js --env production",
+    "pstop": "pm2 stop ./src/bot.js"
   },
   "keywords": [],
   "author": "",
@@ -32,6 +32,7 @@
     "node-cache": "^5.1.2",
     "node-witai-speech": "^1.0.2",
     "nodemon": "^2.0.6",
+    "pm2": "^4.5.5",
     "prism-media": "^1.2.3",
     "qs": "^6.5.2",
     "request": "^2.88.2",
