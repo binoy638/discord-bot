@@ -4,8 +4,8 @@ module.exports = {
       name: "app",
       script: "./src/bot.js",
       autorestart: true,
+      max_memory_restart: "500M",
       log_date_format: "HH:mm:ss",
-      watch: true,
       env: {
         NODE_ENV: "development",
       },
