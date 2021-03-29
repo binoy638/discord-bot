@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./src/bot.js",
-    "dev": "nodemon ./src/bot.js"
+    "start": "node ./src/bot.js",
+    "dev": "nodemon ./src/bot.js",
+    "pstart": "pm2 start ./src/bot.js",
+    "pstop":"pm2 stop ./src/bot.js"
   },
   "keywords": [],
   "author": "",
