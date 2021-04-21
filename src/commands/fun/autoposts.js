@@ -1,7 +1,7 @@
 const job = require("../../functions/ninegag/SetJobs");
 // const NineGag = require("../../functions/ninegag/ninegag");
 const mongo = require("../../mongo");
-const nineSchema = require("../../schemas/ninegagSchema");
+const nineSchema = require("../../models/ninegag");
 
 const Commando = require("discord.js-commando");
 
@@ -47,7 +47,6 @@ module.exports = class AddCommand extends Commando.Command {
     });
   }
   async run(message, args) {
-    console.log(args);
     const { channel } = message;
 
     const section = args.section;

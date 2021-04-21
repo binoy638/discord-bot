@@ -1,9 +1,7 @@
 const mongo = require("../../mongo");
-const valoSchema = require("../../schemas/valorant-stats-schema");
+const valoSchema = require("../../models/valorant");
 const Commando = require("discord.js-commando");
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "valouser",

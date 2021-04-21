@@ -1,5 +1,5 @@
 const mongo = require("../../mongo");
-const animeAlertSchema = require("../../schemas/animeAlertSchema");
+const animeAlertSchema = require("../../models/anime");
 
 module.exports = async () => {
   let data = [];

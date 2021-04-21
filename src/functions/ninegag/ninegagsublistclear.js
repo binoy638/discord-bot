@@ -1,5 +1,5 @@
 const mongo = require("../../mongo");
-const ninegagSchema = require("../../schemas/ninegagSchema");
+const ninegagSchema = require("../../models/ninegag");
 
 const Job = require("../JobManager");
 

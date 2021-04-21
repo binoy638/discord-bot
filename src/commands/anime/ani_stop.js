@@ -1,10 +1,8 @@
 const job = require("../../functions/JobManager");
 const mongo = require("../../mongo");
-const animeAlertSchema = require("../../schemas/animeAlertSchema");
+const animeAlertSchema = require("../../models/anime");
 const Commando = require("discord.js-commando");
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "ani_stop",

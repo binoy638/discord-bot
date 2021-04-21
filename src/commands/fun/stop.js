@@ -1,6 +1,6 @@
 const job = require("../../functions/JobManager");
 const mongo = require("../../mongo");
-const nineSchema = require("../../schemas/ninegagSchema");
+const nineSchema = require("../../models/ninegag");
 
 const Commando = require("discord.js-commando");
 

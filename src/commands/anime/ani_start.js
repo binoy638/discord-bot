@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const mongo = require("../../mongo");
-const animeAlertSchema = require("../../schemas/animeAlertSchema");
+const animeAlertSchema = require("../../models/anime");
 const getanime = require("../../functions/animeAlerts/getanime");
 const job = require("../../functions/animeAlerts/setJobs");
 const sendAlert = require("../../functions/animeAlerts/sendAlert");

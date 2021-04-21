@@ -1,11 +1,9 @@
 const mongo = require("../../mongo");
-const welcomeSchema = require("../../schemas/welcome-schema");
+const welcomeSchema = require("../../models/welcome");
 var cache = require("../../functions/cache");
 const Commando = require("discord.js-commando");
 
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "welcome",

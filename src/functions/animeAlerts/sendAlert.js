@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 var job = require("../JobManager");
 const mongo = require("../../mongo");
-const animeAlertSchema = require("../../schemas/animeAlertSchema");
+const animeAlertSchema = require("../../models/anime");
 module.exports = async (data, channel, isfirst) => {
   let {
     480: res480,

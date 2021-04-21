@@ -1,5 +1,5 @@
 const mongo = require("../mongo");
-const welcomeSchema = require("../schemas/welcome-schema");
+const welcomeSchema = require("../models/welcome");
 // const cache = {};
 var cache = require("./cache");
 

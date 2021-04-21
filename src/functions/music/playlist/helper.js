@@ -1,5 +1,5 @@
 const mongo = require("../../../mongo");
-const playlistSchema = require("../../../schemas/playlistSchema");
+const playlistSchema = require("../../../models/playlist");
 const cache = require("../../cache");
 const musicPlayerInstance = require("../musicPlayerInstance");
 

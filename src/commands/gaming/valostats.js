@@ -2,7 +2,7 @@ const request = require("request-promise");
 const Discord = require("discord.js");
 const cheerio = require("cheerio");
 const mongo = require("../../mongo");
-const valoSchema = require("../../schemas/valorant-stats-schema");
+const valoSchema = require("../../models/valorant");
 const Commando = require("discord.js-commando");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {

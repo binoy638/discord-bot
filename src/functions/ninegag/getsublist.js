@@ -1,5 +1,5 @@
 const mongo = require("../../mongo");
-const nineSchema = require("../../schemas/ninegagSchema");
+const nineSchema = require("../../models/ninegag");
 
 module.exports = async () => {
   let data = [];

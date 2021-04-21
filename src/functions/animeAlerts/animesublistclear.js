@@ -1,5 +1,5 @@
 const mongo = require("../../mongo");
-const animeAlertSchema = require("../../schemas/animeAlertSchema");
+const animeAlertSchema = require("../../models/anime");
 const Job = require("../JobManager");
 
 module.exports = async (id) => {
