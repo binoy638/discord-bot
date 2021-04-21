@@ -2,9 +2,9 @@ const snoowrap = require("snoowrap");
 
 const r = new snoowrap({
   userAgent: "udility",
-  clientId: "8C5Qy2CrzI0jUQ",
-  clientSecret: "cjPr4wLfm04vuQnxLGJonUtuA9uTew",
-  refreshToken: "68663730379-2A3tNVSWMrFB7M2p7Ktkw5Kcp_VxBw",
+  clientId: process.env.REDDIT_CLIENT_ID,
+  clientSecret: process.env.REDDIT_CLIENT_SECRET,
+  refreshToken: process.env.REDDIT_CLIENT_REFRESH_TOKEN,
 });
 
 const extractVideoUrl = (obj) => {
