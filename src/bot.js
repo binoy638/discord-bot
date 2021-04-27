@@ -33,6 +33,7 @@ const Commando = require("discord.js-commando");
 // const client = new Discord.Client();
 const client = new Commando.Client({
   owner: "312265605715722240",
+  commandPrefix: "!",
 });
 
 client

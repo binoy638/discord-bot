@@ -9,6 +9,7 @@ const musicPlayerInstance = require("../../functions/music/musicPlayerInstance")
 const { infoFromQuery } = require("../../functions/music/search");
 const cache = require("../../functions/cache");
 const Discordcollection = require("../../functions/utils/Discordcollection");
+const play = require("../../functions/music/play");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
@@ -57,39 +58,10 @@ module.exports = class AddCommand extends Commando.Command {
     musicPlayer.addplaylist(playlist);
 
     const connection = await voice.channel.join();
-    async function playSong(connection, channel, musicPlayer) {
-      let currentSong = musicPlayer.currentSong();
-      if (!currentSong) {
-        return;
-      }
-      if (!currentSong.playerInfo) {
-        const searchQuery = `${currentSong.artists} ${currentSong.track}`;
-        const PlayerInfo = await infoFromQuery(searchQuery);
 
-        currentSong.playerInfo = PlayerInfo.playerInfo;
-        addplayerInfo(id, currentSong);
-      }
-      const stream = ytdl(currentSong.playerInfo.link, {
-        filter: "audioonly",
-        opusEncoded: true,
-      });
-      const dispatcher = connection.play(stream, { type: "opus" });
-      musicPlayer.setStatus(1);
-      const msg = await statusMsg(currentSong, channel, "playing");
-      dispatcher.on("finish", () => {
-        musicPlayer.nextSong();
-        msg.delete();
-        if (musicPlayer.isQueueEmpty === true) {
-          connection.disconnect();
-        } else {
-          setTimeout(() => {
-            playSong(connection, channel, musicPlayer);
-          }, 1000);
-        }
-      });
-    }
+    play(connection, message.channel, musicPlayer);
 
-    playSong(connection, message.channel, musicPlayer);
+    //TODO:Check if duplicate event listners are being added
     connection.on("disconnect", () => {
       Discordcollection.delete(`MusicPlayer-${message.channel.guild.id}`);
       musicPlayer.setStatus(0);

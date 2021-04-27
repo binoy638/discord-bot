@@ -1,11 +1,12 @@
 const ytdl = require("discord-ytdl-core");
 const queryType = require("../../functions/music/queryType");
-const statusMsg = require("../../functions/music/statusMsg");
+// const statusMsg = require("../../functions/music/statusMsg");
 const Commando = require("discord.js-commando");
 const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
 const Discordcollection = require("../../functions/utils/Discordcollection");
 const { playlist } = require("../../functions/music/playlist/spotify");
 const { infoFromQuery, infoFromLink } = require("../../functions/music/search");
+const play = require("../../functions/music/play");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -28,7 +29,6 @@ module.exports = class AddCommand extends Commando.Command {
     const query = args.query;
 
     const QueryType = queryType(query);
-
     const voiceChannel = message.member.voice.channel;
     if (!voiceChannel) return message.channel.send("No voice channel.");
 
@@ -96,46 +96,15 @@ module.exports = class AddCommand extends Commando.Command {
         break;
       case 4:
         return message.reply("Invalid link please try again.");
-        break;
+
       default:
         return message.reply("Something went wrong, please try again.");
     }
 
-    let connection = await voiceChannel.join();
+    const connection = await voiceChannel.join();
 
-    async function playSong(connection, channel, musicPlayer) {
-      let currentSong = musicPlayer.currentSong();
-      if (!currentSong) {
-        return;
-      }
-      if (!currentSong.playerInfo) {
-        const searchQuery = `${currentSong.artists} ${currentSong.track}`;
-        const PlayerInfo = await infoFromQuery(searchQuery);
-        currentSong.playerInfo = PlayerInfo.playerInfo;
-      }
-      const stream = ytdl(currentSong.playerInfo.link, {
-        filter: "audioonly",
-        opusEncoded: true,
-      });
-      const dispatcher = connection.play(stream, { type: "opus" });
-      musicPlayer.setStatus(1);
-      const msg = await statusMsg(currentSong, channel, "playing");
-      console.log(musicPlayer.showQueue());
-      dispatcher.on("finish", () => {
-        musicPlayer.nextSong();
-        msg.delete();
-        if (musicPlayer.isQueueEmpty() === true) {
-          connection.disconnect();
-        } else {
-          setTimeout(() => {
-            playSong(connection, channel, musicPlayer);
-          }, 1000);
-        }
-      });
-    }
-
-    playSong(connection, message.channel, musicPlayer);
-
+    play(connection, message.channel, musicPlayer);
+    //TODO:Check if duplicate event listners are being added
     connection.on("disconnect", () => {
       Discordcollection.delete(`MusicPlayer-${message.channel.guild.id}`);
       musicPlayer.setStatus(0);
