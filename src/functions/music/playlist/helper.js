@@ -1,6 +1,7 @@
-const mongo = require("../../../mongo");
+const mongo = require("../../../configs/mongo");
 const playlistSchema = require("../../../models/playlist");
-const cache = require("../../cache");
+const { CacheGet, CacheSet, CacheDel } = require("../../cache");
+
 const musicPlayerInstance = require("../musicPlayerInstance");
 
 const add = async (id, playlist, channel) => {
@@ -24,7 +25,7 @@ const add = async (id, playlist, channel) => {
       );
       const newPlaylist = resp.playlist;
 
-      cache.set(`Playlist-${id}`, newPlaylist);
+      CacheSet(`Playlist-${id}`, newPlaylist);
     } catch (e) {
       return false;
     } finally {
@@ -35,7 +36,7 @@ const add = async (id, playlist, channel) => {
   if (resp) {
     let musicPlayer = musicPlayerInstance(channel);
     if (musicPlayer) {
-      const plst = cache.get(`Playlist-${id}`);
+      const plst = await CacheGet(`Playlist-${id}`, true);
       musicPlayer.flushcache();
       musicPlayer.addplaylist(plst);
       if (musicPlayer.isShuffled === true) {
@@ -53,7 +54,7 @@ const clear = async (id, channel) => {
       await playlistSchema.findOneAndRemove({
         user: id,
       });
-      cache.del(`Playlist-${id}`);
+      CacheDel(`Playlist-${id}`);
       musicPlayer = musicPlayerInstance(channel);
       musicPlayer.flushcache();
     } catch (e) {
@@ -104,7 +105,7 @@ const remove = async (id, track, channel) => {
       );
       const newPlaylist = resp.playlist;
 
-      cache.set(`Playlist-${id}`, newPlaylist);
+      CacheSet(`Playlist-${id}`, newPlaylist);
     } catch (e) {
       return false;
     } finally {
@@ -115,7 +116,7 @@ const remove = async (id, track, channel) => {
   if (resp) {
     let musicPlayer = musicPlayerInstance(channel);
     if (musicPlayer) {
-      const plst = cache.get(`Playlist-${id}`);
+      const plst = await CacheGet(`Playlist-${id}`, true);
       musicPlayer.flushcache();
       musicPlayer.addplaylist(plst);
       if (musicPlayer.isShuffled === true) {

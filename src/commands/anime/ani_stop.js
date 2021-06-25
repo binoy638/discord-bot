@@ -1,5 +1,5 @@
 const job = require("../../functions/JobManager");
-const mongo = require("../../mongo");
+const mongo = require("../../configs/mongo");
 const animeAlertSchema = require("../../models/anime");
 const Commando = require("discord.js-commando");
 module.exports = class AddCommand extends Commando.Command {

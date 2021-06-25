@@ -1,7 +1,7 @@
-const mongo = require("../../mongo");
+const mongo = require("../../configs/mongo");
 const welcomeSchema = require("../../models/welcome");
-var cache = require("../../functions/cache");
 const Commando = require("discord.js-commando");
+const { CacheSet } = require("../../functions/cache");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -38,7 +38,7 @@ module.exports = class AddCommand extends Commando.Command {
             upsert: true,
           }
         );
-        cache.set(`welmsg${guild.id}`, [channel.id, text]);
+        CacheSet(`welmsg${guild.id}`, [channel.id, text]);
       } finally {
         mongoose.connection.close();
       }

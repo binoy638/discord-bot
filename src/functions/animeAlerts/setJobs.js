@@ -1,7 +1,7 @@
 var job = require("../JobManager");
 const findep = require("./findepisode");
 const sendAlert = require("./sendAlert");
-var myprefix = require("../../bot");
+
 module.exports = async (id, title, cron_time, channel) => {
   job_id = `Alerts-${channel.id}-${id}`;
   job.add(

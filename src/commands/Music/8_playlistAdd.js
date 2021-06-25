@@ -38,7 +38,7 @@ module.exports = class AddCommand extends Commando.Command {
 
         const response = await add(id, currentTrack, message.channel);
 
-        if (response === true) {
+        if (response) {
           return message.reply(
             `\`${currentTrack.track}\` added to your playlist.`
           );
@@ -65,7 +65,7 @@ module.exports = class AddCommand extends Commando.Command {
       }
       const response = await add(id, playlist.tracks, message.channel);
 
-      if (response === true) {
+      if (response) {
         return message.reply(
           `\`${playlist.tracks.length} tracks\` added to your playlist.\nUse \`${prefix}playlistshow\` to view your playlist.`
         );

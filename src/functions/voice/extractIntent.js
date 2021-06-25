@@ -1,5 +1,3 @@
-const Commando = require("discord.js-commando");
-
 module.exports = (data, message, client) => {
   try {
     const {

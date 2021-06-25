@@ -1,9 +1,10 @@
 const Commando = require("discord.js-commando");
-const cache = require("../../functions/cache");
+
 const Discord = require("discord.js");
 
 const { find } = require("../../functions/music/playlist/helper");
 const pagination = require("../../functions/utils/pagination");
+const { CacheGet, CacheSet } = require("../../functions/cache");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -29,10 +30,11 @@ module.exports = class AddCommand extends Commando.Command {
     const prefix = message.guild._commandPrefix;
     const { username } = message.member.user;
     const { id } = message.member.user;
-    let playlist = cache.get(`Playlist-${id}`);
+
+    let playlist = await CacheGet(`Playlist-${id}`, true);
     if (!playlist) {
       playlist = await find(id);
-      cache.set(`Playlist-${id}`, playlist);
+      CacheSet(`Playlist-${id}`, playlist);
     }
 
     if (!playlist) {

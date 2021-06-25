@@ -3,13 +3,7 @@ const statusMsg = require("./statusMsg");
 const { infoFromQuery } = require("./search");
 const { addplayerInfo } = require("./playlist/helper");
 
-const play = async (
-  connection,
-  channel,
-  musicPlayer,
-  seekTime,
-  hasFilter = false
-) => {
+const play = async (connection, channel, musicPlayer, seekTime, id = null) => {
   let currentSong = musicPlayer.currentSong();
   if (!currentSong) {
     return;
@@ -18,7 +12,9 @@ const play = async (
     const searchQuery = `${currentSong.artists} ${currentSong.track}`;
     const PlayerInfo = await infoFromQuery(searchQuery);
     currentSong.playerInfo = PlayerInfo.playerInfo;
-    addplayerInfo(id, currentSong);
+    if (id) {
+      addplayerInfo(id, currentSong);
+    }
   }
 
   const filter = musicPlayer.audioFilter;
@@ -32,19 +28,32 @@ const play = async (
     liveBuffer: 40000,
     highWaterMark: 1 << 25,
   });
+
   const dispatcher = await connection.play(stream, { type: "opus" });
+
   musicPlayer.setStatus(1);
-  let msg;
-  if (!hasFilter) {
+  // let msg;
+  // if (!hasFilter) {
+  //   msg = await statusMsg(currentSong, channel, "playing");
+  //   musicPlayer.message = msg;
+  // }
+  // console.log(musicPlayer);
+
+  let msg = musicPlayer.message;
+  if (!msg) {
     msg = await statusMsg(currentSong, channel, "playing");
+    musicPlayer.message = msg;
+  } else {
+    statusMsg(currentSong, channel, "playing", msg);
   }
 
   dispatcher.on("finish", () => {
     musicPlayer.setSeekTime(0);
     musicPlayer.nextSong();
-    if (msg) {
-      msg.delete();
-    }
+    // if (msg) {
+    //   msg.delete();
+    // }
+
     if (musicPlayer.isQueueEmpty() === true) {
       connection.disconnect();
     } else {

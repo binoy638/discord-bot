@@ -21,5 +21,5 @@ module.exports = (filterArgs, connection, channel, musicPlayer) => {
   } catch (e) {
     console.log(e);
   }
-  play(connection, channel, musicPlayer, seekTime, true);
+  play(connection, channel, musicPlayer, seekTime);
 };

@@ -15,6 +15,7 @@ class MusicPlayer {
     this.loop = false;
     this.seek = 0;
     this.audioFilter = "dynaudnorm=f=200";
+    this.message = null;
 
     player.on("playlistchange", () => {
       this.count = this.playlist.length;

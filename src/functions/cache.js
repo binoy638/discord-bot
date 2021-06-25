@@ -1,18 +1,55 @@
-const cache = require("node-cache");
+const redisCache = require("../configs/redis");
+const { promisify } = require("util");
+const getCacheAsync = promisify(redisCache.get).bind(redisCache);
 
-module.exports = (function () {
-  this.storage = new cache();
-  // this.storage.on("set", function (key, value) {
-  //   console.log(`key:${key} value:${value}`);
-  // });
-  this.storage.on("expired", function (key, value) {
-    console.log(`${key} expired`);
-  });
-  this.storage.on("flush", function () {
-    console.log("Cache Flushed");
-  });
-  return this.storage;
-})();
+const CacheSet = (key, value) => {
+  if (typeof key !== "string") throw "Key must be a String";
+
+  try {
+    if (typeof value === "object") {
+      redisCache.set(key, JSON.stringify(value));
+    } else redisCache.set(key, value);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const CacheSetex = (key, ttl, value) => {
+  if (typeof key !== "string") throw "Key must be a String";
+  if (typeof ttl !== "number") throw "TTL must be a number";
+  try {
+    if (typeof value === "object") {
+      redisCache.setex(key, ttl, JSON.stringify(value));
+    } else redisCache.setex(key, ttl, value);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const CacheGet = async (key, json) => {
+  if (typeof key !== "string") throw "Key must be a String";
+  try {
+    const data = await getCacheAsync(key);
+    if (data) {
+      if (json && typeof data === "string") {
+        return JSON.parse(data);
+      } else return data;
+    } else return undefined;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const CacheDel = async (key) => {
+  if (typeof key !== "string") throw "Key must be a String";
+  try {
+    redisCache.del(key);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { CacheSet, CacheSetex, CacheGet, CacheDel };
 
 /*
  Cache Key Prefixs:

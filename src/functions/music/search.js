@@ -2,7 +2,7 @@ var search = require("youtube-search");
 const ytdl = require("discord-ytdl-core");
 const { htmlUnescape } = require("escape-goat");
 const youtube = require("scrape-youtube").default;
-const cache = require("../cache");
+const { CacheGet, CacheSet } = require("../cache");
 const API_KEY = process.env.YOUTUBE_KEY;
 
 var opts = {
@@ -14,7 +14,6 @@ var opts = {
 
 const imageLink = (link) => {
   const newLink = link.replace("hqdefault", "default");
-
   return newLink;
 };
 
@@ -30,7 +29,9 @@ const youtubeScrape = async (query) => {
       song = info.videoDetails.media.song;
       artist = info.videoDetails.media.artist;
     } catch (e) {
+      // console.log(e);
       console.log("Cant find artist info");
+      console.log(e);
     }
     return {
       track: song ? song : title,
@@ -45,7 +46,7 @@ const youtubeScrape = async (query) => {
 };
 
 const infoFromQuery = async (query) => {
-  let songInfo = cache.get(`SearchQuery:${query}`); //check if song is present in cache
+  let songInfo = await CacheGet(`SearchQuery:${query}`, true); //check if song is present in cache
 
   if (!songInfo) {
     //if song is not in cahce search it using youtube-search
@@ -70,7 +71,9 @@ const infoFromQuery = async (query) => {
           song = info.videoDetails.media.song;
           artist = info.videoDetails.media.artist;
         } catch (e) {
+          // console.log(e);
           console.log("Cant find artist info");
+          console.log(e);
         }
 
         songInfo = {
@@ -83,7 +86,7 @@ const infoFromQuery = async (query) => {
           },
         };
 
-        cache.set(`SearchQuery:${query}`, songInfo); //save the song info in cache for future quries
+        CacheSet(`SearchQuery:${query}`, songInfo); //save the song info in cache for future quries
       }
     } catch (e) {
       console.log("API rate limit exceeded.");
@@ -98,29 +101,32 @@ const infoFromQuery = async (query) => {
 };
 
 const infoFromLink = async (url) => {
-  let songInfo;
-  try {
-    const info = await ytdl.getBasicInfo(url);
-    if (info.videoDetails) {
-      const {
-        title,
-        video_url: link,
-        thumbnails: [{ url: image }],
-      } = info.videoDetails;
-      let song = info.videoDetails.media.song;
-      let artist = info.videoDetails.media.artist;
-      songInfo = {
-        track: song ? song : htmlUnescape(title),
-        artists: artist ? artist : "",
-        playerInfo: {
-          link,
-          title: htmlUnescape(title),
-          image,
-        },
-      };
+  let songInfo = await CacheGet(url, true);
+  if (!songInfo) {
+    try {
+      const info = await ytdl.getBasicInfo(url);
+      if (info.videoDetails) {
+        const {
+          title,
+          video_url: link,
+          thumbnails: [{ url: image }],
+        } = info.videoDetails;
+        let song = info.videoDetails.media.song;
+        let artist = info.videoDetails.media.artist;
+        songInfo = {
+          track: song ? song : htmlUnescape(title),
+          artists: artist ? artist : "",
+          playerInfo: {
+            link,
+            title: htmlUnescape(title),
+            image,
+          },
+        };
+        CacheSet(url, songInfo);
+      }
+    } catch (error) {
+      console.log("Cant fetch songinfo from link");
     }
-  } catch (error) {
-    console.log("Cant fetch songinfo from link");
   }
   return songInfo;
 };

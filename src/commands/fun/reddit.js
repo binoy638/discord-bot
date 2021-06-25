@@ -1,7 +1,8 @@
 const Commando = require("discord.js-commando");
-const cache = require("../../functions/cache");
+const { CacheGet, CacheSetex } = require("../../functions/cache");
+
 const { RedditEmbed } = require("../../functions/embed");
-const { fetchHotPosts } = require("../../functions/reddit/snoowrap");
+const Reddit = require("../../libs/reddit");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -9,11 +10,11 @@ module.exports = class AddCommand extends Commando.Command {
       name: "meme",
       group: "fun",
       memberName: "meme",
-      description: "Get a random meme from a reddit",
+      description: "Get random post from a subreddit.",
       args: [
         {
           key: "subreddit",
-          prompt: "Enter subreddit name or url.",
+          prompt: "Please specify a subreddit.",
           type: "string",
           default: "meme",
         },
@@ -23,10 +24,11 @@ module.exports = class AddCommand extends Commando.Command {
   async run(message, args) {
     let subreddit = args.subreddit;
 
-    let posts = cache.get(`Rd-${subreddit}`);
+    let posts = await CacheGet(`Rd-${subreddit}`, true);
     if (!posts) {
-      posts = await fetchHotPosts(subreddit, 50);
-      if (posts) cache.set(`Rd-${subreddit}`, posts, 120);
+      const reddit = new Reddit(subreddit, "hot");
+      posts = await reddit.getPosts(subreddit, 100);
+      if (posts) CacheSetex(`Rd-${subreddit}`, 3600, posts);
     }
 
     if (!posts)

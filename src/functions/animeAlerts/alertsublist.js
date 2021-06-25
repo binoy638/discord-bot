@@ -1,4 +1,4 @@
-const mongo = require("../../mongo");
+const mongo = require("../../configs/mongo");
 const animeAlertSchema = require("../../models/anime");
 
 module.exports = async () => {

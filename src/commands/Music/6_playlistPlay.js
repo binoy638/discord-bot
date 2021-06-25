@@ -1,15 +1,9 @@
 const Commando = require("discord.js-commando");
-const ytdl = require("discord-ytdl-core");
-const {
-  find,
-  addplayerInfo,
-} = require("../../functions/music/playlist/helper");
-const statusMsg = require("../../functions/music/statusMsg");
+const { find } = require("../../functions/music/playlist/helper");
 const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
-const { infoFromQuery } = require("../../functions/music/search");
-const cache = require("../../functions/cache");
 const Discordcollection = require("../../functions/utils/Discordcollection");
 const play = require("../../functions/music/play");
+const { CacheGet, CacheSet } = require("../../functions/cache");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
@@ -20,14 +14,15 @@ module.exports = class AddCommand extends Commando.Command {
       description: "Play your tracks from your playlist",
     });
   }
-  async run(message, args) {
+  async run(message) {
     const prefix = message.guild._commandPrefix;
     const { id } = message.member.user;
     const { voice } = message.member;
-    let playlist = cache.get(`Playlist-${id}`);
+
+    let playlist = await CacheGet(`Playlist-${id}`, true);
     if (!playlist) {
       playlist = await find(id);
-      cache.set(`Playlist-${id}`, playlist);
+      CacheSet(`Playlist-${id}`, playlist);
     }
 
     if (!playlist) {
@@ -59,7 +54,7 @@ module.exports = class AddCommand extends Commando.Command {
 
     const connection = await voice.channel.join();
 
-    play(connection, message.channel, musicPlayer);
+    play(connection, message.channel, musicPlayer, 0, id);
 
     //TODO:Check if duplicate event listners are being added
     connection.on("disconnect", () => {

@@ -1,10 +1,11 @@
 const SpotifyWebApi = require("spotify-web-api-node");
-const cache = require("../../cache.js");
+const { CacheSetex, CacheGet } = require("../../cache.js");
+
 const token = require("./spotifyToken.js");
 const spotifyApi = new SpotifyWebApi();
 
 async function setToken() {
-  let accessToken = cache.get("spotify-access-token");
+  let accessToken = await CacheGet("spotify-access-token");
   if (!accessToken) {
     const result = await token();
 
@@ -13,7 +14,7 @@ async function setToken() {
     }
     accessToken = result.token;
     const ttl = result.expires_in;
-    cache.set("spotify-access-token", accessToken, ttl);
+    CacheSetex("spotify-access-token", ttl, accessToken);
   }
 
   spotifyApi.setAccessToken(accessToken);
@@ -32,7 +33,7 @@ const playlist = async (slug) => {
     data.playlistInfo = playlistInfo;
     data.tracks = [];
     let playlist = response.body.tracks.items;
-    playlist.map((tracks, index) => {
+    playlist.map((tracks) => {
       const artists = tracks.track.artists.map((artist) => artist.name).join();
 
       const track = tracks.track.name;

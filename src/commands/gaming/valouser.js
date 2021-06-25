@@ -1,4 +1,4 @@
-const mongo = require("../../mongo");
+const mongo = require("../../configs/mongo");
 const valoSchema = require("../../models/valorant");
 const Commando = require("discord.js-commando");
 module.exports = class AddCommand extends Commando.Command {

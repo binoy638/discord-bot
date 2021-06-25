@@ -1,12 +1,11 @@
-const mongo = require("../mongo");
+const mongo = require("../configs/mongo");
 const welcomeSchema = require("../models/welcome");
-// const cache = {};
-var cache = require("./cache");
+const { CacheGet, CacheSet } = require("./cache");
 
 module.exports = async (member) => {
   const { guild } = member;
 
-  let data = cache.get(`welmsg${guild.id}`);
+  let data = await CacheGet(`welmsg${guild.id}`, true);
 
   //   console.log(`cache: ${JSON.stringify(demo)}`);
 
@@ -17,7 +16,7 @@ module.exports = async (member) => {
           _id: `welmsg${guild.id}`,
         });
         data = [result.channelId, result.text];
-        cache.set(`welmsg${guild.id}`, data);
+        CacheSet(`welmsg${guild.id}`, data);
       } finally {
         mongoose.connection.close();
       }

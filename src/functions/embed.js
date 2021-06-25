@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+const { htmlUnescape } = require("escape-goat");
 
 const RedditEmbed = (post, type = "image") => {
   if (!post) return null;
@@ -19,4 +20,23 @@ const RedditEmbed = (post, type = "image") => {
   return Embed;
 };
 
-module.exports = { RedditEmbed };
+const NineGagEmbed = (data, channel) => {
+  let Title = htmlUnescape(data.title);
+  if (Title.length > 250) {
+    Title = Title.slice(0, 50) + "....";
+  }
+  const gag = new Discord.MessageEmbed()
+    .setColor("#0099ff")
+    .setTitle(Title)
+    .setURL(data["url"]);
+
+  if (data["type"] === "Photo") {
+    gag.setImage(data["content"]);
+    channel.send(gag);
+  } else {
+    channel.send({ embed: gag });
+    channel.send(data["content"]);
+  }
+};
+
+module.exports = { RedditEmbed, NineGagEmbed };

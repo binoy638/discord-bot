@@ -28,10 +28,11 @@ module.exports = class AddCommand extends Commando.Command {
     dispatcher.pause();
 
     const musicPlayer = musicPlayerInstance(message.channel);
+    const playerMsg = musicPlayer.message;
     if (musicPlayer) {
       const currentSong = musicPlayer.currentSong();
       musicPlayer.setStatus(2);
-      return statusMsg(currentSong, message.channel, "paused");
+      return statusMsg(currentSong, message.channel, "paused", playerMsg);
     }
     message.channel.send("`Paused ⏸️`");
   }

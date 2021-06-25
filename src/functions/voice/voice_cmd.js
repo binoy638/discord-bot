@@ -1,12 +1,11 @@
 var convert_audio = require("./convert_audio");
 var transcribe = require("./transcribe");
 const path = require("path");
-const { setTimeout } = require("timers");
 module.exports = async (connection, message, user, client) => {
   // connection.play(path.join("src/static", "sound.mp3"));
 
   if (!connection.dispatcher) {
-    connection.play(path.join("src/static", "sound.mp3"));
+    connection.play(path.join("src/assets", "sound.mp3"));
   } else {
     connection.dispatcher.setVolume(0.3);
     setTimeout(() => {
