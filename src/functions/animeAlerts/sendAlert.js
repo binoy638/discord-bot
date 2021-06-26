@@ -2,6 +2,8 @@ const Discord = require("discord.js");
 var job = require("../JobManager");
 const mongo = require("../../configs/mongo");
 const animeAlertSchema = require("../../models/anime");
+const animeButtons = require("../../buttons/animeButtons");
+const axios = require("axios");
 module.exports = async (data, channel, isfirst) => {
   let {
     480: res480,
@@ -13,36 +15,19 @@ module.exports = async (data, channel, isfirst) => {
     title: title,
     anime_id: id,
   } = data;
-  const alert = new Discord.MessageEmbed()
+  const {
+    data: { image_url },
+  } = await axios.get(`https://api.jikan.moe/v3/anime/${id}`);
+  const embed = new Discord.MessageEmbed()
     .setColor("#0099ff")
-    .setTitle(`${title}-${episode}`)
-    .setURL(`https://myanimelist.net/${id}`)
-    .addFields(
-      {
-        name: "480p",
-        value: `[Open](https://udility.herokuapp.com/redirect/${res480})`,
-        inline: true,
-      },
-      {
-        name: "720p",
-        value: `[Open](https://udility.herokuapp.com/redirect/${res720})`,
-        inline: true,
-      },
-      {
-        name: "1080p",
-        value: `[Open](https://udility.herokuapp.com/redirect/${res1080})`,
-        inline: true,
-      }
-    );
-  if (isfirst) {
-    channel.send(`Next episode will be out on next \`${day} at ${IST}(IST)\``);
-  } else {
-    channel.send(
-      `Yay! New episode of ${title} is out.\nNext episode will be out on next \`${day} at ${IST}(IST)\``
-    );
-  }
+    .setTitle(`New Episode of ${title} is out`)
+    .setDescription(episode)
+    .setImage(image_url)
+    .setFooter(`Next episode will be out on ${day} at ${IST}(IST)`);
 
-  channel.send(alert);
+  const buttons = animeButtons(res480, res720, res1080);
+
+  channel.send({ embed, components: buttons });
   if (!data["Airing"]) {
     channel.send(`This was the last episode of ${title} :(`);
     await mongo().then(async (mongoose) => {

@@ -34,36 +34,36 @@ module.exports = class AddCommand extends Commando.Command {
 
     anime["anime_id"] = id;
     let { Airing: Airing, Corn_Time: Cron_Time, title: title } = anime;
-    await mongo().then(async (mongoose) => {
-      try {
-        const data = await animeAlertSchema.findOne({
-          _id: `${channel_id}-${id}`,
-        });
-        if (data) {
-          return message.channel.send(
-            `Anime Alerts for \`${title}\` already activated in this channel`
-          );
-        } else {
-          console.log("tring to insert");
-          await animeAlertSchema.create({
-            _id: `${channel_id}-${id}`,
-            channelId: channel_id,
-            guild: message.channel.guild.id,
-            anime_id: id,
-            cron_time: Cron_Time,
-            anime_title: title,
-          });
-          job(id, title, Cron_Time, message.channel);
-          message.channel.send(
-            `Anime Alerts for \`${title}\` has been activate on this channel.`
-          );
-          sendAlert(anime, message.channel, true);
-        }
-      } catch (e) {
-        console.log(e);
-      } finally {
-        mongoose.connection.close();
-      }
-    });
+    // await mongo().then(async (mongoose) => {
+    //   try {
+    //     const data = await animeAlertSchema.findOne({
+    //       _id: `${channel_id}-${id}`,
+    //     });
+    //     if (data) {
+    //       return message.channel.send(
+    //         `Anime Alerts for \`${title}\` already activated in this channel`
+    //       );
+    //     } else {
+    //       console.log("tring to insert");
+    //       await animeAlertSchema.create({
+    //         _id: `${channel_id}-${id}`,
+    //         channelId: channel_id,
+    //         guild: message.channel.guild.id,
+    //         anime_id: id,
+    //         cron_time: Cron_Time,
+    //         anime_title: title,
+    //       });
+    //       job(id, title, Cron_Time, message.channel);
+    //       message.channel.send(
+    //         `Anime Alerts for \`${title}\` has been activate on this channel.`
+    //       );
+    //       sendAlert(anime, message.channel, true);
+    //     }
+    //   } catch (e) {
+    //     console.log(e);
+    //   } finally {
+    //     mongoose.connection.close();
+    //   }
+    // });
   }
 };

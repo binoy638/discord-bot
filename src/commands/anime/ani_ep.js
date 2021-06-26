@@ -1,9 +1,8 @@
 const axios = require("axios");
 const Discord = require("discord.js");
 const Commando = require("discord.js-commando");
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+const animeButtons = require("../../buttons/animeButtons");
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "ani_ep",
@@ -21,39 +20,30 @@ module.exports = class AddCommand extends (
   }
   async run(message, args) {
     let id = args.animeID;
-    const Embed = new Discord.MessageEmbed().setColor("#0099ff");
-    axios
-      .get(`https://udility.herokuapp.com/anime_first/${id}`)
-      .then((res) => {
-        if (res.data["title"]) {
-          Embed.setTitle(`${res.data["title"]}-${res.data["episode"]}`)
-            .setURL(`https://myanimelist.net/anime/${id}`)
-            .addFields(
-              {
-                name: "480p",
-                value: `[Open](https://udility.herokuapp.com/redirect/${res.data["480"]})`,
-                inline: true,
-              },
-              {
-                name: "720p",
-                value: `[Open](https://udility.herokuapp.com/redirect/${res.data["720"]})`,
-                inline: true,
-              },
-              {
-                name: "1080p",
-                value: `[Open](https://udility.herokuapp.com/redirect/${res.data["1080"]})`,
-                inline: true,
-              }
-            );
+    try {
+      const { data: anime } = await axios.get(
+        `https://udility.herokuapp.com/anime_first/${id}`
+      );
+      if (!anime) return message.channel.send("Episode not found!");
 
-          message.channel.send(Embed);
-        } else {
-          message.channel.send("Episode not found!");
-        }
-      })
-      .catch((err) => {
-        console.error("Sever error 500");
-        message.channel.send("Episode not found!");
-      });
+      const {
+        data: { image_url },
+      } = await axios.get(`https://api.jikan.moe/v3/anime/${id}`);
+
+      if (image_url) anime.image_url = image_url;
+      const buttons = animeButtons(anime["480"], anime["720"], anime["1080"]);
+      const embed = new Discord.MessageEmbed()
+        .setColor("#0099ff")
+        .setTitle(`New Episode of ${anime.title} is out`)
+        .setDescription(anime.episode)
+        .setImage(image_url)
+        .setFooter(
+          `Next episode will be out on ${anime.day} at ${anime.IST}(IST)`
+        );
+      message.channel.send({ embed, components: buttons });
+    } catch (error) {
+      message.channel.send("Episode not found!");
+      console.error(error);
+    }
   }
 };
