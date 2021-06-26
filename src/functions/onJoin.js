@@ -7,8 +7,6 @@ module.exports = async (member) => {
 
   let data = await CacheGet(`welmsg${guild.id}`, true);
 
-  //   console.log(`cache: ${JSON.stringify(demo)}`);
-
   if (!data) {
     await mongo().then(async (mongoose) => {
       try {

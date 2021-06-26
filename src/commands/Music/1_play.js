@@ -29,7 +29,7 @@ module.exports = class AddCommand extends Commando.Command {
     const query = args.query;
 
     const QueryType = queryType(query);
-    const { id } = message.member.user;
+
     const voiceChannel = message.member.voice.channel;
     if (!voiceChannel) return message.channel.send("No voice channel.");
 
