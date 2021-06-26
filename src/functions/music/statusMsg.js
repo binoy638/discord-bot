@@ -21,7 +21,6 @@ module.exports = async (data, channel, status, message) => {
   }
 
   if (message) {
-    console.log("inside is message");
     message.edit({
       embed: musicEmbed,
       components: buttons,

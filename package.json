@@ -45,6 +45,6 @@
     "spotify-web-api-node": "^5.0.2",
     "underscore": "^1.12.0",
     "youtube-search": "^1.1.6",
-    "ytdl-core": "https://github.com/fent/node-ytdl-core#d1f535712410eebd79a7468abd07d94f8c4ebe5a"
+    "ytdl-core": "^4.8.3"
   }
 }
