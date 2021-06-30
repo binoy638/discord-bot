@@ -1,11 +1,8 @@
 const Commando = require("discord.js-commando");
 const { MessageEmbed } = require("discord.js");
-const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
-const {
-  Emoji2Filter,
-  String2Filter,
-} = require("../../functions/utils/filterOpts");
-const applyFilter = require("../../functions/music/applyFilter");
+const musicPlayerInstance = require("../../utils/music/musicPlayerInstance");
+const { Emoji2Filter, String2Filter } = require("../../utils/misc/filterOpts");
+const applyFilter = require("../../utils/music/applyFilter");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {

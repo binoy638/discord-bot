@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const Commando = require("discord.js-commando");
 const { agenda } = require("./configs/agenda");
+const animeTimer = require("./utils/animeAlerts/animeTimer");
 
 const client = new Commando.Client({
   owner: "312265605715722240",
@@ -25,9 +26,10 @@ for (const file of eventFiles) {
 }
 
 agenda.define("animeTimer", async (job) => {
-  const { channelID, guildID, animeID, cornTime, animeTitle, animeImage } =
-    job.attrs.data;
+  console.log("inside job def");
+  const { channelID, animeID, animeImage, animeTitle } = job.attrs.data;
   const channel = client.channels.cache.get(channelID);
+  animeTimer({ id: animeID, image: animeImage, title: animeTitle }, channel);
 });
 
 client.login(process.env.TOKEN);

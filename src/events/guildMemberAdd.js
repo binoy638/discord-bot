@@ -1,4 +1,4 @@
-const onJoin = require("../functions/onJoin");
+const onJoin = require("../utils/onJoin");
 
 module.exports = {
   name: "guildMemberAdd",

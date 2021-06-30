@@ -39,4 +39,14 @@ const NineGagEmbed = (data, channel) => {
   }
 };
 
-module.exports = { RedditEmbed, NineGagEmbed };
+const ErrorEmbed = (msg, channel) => {
+  const embed = new Discord.MessageEmbed().setDescription(`❌ ${msg}`);
+  channel.send(embed);
+};
+
+const SuccessEmbed = (msg, channel) => {
+  const embed = new Discord.MessageEmbed().setDescription(`✅ ${msg}`);
+  channel.send(embed);
+};
+
+module.exports = { RedditEmbed, NineGagEmbed, ErrorEmbed, SuccessEmbed };

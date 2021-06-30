@@ -1,10 +1,8 @@
-const onJoin = require("../../functions/onJoin");
+const onJoin = require("../../utils/onJoin");
 
 const Commando = require("discord.js-commando");
 
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "jsim",

@@ -2,9 +2,9 @@ const Commando = require("discord.js-commando");
 
 const Discord = require("discord.js");
 
-const { find } = require("../../functions/music/playlist/helper");
-const pagination = require("../../functions/utils/pagination");
-const { CacheGet, CacheSet } = require("../../functions/cache");
+const { find } = require("../../utils/music/playlist/helper");
+const pagination = require("../../utils/misc/pagination");
+const { CacheGet, CacheSet } = require("../../utils/cache");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {

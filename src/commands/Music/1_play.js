@@ -1,12 +1,12 @@
 const ytdl = require("discord-ytdl-core");
-const queryType = require("../../functions/music/queryType");
-// const statusMsg = require("../../functions/music/statusMsg");
+const queryType = require("../../utils/music/queryType");
+// const statusMsg = require("../../utils/music/statusMsg");
 const Commando = require("discord.js-commando");
-const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
-const Discordcollection = require("../../functions/utils/Discordcollection");
-const { playlist } = require("../../functions/music/playlist/spotify");
-const { infoFromQuery, infoFromLink } = require("../../functions/music/search");
-const play = require("../../functions/music/play");
+const musicPlayerInstance = require("../../utils/music/musicPlayerInstance");
+const Discordcollection = require("../../utils/misc/Discordcollection");
+const { playlist } = require("../../utils/music/playlist/spotify");
+const { infoFromQuery, infoFromLink } = require("../../utils/music/search");
+const play = require("../../utils/music/play");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {

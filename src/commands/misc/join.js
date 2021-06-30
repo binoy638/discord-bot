@@ -4,8 +4,8 @@ const {
   GRASSHOPPER,
   BUMBLEBEE,
 } = require("@picovoice/porcupine-node/builtin_keywords");
-const voice_cmd = require("../../functions/voice/voice_cmd");
-const msg = require("../../functions/voice/message");
+const voice_cmd = require("../../utils/voice/voice_cmd");
+const msg = require("../../utils/voice/message");
 const Commando = require("discord.js-commando");
 
 module.exports = class AddCommand extends Commando.Command {

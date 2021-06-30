@@ -1,4 +1,4 @@
-const player = require("../utils/Discordcollection");
+const player = require("../misc/Discordcollection");
 const MusicPlayer = require("./musicPlayer");
 
 module.exports = (channel, vc) => {

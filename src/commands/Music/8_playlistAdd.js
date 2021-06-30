@@ -1,9 +1,7 @@
 const Commando = require("discord.js-commando");
-const { add } = require("../../functions/music/playlist/helper");
-const {
-  playlist: getplaylist,
-} = require("../../functions/music/playlist/spotify");
-const musicPlayerInstance = require("../../functions/music/musicPlayerInstance");
+const { add } = require("../../utils/music/playlist/helper");
+const { playlist: getplaylist } = require("../../utils/music/playlist/spotify");
+const musicPlayerInstance = require("../../utils/music/musicPlayerInstance");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {

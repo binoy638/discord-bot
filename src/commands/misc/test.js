@@ -14,13 +14,12 @@ module.exports = class AddCommand extends Commando.Command {
     });
   }
   async run(message, args) {
-    const embed = new Discord.MessageEmbed()
-      .setColor("#0099ff")
-      .setTitle("New Episode of Megalo Box Season 2 is out")
-      .setDescription(`Megalo Box season 2 \nEpisode: 5`)
-      .setImage("https://cdn.myanimelist.net/images/anime/1190/113352.jpg")
-      .setFooter("Next episode will be out on 12:00(IST)");
-
-    message.channel.send({ embed, components: animeButtons });
+    try {
+      const { data } = await axios.get(
+        `https://udility.herokuapp.com/anime/40729`
+      );
+    } catch (error) {
+      console.error(error.response.status);
+    }
   }
 };

@@ -1,4 +1,4 @@
-const musicPlayerInstance = require("../functions/music/musicPlayerInstance");
+const musicPlayerInstance = require("../utils/music/musicPlayerInstance");
 
 module.exports = {
   name: "clickButton",

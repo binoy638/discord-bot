@@ -1,7 +1,7 @@
 const Commando = require("discord.js-commando");
-const { CacheGet, CacheSetex } = require("../../functions/cache");
+const { CacheGet, CacheSetex } = require("../../utils/cache");
 
-const { RedditEmbed } = require("../../functions/embed");
+const { RedditEmbed } = require("../../utils/embed");
 const Reddit = require("../../libs/reddit");
 
 module.exports = class AddCommand extends Commando.Command {
