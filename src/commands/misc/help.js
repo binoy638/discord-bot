@@ -1,9 +1,7 @@
 const Discord = require("discord.js");
 const Commando = require("discord.js-commando");
 
-module.exports = class AddCommand extends (
-  Commando.Command
-) {
+module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     const groups = client.registry.groups
       .filter((group) => {
@@ -72,15 +70,14 @@ module.exports = class AddCommand extends (
           `${prefix}${command.name}`,
           `\`${command.description}\``
         );
-        if (command.groupID === "guild") {
-          Embed.addField(
-            `${prefix}prefix`,
-            "`change command prefix for this guild`"
-          );
-        }
       }
     });
-
+    if (cmdarg === "guild") {
+      Embed.addField(
+        `${prefix}prefix`,
+        "`change command prefix for this guild`"
+      );
+    }
     return message.channel.send(Embed);
   }
 };
