@@ -14,12 +14,11 @@ module.exports = class AddCommand extends Commando.Command {
     });
   }
   async run(message, args) {
-    try {
-      const { data } = await axios.get(
-        `https://udility.herokuapp.com/anime/40729`
-      );
-    } catch (error) {
-      console.error(error.response.status);
-    }
+    this.client.guilds.cache.forEach((guild) => {
+      console.log(`Guild: ${guild.name}\nMembers:`);
+      guild.members.cache.each((member) => {
+        console.log(member.user.username);
+      });
+    });
   }
 };

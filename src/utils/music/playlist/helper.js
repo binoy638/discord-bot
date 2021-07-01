@@ -99,7 +99,6 @@ const remove = async (id, track, channel) => {
           $pull: { playlist: track },
         },
         {
-          upsert: true,
           new: true,
         }
       );

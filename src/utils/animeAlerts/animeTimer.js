@@ -2,6 +2,7 @@ const axios = require("axios");
 const Discord = require("discord.js");
 const animeButtons = require("../../buttons/animeButtons");
 const { agenda } = require("../../configs/agenda");
+const { ErrorEmbed } = require("../embed");
 
 module.exports = async (JobInfo, channel) => {
   const { id, image, title } = JobInfo;
@@ -40,10 +41,17 @@ module.exports = async (JobInfo, channel) => {
           `Anime ${id} have stopped airing.\nJob cancelled: ${removedJobCount}`
         );
       } else {
-        return channel.send(
-          `${title}'s new episode got delayed.\nUse \`ani_ep ${id}\` to get the last released episode.`
+        return ErrorEmbed(
+          `${title}'s new episode got delayed.\nUse \`episode ${id}\` to get the last released episode.`,
+          channel
         );
       }
+    } else {
+      console.error(error);
+      ErrorEmbed(
+        `Something went wrong,could not fetch episode.\nAnime ID:\`${id}\``,
+        channel
+      );
     }
   }
 };
