@@ -1,4 +1,3 @@
-const { search } = require("ffmpeg-static");
 const searchNavButtons = require("../buttons/searchNavButtons");
 const { extractIDIndex } = require("../utils/anime/helper");
 const { CacheGet } = require("../utils/cache");
@@ -91,7 +90,7 @@ module.exports = {
           "animetorrent",
           true
         );
-        return animetorrent.run(message, { query });
+        return animetorrent.run(message, { query }, true);
     }
   },
 };

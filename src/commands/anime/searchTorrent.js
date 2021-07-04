@@ -19,7 +19,8 @@ module.exports = class AddCommand extends Commando.Command {
       ],
     });
   }
-  async run(message, args) {
+  async run(message, args, fromButton = false) {
+    const prefix = message.guild._commandPrefix || "!";
     const { channel } = message;
     const query = args.query;
 
@@ -45,6 +46,10 @@ module.exports = class AddCommand extends Commando.Command {
           }
         );
       });
+      if (fromButton)
+        embed.setDescription(
+          `For custom search use \`${prefix}animetorrent [query]\``
+        );
       channel.send(embed);
     } catch (error) {
       console.error(error);
