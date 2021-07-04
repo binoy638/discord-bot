@@ -10,7 +10,7 @@ module.exports = class AddCommand extends Commando.Command {
       aliases: ["ani_search", "search"],
       group: "anime",
       memberName: "ani_search",
-      description: "Search currently airing anime.",
+      description: "Search anime in myanimelist.",
       args: [
         {
           key: "query",

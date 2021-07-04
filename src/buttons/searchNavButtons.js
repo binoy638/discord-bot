@@ -1,10 +1,11 @@
 const { MessageButton, MessageActionRow } = require("discord-buttons");
+const { search } = require("ffmpeg-static");
 
 module.exports = (isAiring = false) => {
   const searchNext = new MessageButton()
     .setStyle("blurple")
     .setLabel("Next")
-    .setID(`search-next`);
+    .setID(`anime-search-next`);
 
   const enableNotification = new MessageButton()
     .setStyle("green")
@@ -15,7 +16,12 @@ module.exports = (isAiring = false) => {
   const searchPrevious = new MessageButton()
     .setStyle("blurple")
     .setLabel("Prev")
-    .setID(`search-prev`);
+    .setID(`anime-search-prev`);
+
+  const searchTorrent = new MessageButton()
+    .setStyle("blurple")
+    .setLabel("Torrent")
+    .setID(`anime-torrent`);
 
   if (isAiring) enableNotification.setDisabled(false);
 
@@ -23,5 +29,6 @@ module.exports = (isAiring = false) => {
     searchPrevious,
     enableNotification,
     searchNext,
+    searchTorrent,
   ]);
 };

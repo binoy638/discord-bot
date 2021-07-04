@@ -39,7 +39,7 @@ module.exports = {
         const [skip] = client.registry.findCommands("skip", true);
         skip.run(message, button.clicker);
         break;
-      case "search-next":
+      case "anime-search-next":
         button.defer();
         let searchResults = await CacheGet(message.id, true);
         if (!searchResults) return;
@@ -56,7 +56,7 @@ module.exports = {
           embed: animeEmbed(nextAnime, Index),
           components: searchNavButtons(nextAnime.airing),
         });
-      case "search-prev":
+      case "anime-search-prev":
         button.defer();
         const _searchResults = await CacheGet(message.id, true);
         if (!_searchResults) return;
@@ -82,7 +82,16 @@ module.exports = {
           "start",
           true
         );
-        enableNotification.run(message, { animeID: Number(animeID) });
+        return enableNotification.run(message, { animeID: Number(animeID) });
+      case "anime-torrent":
+        button.defer();
+        const query = message?.embeds[0]?.title;
+        if (!query) return;
+        const [animetorrent] = client.registry.findCommands(
+          "animetorrent",
+          true
+        );
+        return animetorrent.run(message, { query });
     }
   },
 };
