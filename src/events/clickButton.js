@@ -1,3 +1,8 @@
+const { search } = require("ffmpeg-static");
+const searchNavButtons = require("../buttons/searchNavButtons");
+const { extractIDIndex } = require("../utils/anime/helper");
+const { CacheGet } = require("../utils/cache");
+const { animeEmbed } = require("../utils/embed");
 const musicPlayerInstance = require("../utils/music/musicPlayerInstance");
 
 module.exports = {
@@ -34,6 +39,50 @@ module.exports = {
         const [skip] = client.registry.findCommands("skip", true);
         skip.run(message, button.clicker);
         break;
+      case "search-next":
+        button.defer();
+        let searchResults = await CacheGet(message.id, true);
+        if (!searchResults) return;
+        const [ID, Index] = extractIDIndex(message.embeds[0]);
+
+        if (!ID || !Index)
+          throw new Error(
+            `ID or Index not found for message ID: ${message.id}`
+          );
+        if (!searchResults.length > Index) return;
+        const nextAnime = searchResults[Index];
+
+        return message.edit({
+          embed: animeEmbed(nextAnime, Index),
+          components: searchNavButtons(nextAnime.airing),
+        });
+      case "search-prev":
+        button.defer();
+        const _searchResults = await CacheGet(message.id, true);
+        if (!_searchResults) return;
+        const [prevID, prevIndex] = extractIDIndex(message.embeds[0]);
+        if (!prevID || !prevIndex)
+          throw new Error(
+            `ID or Index not found for message ID: ${message.id}`
+          );
+        if (!_searchResults.length > prevIndex - 2) return;
+
+        const prevAnime = _searchResults[prevIndex - 2];
+
+        return message.edit({
+          embed: animeEmbed(prevAnime, prevIndex - 2),
+          components: searchNavButtons(prevAnime.airing),
+        });
+      case "anime-notification":
+        button.defer();
+
+        const [animeID] = extractIDIndex(message.embeds[0]);
+
+        const [enableNotification] = client.registry.findCommands(
+          "start",
+          true
+        );
+        enableNotification.run(message, { animeID: Number(animeID) });
     }
   },
 };

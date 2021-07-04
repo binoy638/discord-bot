@@ -19,11 +19,12 @@ module.exports = class AddCommand extends Commando.Command {
     });
   }
   async run(message, args) {
-    const { channel } = message;
+    const { channel, guild } = message;
     const id = args.animeID;
+
     const isRemoved = await agenda.cancel({
       name: "animeTimer",
-      "data.guildID": channel.guild.id,
+      "data.guildID": guild.id,
       "data.channelID": channel.id,
       "data.animeID": id,
     });

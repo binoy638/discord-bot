@@ -39,6 +39,22 @@ const NineGagEmbed = (data, channel) => {
   }
 };
 
+const animeEmbed = (anime, index) => {
+  const newIndex = Number(index) + 1;
+
+  return new Discord.MessageEmbed()
+    .setTitle(anime.title)
+    .setURL(anime.url)
+    .setImage(anime.image_url)
+    .addFields(
+      { name: "Synopsis", value: anime.synopsis },
+      { name: "Episodes", value: anime.episodes, inline: true },
+      { name: "Score", value: anime.score, inline: true },
+      { name: "Airing", value: anime.airing ? "✅" : "❌", inline: true }
+    )
+    .setFooter(`ID: ${anime.mal_id}     Index: ${newIndex}`);
+};
+
 const ErrorEmbed = (msg, channel) => {
   const embed = new Discord.MessageEmbed().setDescription(`❌ ${msg}`);
   channel.send(embed);
@@ -49,4 +65,10 @@ const SuccessEmbed = (msg, channel) => {
   channel.send(embed);
 };
 
-module.exports = { RedditEmbed, NineGagEmbed, ErrorEmbed, SuccessEmbed };
+module.exports = {
+  RedditEmbed,
+  NineGagEmbed,
+  ErrorEmbed,
+  SuccessEmbed,
+  animeEmbed,
+};

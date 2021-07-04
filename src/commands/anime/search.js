@@ -1,12 +1,13 @@
-const axios = require("axios");
 const Commando = require("discord.js-commando");
-const Discord = require("discord.js");
-const { ErrorEmbed } = require("../../utils/embed");
+const { ErrorEmbed, animeEmbed } = require("../../utils/embed");
+const search = require("../../utils/anime/search");
+const searchNavButtons = require("../../buttons/searchNavButtons");
+const { CacheSetex } = require("../../utils/cache");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
-      name: "search",
-      aliases: ["ani_search"],
+      name: "anime",
+      aliases: ["ani_search", "search"],
       group: "anime",
       memberName: "ani_search",
       description: "Search currently airing anime.",
@@ -21,43 +22,22 @@ module.exports = class AddCommand extends Commando.Command {
   }
   async run(message, args) {
     const query = args.query;
-    try {
-      const { data } = await axios.get(
-        `https://api.jikan.moe/v3/search/anime?q=${query}&status=airing`
-      );
-      const anime = data.results[0];
-      if (!anime) {
-        return ErrorEmbed(
-          "Something went wrong,please try again later.",
-          message.channel
-        );
-      }
 
-      const {
-        mal_id: id,
-        url: url,
-        image_url: image,
-        title: title,
-        synopsis: synopsis,
-        episodes: episodes,
-        score: score,
-      } = anime;
-      const embed = new Discord.MessageEmbed()
-        .setTitle(title)
-        .setURL(url)
-        .setImage(image)
-        .addFields(
-          { name: "Synopsis", value: synopsis },
-          { name: "Episodes", value: episodes, inline: true },
-          { name: "Score", value: score, inline: true },
-          { name: "ID", value: id, inline: true }
-        );
-      message.channel.send({ embed: embed });
-    } catch (error) {
-      ErrorEmbed(
+    const searchResult = await search(query);
+
+    const anime = searchResult[0];
+
+    if (!anime)
+      return ErrorEmbed(
         "Something went wrong,please try again later.",
         message.channel
       );
-    }
+
+    const buttons = searchNavButtons(anime.airing);
+    const msg = await message.channel.send({
+      embed: animeEmbed(anime, 0),
+      components: buttons,
+    });
+    CacheSetex(msg.id, 3600, searchResult);
   }
 };

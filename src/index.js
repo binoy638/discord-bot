@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const Commando = require("discord.js-commando");
 const { agenda } = require("./configs/agenda");
-const animeTimer = require("./utils/animeAlerts/animeTimer");
+const animeTimer = require("./utils/anime/animeTimer");
 
 const client = new Commando.Client({
   owner: "312265605715722240",

@@ -1,8 +1,9 @@
 const Discord = require("discord.js");
-const getanime = require("../../utils/animeAlerts/getanime");
+const getanime = require("../../utils/anime/getanime");
 const Commando = require("discord.js-commando");
 const { agenda } = require("../../configs/agenda");
 const axios = require("axios");
+const { ErrorEmbed } = require("../../utils/embed");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
@@ -37,8 +38,9 @@ module.exports = class AddCommand extends Commando.Command {
     });
 
     if (isExists.length > 0)
-      return message.reply(
-        `Notification for \`${anime.title}\` is already activated on this guild.`
+      return ErrorEmbed(
+        `Notification for \`${anime.title}\` is already activated on this guild.`,
+        channel
       );
     const {
       data: { image_url: animeImage },
@@ -52,13 +54,13 @@ module.exports = class AddCommand extends Commando.Command {
       animeTitle: anime.title,
     });
 
-    job.repeatEvery(anime.Corn_Time, { timezone: "Asia/Kolkata" });
+    job.repeatEvery(anime.Corn_Time, { timezone: "America/Los_Angeles" });
 
     job.save();
     const embed = new Discord.MessageEmbed()
-      .setTitle("Anime Notifications")
+      .setTitle("New anime notification added")
       .setDescription(
-        `\>>> \**Title\**: ${anime.title}\n\**Day\**: ${anime.IST_Day}\n\**Time\**: ${anime.IST}(IST)\n\**Status\**: ✅ \n`
+        `\>>> \**Title\**: ${anime.title}\n\**ID\**: ${id}\n\**Day\**: ${anime.IST_Day}\n\**Time\**: ${anime.IST}(IST)\n\**Status\**: ✅ \n`
       )
       .setImage(animeImage);
     message.channel.send(embed);
