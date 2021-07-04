@@ -52,7 +52,7 @@ module.exports = class AddCommand extends Commando.Command {
       animeTitle: anime.title,
     });
 
-    job.repeatEvery(anime.Corn_Time);
+    job.repeatEvery(anime.Corn_Time, { timezone: "Asia/Kolkata" });
 
     job.save();
     const embed = new Discord.MessageEmbed()
