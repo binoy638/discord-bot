@@ -2,6 +2,8 @@ const Commando = require("discord.js-commando");
 const axios = require("axios");
 const Discord = require("discord.js");
 const animeButtons = require("../../buttons/animeButtons");
+const { CacheSetex } = require("../../utils/cache");
+const client = require("../..");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -14,11 +16,6 @@ module.exports = class AddCommand extends Commando.Command {
     });
   }
   async run(message, args) {
-    this.client.guilds.cache.forEach((guild) => {
-      console.log(`Guild: ${guild.name}\nMembers:`);
-      guild.members.cache.each((member) => {
-        console.log(member.user.username);
-      });
-    });
+    console.log(message.attachments.first());
   }
 };

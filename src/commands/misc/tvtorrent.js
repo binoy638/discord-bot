@@ -5,51 +5,47 @@ const axios = require("axios");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
-      name: "animetorrent",
-      aliases: ["ani_torrent"],
-      group: "anime",
-      memberName: "animetorrent",
-      description: "Search anime torrent.",
+      name: "tvtorrent",
+      group: "misc",
+      memberName: "tvtorrent",
+      description: "Search tv torrent.",
       args: [
         {
           key: "query",
-          prompt: "Which anime you want to search?",
+          prompt: "Enter search query.",
           type: "string",
         },
       ],
     });
   }
-  async run(message, args, fromButton = false) {
-    const prefix = message.guild._commandPrefix || "!";
+  async run(message, args) {
     const { channel } = message;
+
     const query = args.query;
 
     try {
       const { data } = await axios.get(
-        `https://udility.herokuapp.com/search?q=${query}`
+        `https://udility.herokuapp.com/search/tvshows?q=${query}`
       );
       if (!data || data?.results.length === 0)
         return ErrorEmbed(`No results found for ${query}.`, channel);
-      const animes = data.results;
+      const torrent = data.results;
       const embed = new Discord.MessageEmbed().setTitle(
         `Search results for ${query}`
       );
-      animes.map((anime) => {
+      torrent.map((item) => {
         embed.addFields(
-          { name: "\u200b", value: anime.title.substring(0, 80) },
-          { name: "Size", value: anime.size, inline: true },
-          { name: "Seeds", value: anime.seed, inline: true },
+          { name: "\u200b", value: item.title.substring(0, 80) },
+          { name: "Size", value: item.size, inline: true },
+          { name: "Seeds", value: item.seed, inline: true },
           {
             name: "Download",
-            value: `[Link](https://udility.herokuapp.com/redirect/${anime.slug})`,
+            value: `[Link](https://udility.herokuapp.com/redirect/${item.slug})`,
             inline: true,
           }
         );
       });
-      if (fromButton)
-        embed.setDescription(
-          `For custom search use \`${prefix}animetorrent [query]\``
-        );
+
       channel.send(embed);
     } catch (error) {
       console.error(error);

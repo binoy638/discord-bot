@@ -56,6 +56,7 @@ const play = async (connection, channel, musicPlayer, seekTime, id = null) => {
 
     if (musicPlayer.isQueueEmpty() === true) {
       connection.disconnect();
+      msg.delete();
     } else {
       setTimeout(() => {
         play(connection, channel, musicPlayer);

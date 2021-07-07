@@ -47,9 +47,9 @@ const animeEmbed = (anime, index) => {
     .setURL(anime.url)
     .setImage(anime.image_url)
     .addFields(
-      { name: "Synopsis", value: anime.synopsis },
-      { name: "Episodes", value: anime.episodes, inline: true },
-      { name: "Score", value: anime.score, inline: true },
+      { name: "Synopsis", value: anime.synopsis || "NA" },
+      { name: "Episodes", value: anime.episodes || "NA", inline: true },
+      { name: "Score", value: anime.score || "NA", inline: true },
       { name: "Airing", value: anime.airing ? "✅" : "❌", inline: true }
     )
     .setFooter(`ID: ${anime.mal_id}     Index: ${newIndex}`);

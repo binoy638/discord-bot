@@ -57,11 +57,7 @@ module.exports = class AddCommand extends Commando.Command {
             `${mentionedUsers ? mentionedUsers.map((user) => user.user) : ""}`
           )
           .setAuthor(message.author.tag, message.author.displayAvatarURL())
-          .setImage(
-            `https://cdn.betterttv.net/emote/${foundEmote.id}/3x${
-              foundEmote.type === "gif" ? ".gif" : ""
-            }`
-          );
+          .setImage(foundEmote.url);
 
         message.delete();
         channel.send(embed);

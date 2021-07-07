@@ -50,7 +50,6 @@ module.exports = {
           );
         if (!searchResults.length > Index) return;
         const nextAnime = searchResults[Index];
-
         return message.edit({
           embed: animeEmbed(nextAnime, Index),
           components: searchNavButtons(nextAnime.airing),

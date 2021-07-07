@@ -1,4 +1,5 @@
 const Commando = require("discord.js-commando");
+const { ErrorEmbed, SuccessEmbed } = require("../../utils/embed");
 const musicPlayerInstance = require("../../utils/music/musicPlayerInstance");
 
 module.exports = class AddCommand extends Commando.Command {
@@ -12,11 +13,13 @@ module.exports = class AddCommand extends Commando.Command {
     });
   }
   async run(message) {
+    const { channel } = message;
     const musicPlayer = musicPlayerInstance(message.channel);
     if (musicPlayer.isQueueEmpty() === true) {
-      return message.reply("No tracks in queue to shuffle.");
+      return ErrorEmbed("No tracks in queue to shuffle.", channel);
     }
     musicPlayer.shufflePlaylist();
-    message.reply("Playlist shuffled.");
+
+    SuccessEmbed("Playlist shuffled.", channel);
   }
 };

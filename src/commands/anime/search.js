@@ -38,6 +38,7 @@ module.exports = class AddCommand extends Commando.Command {
       embed: animeEmbed(anime, 0),
       components: buttons,
     });
-    CacheSetex(msg.id, 3600, searchResult);
+    msg.delete({ timeout: 1800000 });
+    CacheSetex(msg.id, 1800, searchResult);
   }
 };

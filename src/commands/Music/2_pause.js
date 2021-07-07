@@ -1,6 +1,7 @@
 const statusMsg = require("../../utils/music/statusMsg");
 const Commando = require("discord.js-commando");
 const musicPlayerInstance = require("../../utils/music/musicPlayerInstance");
+const { ErrorEmbed } = require("../../utils/embed");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -13,12 +14,12 @@ module.exports = class AddCommand extends Commando.Command {
     });
   }
   async run(message, clicker) {
+    const { channel } = message;
     const id = clicker?.user?.id || message.member.user.id;
     let voiceConnection = message.guild.me.voice.connection;
 
-    if (!voiceConnection) {
-      return message.channel.send("`No Song is playing to pause! ⏸️`");
-    }
+    if (!voiceConnection) return ErrorEmbed("No music to pause ⏸️", channel);
+
     let voiceChannelMembers = message.guild.me.voice.channel.members;
 
     let isUserInVC = false;
@@ -29,17 +30,17 @@ module.exports = class AddCommand extends Commando.Command {
     });
 
     if (!isUserInVC)
-      return message.channel.send(
-        `<@${id}> You must be in the same voice channel to use this command.`
+      return ErrorEmbed(
+        "You need to be in a voice channel to use this command.",
+        channel
       );
 
     let dispatcher = voiceConnection.dispatcher;
     if (!dispatcher) {
-      return message.channel.send("`No Song is playing to pause! ⏸️`");
+      return ErrorEmbed("No music to pause ⏸️", channel);
     }
-    if (dispatcher.paused) {
-      return message.channel.send("`Song is already paused! ⏸️`");
-    }
+    if (dispatcher.paused) return ErrorEmbed("Music already paused ⏸️");
+
     dispatcher.pause();
 
     const musicPlayer = musicPlayerInstance(message.channel);
@@ -49,6 +50,5 @@ module.exports = class AddCommand extends Commando.Command {
       musicPlayer.setStatus(2);
       return statusMsg(currentSong, message.channel, "paused", playerMsg);
     }
-    message.channel.send("`Paused ⏸️`");
   }
 };
