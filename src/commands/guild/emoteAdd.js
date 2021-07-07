@@ -43,7 +43,7 @@ module.exports = class AddCommand extends Commando.Command {
       if (!attachment)
         return ErrorEmbed("You need to provide emote url or file.", channel);
       url = attachment.url;
-      name = attachment.name.split(".").slice(1).pop();
+      name = attachment.name.split(".")[0];
       if (!url)
         return ErrorEmbed(
           "Something went wrong, please try again later.",
