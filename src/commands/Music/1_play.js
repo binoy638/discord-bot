@@ -109,7 +109,7 @@ module.exports = class AddCommand extends Commando.Command {
           const queueCount = musicPlayer.queueCount();
 
           SuccessEmbed(
-            `\`${track.track}\` Queued\nTotal Tracks in Queue:\`${queueCount}\``,
+            `\`${Track.track}\` Queued\nTotal Tracks in Queue:\`${queueCount}\``,
             channel
           );
           return;
