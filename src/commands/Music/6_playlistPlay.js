@@ -4,6 +4,7 @@ const musicPlayerInstance = require("../../utils/music/musicPlayerInstance");
 const Discordcollection = require("../../utils/misc/Discordcollection");
 const play = require("../../utils/music/play");
 const { CacheGet, CacheSet } = require("../../utils/cache");
+const { ErrorEmbed } = require("../../utils/embed");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
@@ -16,8 +17,16 @@ module.exports = class AddCommand extends Commando.Command {
   }
   async run(message) {
     const prefix = message.guild._commandPrefix;
+    const { channel } = message;
     const { id } = message.member.user;
-    const { voice } = message.member;
+
+    const voiceChannel = message.member.voice.channel;
+
+    if (!voiceChannel)
+      return ErrorEmbed(
+        "You need to be in a voice channel to use this command.",
+        channel
+      );
 
     let playlist = await CacheGet(`Playlist-${id}`, true);
     if (!playlist) {
@@ -31,35 +40,29 @@ module.exports = class AddCommand extends Commando.Command {
       );
     }
 
-    if (!voice.channelID) {
-      message.reply("You must be in a voice channel");
-      return;
-    }
-
     let musicPlayer = musicPlayerInstance(message.channel);
     const botcurrentVC = message.guild.me.voice.channel;
-    if (botcurrentVC) {
-      const existingVc = musicPlayer.getCurrentVoiceChannel();
-      if (existingVc !== voice.channel.id) {
-        const status = musicPlayer.getStatus();
-        if (status !== 0) {
-          return message.reply("❌ already in use.");
-        }
-      }
-    }
+
+    if (botcurrentVC && botcurrentVC.id !== voiceChannel.id)
+      return ErrorEmbed(
+        `Bot already present in <#${botcurrentVC.id}>`,
+        channel
+      );
 
     musicPlayer.flushcache();
-    musicPlayer.setVoiceChannel(voice.channel.id);
+    musicPlayer.setVoiceChannel(voiceChannel.id);
     musicPlayer.addplaylist(playlist);
 
-    const connection = await voice.channel.join();
+    const connection = await voiceChannel.join();
 
     play(connection, message.channel, musicPlayer, 0, id);
 
-    //TODO:Check if duplicate event listners are being added
-    connection.on("disconnect", () => {
-      Discordcollection.delete(`MusicPlayer-${message.channel.guild.id}`);
-      musicPlayer.setStatus(0);
-    });
+    if (!musicPlayer.onDisconnectListner) {
+      connection.on("disconnect", () => {
+        Discordcollection.delete(`MusicPlayer-${message.channel.guild.id}`);
+        musicPlayer.setStatus(0);
+      });
+      musicPlayer.onDisconnectListner = true;
+    }
   }
 };

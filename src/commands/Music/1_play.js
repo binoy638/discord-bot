@@ -48,20 +48,6 @@ module.exports = class AddCommand extends Commando.Command {
       );
 
     let musicPlayer = musicPlayerInstance(message.channel, voiceChannel.id);
-    // const botcurrentVC = message.guild.me.voice.channel;
-    // if (botcurrentVC) {
-    //   const existingVc = musicPlayer.getCurrentVoiceChannel();
-    //   if (existingVc !== voiceChannel.id) {
-    //     // const status = musicPlayer.getStatus();
-    //     // console.log(status);
-    //     // if (status !== 0) {
-    //     return ErrorEmbed(
-    //       "Already playing music in some other channel.",
-    //       channel
-    //     );
-    //     // }
-    //   }
-    // }
 
     switch (QueryType) {
       case 0:
@@ -74,8 +60,8 @@ module.exports = class AddCommand extends Commando.Command {
         }
 
         musicPlayer.addSong(track);
-        if (musicPlayer.getStatus() !== 0) {
-          const queueCount = musicPlayer.queueCount();
+        if (musicPlayer.status !== 0) {
+          const queueCount = musicPlayer.count;
 
           SuccessEmbed(
             `\`${track.track}\` Queued\nTotal Tracks in Queue:\`${queueCount}\``,
@@ -88,7 +74,7 @@ module.exports = class AddCommand extends Commando.Command {
         const slug = query.split("/").pop();
         const { tracks } = await playlist(slug);
         musicPlayer.addplaylist(tracks);
-        const queueCount = musicPlayer.queueCount();
+        const queueCount = musicPlayer.count;
 
         SuccessEmbed(
           `\`${tracks.length}\` Tracks added to queue.\nTotal ${queueCount} in queue.`,
@@ -105,8 +91,8 @@ module.exports = class AddCommand extends Commando.Command {
         }
 
         musicPlayer.addSong(Track);
-        if (musicPlayer.getStatus() !== 0) {
-          const queueCount = musicPlayer.queueCount();
+        if (musicPlayer.status !== 0) {
+          const queueCount = musicPlayer.count;
 
           SuccessEmbed(
             `\`${Track.track}\` Queued\nTotal Tracks in Queue:\`${queueCount}\``,
@@ -128,10 +114,13 @@ module.exports = class AddCommand extends Commando.Command {
     const connection = await voiceChannel.join();
 
     play(connection, message.channel, musicPlayer);
-    //TODO:Check if duplicate event listners are being added
-    connection.on("disconnect", () => {
-      Discordcollection.delete(`MusicPlayer-${message.channel.guild.id}`);
-      musicPlayer.setStatus(0);
-    });
+
+    if (!musicPlayer.onDisconnectListner) {
+      connection.on("disconnect", () => {
+        Discordcollection.delete(`MusicPlayer-${message.channel.guild.id}`);
+        musicPlayer.setStatus(0);
+      });
+      musicPlayer.onDisconnectListner = true;
+    }
   }
 };

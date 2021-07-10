@@ -2,6 +2,7 @@ const ytdl = require("discord-ytdl-core");
 const statusMsg = require("./statusMsg");
 const { infoFromQuery } = require("./search");
 const { addplayerInfo } = require("./playlist/helper");
+const Discordcollection = require("../misc/Discordcollection");
 
 const play = async (connection, channel, musicPlayer, seekTime, id = null) => {
   let currentSong = musicPlayer.currentSong();
@@ -32,12 +33,6 @@ const play = async (connection, channel, musicPlayer, seekTime, id = null) => {
   const dispatcher = await connection.play(stream, { type: "opus" });
 
   musicPlayer.setStatus(1);
-  // let msg;
-  // if (!hasFilter) {
-  //   msg = await statusMsg(currentSong, channel, "playing");
-  //   musicPlayer.message = msg;
-  // }
-  // console.log(musicPlayer);
 
   let msg = musicPlayer.message;
   if (!msg) {
@@ -50,9 +45,6 @@ const play = async (connection, channel, musicPlayer, seekTime, id = null) => {
   dispatcher.on("finish", () => {
     musicPlayer.setSeekTime(0);
     musicPlayer.nextSong();
-    // if (msg) {
-    //   msg.delete();
-    // }
 
     if (musicPlayer.isQueueEmpty() === true) {
       connection.disconnect();

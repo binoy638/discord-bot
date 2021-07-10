@@ -4,6 +4,7 @@ const Discord = require("discord.js");
 const animeButtons = require("../../buttons/animeButtons");
 const { CacheSetex } = require("../../utils/cache");
 const client = require("../..");
+const buttons = require("discord-buttons");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -16,6 +17,6 @@ module.exports = class AddCommand extends Commando.Command {
     });
   }
   async run(message, args) {
-    console.log(message.attachments.first());
+    message.channel.send("`Add filter`", select);
   }
 };

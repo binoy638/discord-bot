@@ -3,10 +3,10 @@ const playerButtons = require("../../buttons/playerButtons");
 
 module.exports = async (data, channel, status, message) => {
   const musicEmbed = new Discord.MessageEmbed()
-    .setTitle(data.playerInfo.title)
+    .setTitle(data.playerInfo.title || "NA")
 
-    .setURL(data.playerInfo.link)
-    .setThumbnail(data.playerInfo.image);
+    .setURL(data.playerInfo.link || "NA")
+    .setThumbnail(data.playerInfo.image || "NA");
 
   let buttons;
 

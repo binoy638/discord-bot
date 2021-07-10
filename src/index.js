@@ -26,9 +26,16 @@ for (const file of eventFiles) {
 }
 
 agenda.define("animeTimer", async (job) => {
-  console.log("inside job def");
   const { channelID, animeID, animeImage, animeTitle } = job.attrs.data;
+
+  if (!channelID || !animeID || !animeImage || !animeTitle)
+    return console.log(
+      "Could not fetch channel all job data attrs.\nAgenda Job: animeTimer"
+    );
+
   const channel = client.channels.cache.get(channelID);
+  if (!channel)
+    return console.log("Could not fetch channel.\nAgenda Job: animeTimer");
   animeTimer({ id: animeID, image: animeImage, title: animeTitle }, channel);
 });
 

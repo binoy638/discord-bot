@@ -1,5 +1,5 @@
 const player = require("../misc/Discordcollection");
-const MusicPlayer = require("./musicPlayer");
+const MusicPlayer = require("../../libs/musicPlayer");
 
 module.exports = (channel, vc) => {
   let instance = player.get(`MusicPlayer-${channel.guild.id}`);

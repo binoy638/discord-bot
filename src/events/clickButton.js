@@ -10,36 +10,44 @@ module.exports = {
     const { client, message } = button;
     let musicPlayer = musicPlayerInstance(message.channel);
     switch (button.id) {
-      case "pause":
-        button.defer();
+      case "music-player-pause":
+        button.reply.defer();
         if (!musicPlayer) return;
         if (musicPlayer.message.id !== message.id) return;
         const [pause] = client.registry.findCommands("pause", true);
         pause.run(message, button.clicker);
         break;
-      case "play":
-        button.defer();
+      case "music-player-play":
+        button.reply.defer();
         if (!musicPlayer) return;
         if (musicPlayer.message.id !== message.id) return;
         const [resume] = client.registry.findCommands("resume", true);
         resume.run(message, button.clicker);
         break;
-      case "stop":
-        button.defer();
+      case "music-player-stop":
+        button.reply.defer();
         if (!musicPlayer) return;
         if (musicPlayer.message.id !== message.id) return;
         const [disconnect] = client.registry.findCommands("disconnect", true);
         disconnect.run(message, button.clicker);
         break;
-      case "next":
-        button.defer();
+      case "music-player-next":
+        button.reply.defer();
         if (!musicPlayer) return;
         if (musicPlayer.message.id !== message.id) return;
         const [skip] = client.registry.findCommands("skip", true);
         skip.run(message, button.clicker);
         break;
+      case "music-player-shuffle":
+        button.reply.defer();
+        if (!musicPlayer) return;
+        if (musicPlayer.message.id !== message.id) return;
+        const [shuffle] = client.registry.findCommands("shuffle", true);
+        shuffle.run(message, button.clicker);
+        break;
+
       case "anime-search-next":
-        button.defer();
+        button.reply.defer();
         let searchResults = await CacheGet(message.id, true);
         if (!searchResults) return;
         const [ID, Index] = extractIDIndex(message.embeds[0]);
@@ -55,7 +63,7 @@ module.exports = {
           components: searchNavButtons(nextAnime.airing),
         });
       case "anime-search-prev":
-        button.defer();
+        button.reply.defer();
         const _searchResults = await CacheGet(message.id, true);
         if (!_searchResults) return;
         const [prevID, prevIndex] = extractIDIndex(message.embeds[0]);
@@ -72,7 +80,7 @@ module.exports = {
           components: searchNavButtons(prevAnime.airing),
         });
       case "anime-notification":
-        button.defer();
+        button.reply.defer();
 
         const [animeID] = extractIDIndex(message.embeds[0]);
 
@@ -82,7 +90,7 @@ module.exports = {
         );
         return enableNotification.run(message, { animeID: Number(animeID) });
       case "anime-torrent":
-        button.defer();
+        button.reply.defer();
         const query = message?.embeds[0]?.title;
         if (!query) return;
         const [animetorrent] = client.registry.findCommands(
@@ -90,6 +98,9 @@ module.exports = {
           true
         );
         return animetorrent.run(message, { query }, true);
+      case "customid":
+        console.log("inside menu");
+        break;
     }
   },
 };

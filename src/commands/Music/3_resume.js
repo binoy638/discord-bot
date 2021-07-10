@@ -1,6 +1,8 @@
 const statusMsg = require("../../utils/music/statusMsg");
 const Commando = require("discord.js-commando");
 const musicPlayerInstance = require("../../utils/music/musicPlayerInstance");
+const { ErrorEmbed } = require("../../utils/embed");
+const checkUserVc = require("../../utils/checkUserVc");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -15,32 +17,29 @@ module.exports = class AddCommand extends Commando.Command {
   async run(message, clicker) {
     const id = clicker?.user?.id || message.member.user.id;
     let voiceConnection = message.guild.me.voice.connection;
+    const { channel } = message;
 
     if (!voiceConnection) {
-      return message.channel.send("`No Song to resume! 🎵`");
+      return ErrorEmbed("No Song to resume! 🎵", channel);
     }
 
-    let voiceChannelMembers = message.guild.me.voice.channel.members;
+    const voiceChannelMembers = message.guild.me.voice.channel.members;
 
-    let isUserInVC = false;
-    voiceChannelMembers.map((member) => {
-      if (member.user.id === id) {
-        isUserInVC = true;
-      }
-    });
+    const isUserInVC = checkUserVc(voiceChannelMembers, id);
 
     if (!isUserInVC)
-      return message.channel.send(
-        `<@${id}> You must be in the same voice channel to use this command.`
+      return ErrorEmbed(
+        `<@${id}> You must be in the same voice channel to use this command.`,
+        channel
       );
 
     let dispatcher = voiceConnection.dispatcher;
     if (!dispatcher) {
-      return message.channel.send("`No Song resume! 🎵`");
+      return ErrorEmbed("`No Song resume! 🎵`", channel);
     }
 
     if (!dispatcher.paused) {
-      return message.channel.send("`Song is already playing! 🎵`");
+      return ErrorEmbed("`Song is already playing! 🎵`", channel);
     }
     dispatcher.resume();
     dispatcher.pause();
@@ -53,6 +52,5 @@ module.exports = class AddCommand extends Commando.Command {
       musicPlayer.setStatus(1);
       return statusMsg(currentSong, message.channel, "playing", playerMsg);
     }
-    message.channel.send("`Resumed 🎵`");
   }
 };

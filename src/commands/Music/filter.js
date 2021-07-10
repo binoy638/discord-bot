@@ -1,8 +1,12 @@
 const Commando = require("discord.js-commando");
 const { MessageEmbed } = require("discord.js");
 const musicPlayerInstance = require("../../utils/music/musicPlayerInstance");
-const { Emoji2Filter, String2Filter } = require("../../utils/misc/filterOpts");
+const { String2Filter } = require("../../utils/misc/filterOpts");
 const applyFilter = require("../../utils/music/applyFilter");
+const checkUserVc = require("../../utils/checkUserVc");
+const { MessageMenuOption, MessageMenu } = require("discord-buttons");
+const { ErrorEmbed, SuccessEmbed } = require("../../utils/embed");
+const filterMenu = require("../../buttons/filterMenu");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
@@ -37,94 +41,41 @@ module.exports = class AddCommand extends Commando.Command {
   }
   async run(message, args) {
     const { channel } = message;
-    const prefix = message.guild._commandPrefix || "!";
+    const id = message.member.user.id;
     let connection = message.guild.me.voice.connection;
 
     if (!connection) {
-      return channel.send(`No song is playing to apply filters.`);
+      return ErrorEmbed(`No song is playing to apply filters.`, channel);
     }
+
+    const voiceChannelMembers = message.guild.me.voice.channel.members;
+
+    const isUserInVC = checkUserVc(voiceChannelMembers, id);
+
+    if (!isUserInVC)
+      return ErrorEmbed(
+        `<@${id}> You must be in the same voice channel to use this command.`,
+        channel
+      );
+
     let dispatcher = connection.dispatcher;
     if (!dispatcher) {
-      return channel.send("No song is playing to apply filters");
+      return ErrorEmbed("No song is playing to apply filters", channel);
     }
     const musicPlayer = musicPlayerInstance(message.channel);
 
     const filterType = args.type;
 
     if (!filterType) {
-      const Embed = new MessageEmbed()
-        .setTitle("Filters")
-        .addFields(
-          { name: "0️⃣ `nightcore`", value: "____________", inline: true },
-          { name: "1️⃣ `bassboost`", value: "____________", inline: true },
-          { name: "2️⃣ `8D`", value: "____________", inline: true },
-          { name: "3️⃣ `vaporwave`", value: "____________", inline: true },
-          {
-            name: "4️⃣ `karaoke`",
-            value: "____________",
-            inline: true,
-          },
-          { name: "5️⃣ `phaser`", value: "____________", inline: true },
-          { name: "6️⃣ `tremolo`", value: "____________", inline: true },
-          {
-            name: "7️⃣ `desilencer`",
-            value: "____________",
-            inline: true,
-          },
-          {
-            name: "8️⃣ `surrounding`",
-            value: "____________",
-            inline: true,
-          },
-          {
-            name: "9️⃣ `pulsator`",
-            value: "____________",
-            inline: true,
-          },
-          { name: "🔟 `chorus`", value: "____________", inline: true },
-          { name: "❎ `clear`", value: "____________", inline: true }
-        )
-        .setFooter(
-          `use reactions or ${prefix}filter [filter type] to apply filters`
-        );
-      const filterOptsMessage = await channel.send(Embed);
-      await filterOptsMessage.react("0️⃣");
-      await filterOptsMessage.react("1️⃣");
-      await filterOptsMessage.react("2️⃣");
-      await filterOptsMessage.react("3️⃣");
-      await filterOptsMessage.react("4️⃣");
-      await filterOptsMessage.react("5️⃣");
-      await filterOptsMessage.react("6️⃣");
-      await filterOptsMessage.react("7️⃣");
-      await filterOptsMessage.react("8️⃣");
-      await filterOptsMessage.react("9️⃣");
-      await filterOptsMessage.react("🔟");
-      await filterOptsMessage.react("❎");
-
-      const filter = (reaction, user) => user.id !== this.client.user.id;
-      let collector = filterOptsMessage.createReactionCollector(filter, {
-        time: 600000,
-      });
-      // const seekTime = dispatcher.streamTime / 1000;
-      collector.on("collect", (reaction, user) => {
-        const emoji = reaction.emoji.name;
-
-        if (dispatcher) {
-          let filterArgs = Emoji2Filter[emoji];
-          if (filterArgs !== undefined) {
-            applyFilter(filterArgs, connection, channel, musicPlayer);
-          } else {
-            console.log("invalid reaction");
-          }
-        }
-      });
+      const menu = filterMenu();
+      message.channel.send("`Add Filters 🤖 \n`", menu);
     } else {
       let filterArgs = String2Filter[filterType];
       if (filterArgs) {
         applyFilter(filterArgs, connection, channel, musicPlayer);
-        message.reply(`Filter applied: \`${filterType}\``);
+        // SuccessEmbed(`Filter applied: \`${filterType}\``, channel);
       } else {
-        message.reply("something went wrong, please try again later.");
+        ErrorEmbed("something went wrong, please try again later.", channel);
       }
     }
   }

@@ -7,7 +7,6 @@ class MusicPlayer {
     this.playlist = [];
     this.count = 0;
     this.isShuffled = false;
-    this.shuffledtracksIds = [];
     this.current = 0;
     this.priority = false;
     this.timesPlayed = 0;
@@ -16,6 +15,7 @@ class MusicPlayer {
     this.seek = 0;
     this.audioFilter = "dynaudnorm=f=200";
     this.message = null;
+    this.onDisconnectListner = false;
 
     player.on("playlistchange", () => {
       this.count = this.playlist.length;
@@ -48,36 +48,17 @@ class MusicPlayer {
     if (this.count === 0) {
       return;
     }
-    if (this.isShuffled === false) {
-      if (this.current < this.count - 1) {
-        this.current += 1;
-      } else {
-        if (this.loop === true) {
-          this.current = 0;
-        } else {
-          this.clearQueue();
-        }
-      }
-      this.timesPlayed += 1;
-      return;
+
+    if (this.current < this.count - 1) {
+      this.current += 1;
     } else {
-      // this.viewplayer();
-      if (this.timesPlayed < this.count) {
-        const trackno = this.shuffledtracksIds[this.timesPlayed];
-        this.current = trackno;
-        this.timesPlayed += 1;
+      if (this.loop === true) {
+        this.current = 0;
       } else {
-        if (this.loop === true) {
-          this.timesPlayed = 0;
-          const trackno = this.shuffledtracksIds[this.timesPlayed];
-          this.current = trackno;
-          this.timesPlayed += 1;
-        } else {
-          this.clearQueue();
-        }
+        this.clearQueue();
       }
     }
-    // this.viewplayer();
+    this.timesPlayed += 1;
   }
 
   currentSong() {
@@ -110,35 +91,24 @@ class MusicPlayer {
   }
   shufflePlaylist() {
     let length = this.playlist.length;
-    let tracks = [...Array(length).keys()];
 
     let temp, i;
     while (length) {
       i = Math.floor(Math.random() * length--);
-      temp = tracks[length];
-      tracks[length] = tracks[i];
-      tracks[i] = temp;
+      temp = this.playlist[length];
+      this.playlist[length] = this.playlist[i];
+      this.playlist[i] = temp;
     }
 
     this.isShuffled = true;
-    this.shuffledtracksIds = tracks;
-    // const trackno = this.shuffledtracksIds[
-    //   this.timesPlayed
-    // ];
-    // this.current = trackno;
-    // this.timesPlayed += 1;
-    // this.viewplayer();
   }
-  isShuffled() {
-    return this.isShuffled;
-  }
+
   flushcache() {
     this.playlist = [];
     this.count = 0;
     this.isShuffled = false;
     this.shuffledtracksIds = [];
     this.current = 0;
-    this.timesPlayed = 0;
     this.status = 0;
     this.loop = false;
   }
@@ -148,9 +118,7 @@ class MusicPlayer {
       this.status = input;
     }
   }
-  getStatus() {
-    return this.status;
-  }
+
   setVoiceChannel(vc) {
     this.voiceChannel = vc;
   }
@@ -158,12 +126,6 @@ class MusicPlayer {
     return this.voiceChannel;
   }
 
-  queueCount() {
-    // if (this.loop === true) {
-    return this.count;
-    // }
-    // return this.playlist.count - (this.current + 1);
-  }
   loop() {
     this.loop = !this.loop;
     return this.loop;

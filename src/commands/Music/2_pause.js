@@ -2,6 +2,7 @@ const statusMsg = require("../../utils/music/statusMsg");
 const Commando = require("discord.js-commando");
 const musicPlayerInstance = require("../../utils/music/musicPlayerInstance");
 const { ErrorEmbed } = require("../../utils/embed");
+const checkUserVc = require("../../utils/checkUserVc");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -20,18 +21,13 @@ module.exports = class AddCommand extends Commando.Command {
 
     if (!voiceConnection) return ErrorEmbed("No music to pause ⏸️", channel);
 
-    let voiceChannelMembers = message.guild.me.voice.channel.members;
+    const voiceChannelMembers = message.guild.me.voice.channel.members;
 
-    let isUserInVC = false;
-    voiceChannelMembers.map((member) => {
-      if (member.user.id === id) {
-        isUserInVC = true;
-      }
-    });
+    const isUserInVC = checkUserVc(voiceChannelMembers, id);
 
     if (!isUserInVC)
       return ErrorEmbed(
-        "You need to be in a voice channel to use this command.",
+        `<@${id}> You must be in the same voice channel to use this command.`,
         channel
       );
 

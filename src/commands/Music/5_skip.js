@@ -1,4 +1,6 @@
 const Commando = require("discord.js-commando");
+const { ErrorEmbed } = require("../../utils/embed");
+const checkUserVc = require("../../utils/checkUserVc");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -11,33 +13,29 @@ module.exports = class AddCommand extends Commando.Command {
     });
   }
   async run(message, clicker) {
+    const { channel } = message;
     const id = clicker?.user?.id || message.member.user.id;
     let voiceConnection = message.guild.me.voice.connection;
 
     if (!voiceConnection) {
-      return message.channel.send("`No Song is playing to skip ⏭️`");
+      return ErrorEmbed("No Song is playing to skip ⏭️", channel);
     }
-    let voiceChannelMembers = message.guild.me.voice.channel.members;
 
-    let isUserInVC = false;
-    voiceChannelMembers.map((member) => {
-      if (member.user.id === id) {
-        isUserInVC = true;
-      }
-    });
+    const voiceChannelMembers = message.guild.me.voice.channel.members;
+
+    const isUserInVC = checkUserVc(voiceChannelMembers, id);
 
     if (!isUserInVC)
-      return message.channel.send(
-        `<@${id}> You must be in the same voice channel to use this command.`
+      return ErrorEmbed(
+        `<@${id}> You must be in the same voice channel to use this command.`,
+        channel
       );
 
     let dispatcher = voiceConnection.dispatcher;
     if (!dispatcher) {
-      return message.channel.send("`No Song is playing to skip ⏭️`");
+      return ErrorEmbed("No Song is playing to skip ⏭️", channel);
     }
 
     dispatcher.end();
-
-    // message.channel.send("`Skipped ⏭️`");
   }
 };
