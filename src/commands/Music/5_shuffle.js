@@ -35,7 +35,10 @@ module.exports = class AddCommand extends Commando.Command {
       return ErrorEmbed("No tracks in queue to shuffle.", channel);
     }
     musicPlayer.shufflePlaylist();
-
     SuccessEmbed("Playlist shuffled.", channel);
+
+    let dispatcher = voiceConnection.dispatcher;
+    if (!dispatcher) return;
+    dispatcher.end();
   }
 };
