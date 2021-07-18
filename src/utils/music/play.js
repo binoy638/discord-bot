@@ -30,31 +30,36 @@ const play = async (connection, channel, musicPlayer, seekTime, id = null) => {
     highWaterMark: 1 << 25,
   });
 
-  const dispatcher = await connection.play(stream, { type: "opus" });
+  try {
+    const dispatcher = await connection.play(stream, { type: "opus" });
 
-  musicPlayer.setStatus(1);
+    musicPlayer.setStatus(1);
 
-  let msg = musicPlayer.message;
-  if (!msg) {
-    msg = await statusMsg(currentSong, channel, "playing");
-    musicPlayer.message = msg;
-  } else {
-    statusMsg(currentSong, channel, "playing", msg);
-  }
-
-  dispatcher.on("finish", () => {
-    musicPlayer.setSeekTime(0);
-    musicPlayer.nextSong();
-
-    if (musicPlayer.isQueueEmpty() === true) {
-      connection.disconnect();
-      msg.delete();
+    let msg = musicPlayer.message;
+    if (!msg) {
+      msg = await statusMsg(currentSong, channel, "playing");
+      musicPlayer.message = msg;
     } else {
-      setTimeout(() => {
-        play(connection, channel, musicPlayer);
-      }, 1000);
+      statusMsg(currentSong, channel, "playing", msg);
     }
-  });
+
+    dispatcher.on("finish", () => {
+      musicPlayer.setSeekTime(0);
+      musicPlayer.nextSong();
+
+      if (musicPlayer.isQueueEmpty() === true) {
+        connection.disconnect();
+        msg.delete();
+      } else {
+        setTimeout(() => {
+          play(connection, channel, musicPlayer);
+        }, 1000);
+      }
+    });
+  } catch (error) {
+    console.log("Error caught at play fn");
+    console.error(error);
+  }
 };
 
 module.exports = play;

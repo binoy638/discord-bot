@@ -2,13 +2,17 @@ const searchNavButtons = require("../buttons/searchNavButtons");
 const { extractIDIndex } = require("../utils/anime/helper");
 const { CacheGet } = require("../utils/cache");
 const { animeEmbed } = require("../utils/embed");
+const Discordcollection = require("../utils/misc/Discordcollection");
 const musicPlayerInstance = require("../utils/music/musicPlayerInstance");
 
 module.exports = {
   name: "clickButton",
   async execute(button) {
     const { client, message } = button;
-    let musicPlayer = musicPlayerInstance(message.channel);
+
+    let musicPlayer = Discordcollection.get(
+      `MusicPlayer-${message.channel.guild.id}`
+    );
     switch (button.id) {
       case "music-player-pause":
         button.reply.defer();
@@ -34,7 +38,8 @@ module.exports = {
       case "music-player-next":
         button.reply.defer();
         if (!musicPlayer) return;
-        if (musicPlayer.message.id !== message.id) return;
+        console.log(musicPlayer);
+        if (musicPlayer?.message?.id !== message.id) return;
         const [skip] = client.registry.findCommands("skip", true);
         skip.run(message, button.clicker);
         break;

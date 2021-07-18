@@ -120,6 +120,15 @@ module.exports = class AddCommand extends Commando.Command {
         Discordcollection.delete(`MusicPlayer-${message.channel.guild.id}`);
         musicPlayer.setStatus(0);
       });
+
+      connection.on("error", (error) => {
+        console.log("Error: could not play song");
+        console.error(error);
+      });
+      connection.on("failed", (error) => {
+        console.log("Error: connection failed");
+        console.error(error);
+      });
       musicPlayer.onDisconnectListner = true;
     }
   }
