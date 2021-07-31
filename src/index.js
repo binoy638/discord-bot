@@ -45,5 +45,5 @@ agenda.define("animeTimer", async (job) => {
   const id = job.attrs._id;
   const attempts = 10;
   const key = `animeJob-${id}-${attempts}`;
-  CacheSetex(key, 600, "true");
+  redis.setex(key, 600, "true");
 });
