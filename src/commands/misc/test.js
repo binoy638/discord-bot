@@ -23,5 +23,6 @@ module.exports = class AddCommand extends Commando.Command {
   async run(message, args) {
     const { channel } = message;
     CacheSetex(`testJob-${channel.id}`, 5, "true");
+    console.log("key added");
   }
 };
