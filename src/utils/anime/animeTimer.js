@@ -2,56 +2,66 @@ const axios = require("axios");
 const Discord = require("discord.js");
 const animeButtons = require("../../buttons/animeButtons");
 const { agenda } = require("../../configs/agenda");
-const { ErrorEmbed } = require("../embed");
+const { CacheGet, CacheSetex } = require("../cache");
 
 module.exports = async (JobInfo, channel) => {
-  const { id, image, title } = JobInfo;
+  const { id, image, title, Day, Time } = JobInfo;
 
   try {
-    const { data: anime } = await axios.get(
-      `https://udility.herokuapp.com/anime/${id}`
+    const { data } = await axios.get(
+      `https://udility.herokuapp.com/anime/episode?q=${title}`
     );
+    if (data?.episode.length === 0) return false;
+    const episodes = extractEpisodes(data.episode);
 
-    const {
-      480: res480,
-      720: res720,
-      1080: res1080,
-      IST,
-      IST_Day: day,
-      episode,
-    } = anime;
+    const description = data.episode[0].title || title;
+
     const embed = new Discord.MessageEmbed()
       .setTitle(`New Episode of ${title} is out`)
-      .setDescription(episode)
+      .setDescription(description)
       .setImage(image)
-      .setFooter(`Next episode will be out on ${day} at ${IST}(IST)`);
-    const buttons = animeButtons(res480, res720, res1080);
-    channel.send({ embed, components: buttons });
+      .setFooter(`Next episode will be out on ${Day} at ${Time}(IST)`);
+    const buttons = animeButtons(
+      episodes["480p"] || null,
+      episodes["720p"] || null,
+      episodes["1080p"] || null
+    );
+    if (channel) {
+      channel.send({ embed, components: buttons });
+    } else {
+      console.log("no channel found");
+      console.log(episodes);
+    }
+
+    return true;
   } catch (error) {
-    if (error.response.status === 404) {
+    let isAiring = await CacheGet(`isAiring:${id}`);
+    if (isAiring === undefined) {
       const {
         data: { airing },
       } = await axios.get(`https://api.jikan.moe/v3/anime/${id}`);
-      if (!airing) {
-        const removedJobCount = await agenda.cancel({
-          name: "animeTimer",
-          "data.animeID": id,
-        });
-        return console.log(
-          `Anime ${id} have stopped airing.\nJob cancelled: ${removedJobCount}`
-        );
-      } else {
-        return ErrorEmbed(
-          `${title}'s new episode got delayed.\nUse \`episode ${id}\` to get the last released episode.`,
-          channel
-        );
-      }
-    } else {
-      console.error(error);
-      ErrorEmbed(
-        `Something went wrong,could not fetch episode.\nAnime ID:\`${id}\``,
-        channel
+      isAiring = airing;
+      CacheSetex(`isAiring:${id}`, 7200, isAiring);
+    }
+
+    if (airing === "false") {
+      const removedJobCount = await agenda.cancel({
+        name: "animeTimer",
+        "data.animeID": id,
+      });
+      console.log(
+        `Anime ${id} have stopped airing.\nJob cancelled: ${removedJobCount}`
       );
+      return true;
+    } else {
+      return false;
     }
   }
+};
+
+const extractEpisodes = (arr) => {
+  return arr.reduce((acc, curr) => {
+    acc[curr.quality] = curr.slug;
+    return acc;
+  }, {});
 };

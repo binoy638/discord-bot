@@ -1,3 +1,7 @@
+const { agenda } = require("../../configs/agenda");
+const mongoose = require("mongoose");
+const animeTimer = require("./animeTimer");
+
 const extractIDIndex = (embed) => {
   if (!embed) return undefined;
   const footerText = embed?.footer?.text;
@@ -13,4 +17,34 @@ const extractIDIndex = (embed) => {
   return [ID, Index];
 };
 
-module.exports = { extractIDIndex };
+const retryJob = async (id, attempts, client) => {
+  const jobs = await agenda.jobs({
+    _id: mongoose.Types.ObjectId(id),
+  });
+  if (jobs.length === 0) return;
+  const job = jobs[0];
+  console.log(`Trying to fetch anime for job id: ${id}\nAttempt: ${attempts}`);
+  const { channelID, animeID, animeImage, animeTitle, animeDay, animeTime } =
+    job.attrs.data;
+
+  const channel = client.channels.cache.get(channelID);
+  const isDone = await animeTimer(
+    {
+      id: animeID,
+      image: animeImage,
+      title: animeTitle,
+      Day: animeDay,
+      Time: animeTime,
+    },
+    channel
+  );
+  return isDone;
+};
+
+const testJob = async (channelID, client) => {
+  console.log("inside test job");
+  const channel = client.channels.cache.get(channelID);
+  console.log(channel);
+};
+
+module.exports = { extractIDIndex, retryJob, testJob };

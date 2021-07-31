@@ -6,6 +6,7 @@ module.exports = {
   async execute(client) {
     console.log(`${client.user.username} is connected`);
     //waiting for database to connect
+
     await mongo().then((mongoose) => {
       try {
         console.log("Connected to mongo!");

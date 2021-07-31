@@ -42,27 +42,26 @@ module.exports = class AddCommand extends Commando.Command {
         `Notification for \`${anime.title}\` is already activated on this guild.`,
         channel
       );
-    const {
-      data: { image_url: animeImage },
-    } = await axios.get(`https://api.jikan.moe/v3/anime/${id}`);
 
     const job = agenda.create("animeTimer", {
       guildID: channel.guild.id,
       channelID: channel.id,
       animeID: id,
-      animeImage,
+      animeImage: anime.image,
       animeTitle: anime.title,
+      animeDay: anime.DAY,
+      animeTime: anime.IST,
     });
 
-    job.repeatEvery(anime.Corn_Time, { timezone: "America/Los_Angeles" });
+    job.repeatEvery(anime.cron, { timezone: "America/Los_Angeles" });
 
     job.save();
     const embed = new Discord.MessageEmbed()
       .setTitle("New anime notification added")
       .setDescription(
-        `\>>> \**Title\**: ${anime.title}\n\**ID\**: ${id}\n\**Day\**: ${anime.IST_Day}\n\**Time\**: ${anime.IST}(IST)\n\**Status\**: ✅ \n`
+        `\>>> \**Title\**: ${anime.title}\n\**ID\**: ${id}\n\**Day\**: ${anime.DAY}\n\**Time\**: ${anime.IST}(IST)\n\**Status\**: ✅ \n`
       )
-      .setImage(animeImage);
+      .setImage(anime.image);
     message.channel.send(embed);
   }
 };

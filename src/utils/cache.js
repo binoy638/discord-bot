@@ -1,5 +1,6 @@
-const redisCache = require("../configs/redis");
 const { promisify } = require("util");
+const { redisCache } = require("..");
+
 const getCacheAsync = promisify(redisCache.get).bind(redisCache);
 
 const CacheSet = (key, value) => {

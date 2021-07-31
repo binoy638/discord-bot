@@ -1,41 +1,49 @@
 const redis = require("redis");
-
 const REDIS_URL = process.env.REDIS_URL;
+require("dotenv").config();
 
-// const redisCache = redis.createClient(REDIS_URL);
+module.exports = (client) => {
+  const pub = redis.createClient(REDIS_URL);
 
-// const expired = () => {
-//   const sub = redisCache;
-//   sub.subscribe("__keyevent@0__:expired", () => {
-//     sub.on("message", (channel, message) => {
-//       if (message.startsWith("delmsg")) {
-//         // deleteMessage(message);
-//         deleteMessage(message);
-//       }
-//     });
-//   });
-// };
-const pub = redis.createClient(REDIS_URL);
+  const expired = () => {
+    const sub = redis.createClient(REDIS_URL);
+    sub.subscribe("__keyevent@0__:expired", () => {
+      sub.on("message", async (channel, key) => {
+        if (key.indexOf("animeJob") !== -1) {
+          const { retryJob } = require("../utils/anime/helper");
+          const [prefix, id, attempts] = key.split("-");
+          const isDone = await retryJob(id, attempts, client);
 
-// pub.send_command("config", ["set", "notify-keyspace-events", "Ex"], expired());
+          const a = attempts - 1;
+          if (!isDone && attempts > 0) {
+            pub.setex(`animeJob-${id}-${a}`, 600, "true");
+          }
+        } else if (key.indexOf("testKey") === -1) {
+          const { testJob } = require("../utils/anime/helper");
+          const [prefix, id] = key.split("-");
+          testJob(id, client);
+        }
+      });
+    });
+  };
 
-pub.on("error", function (err) {
-  console.log("Error " + err);
-});
+  pub.send_command(
+    "config",
+    ["set", "notify-keyspace-events", "Ex"],
+    expired()
+  );
 
-pub.on("ready", () => {
-  console.log("Redis is ready");
-});
+  pub.on("error", function (err) {
+    console.log("Error " + err);
+  });
 
-pub.on("end", () => {
-  console.log("Redis terminated");
-});
+  pub.on("ready", () => {
+    console.log("Redis is ready");
+  });
 
-module.exports = pub;
+  pub.on("end", () => {
+    console.log("Redis terminated");
+  });
 
-/*
- Cache Key Prefixs:
- Rd: Reddit posts 
-
-
-*/
+  return pub;
+};

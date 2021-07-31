@@ -2,12 +2,17 @@ const path = require("path");
 const fs = require("fs");
 const Commando = require("discord.js-commando");
 const { agenda } = require("./configs/agenda");
-const animeTimer = require("./utils/anime/animeTimer");
 
 const client = new Commando.Client({
   owner: "312265605715722240",
   commandPrefix: "!",
 });
+
+client.login(process.env.TOKEN);
+
+const redis = require("./configs/redis")(client);
+
+module.exports = { redisCache: redis };
 
 require("discord-buttons")(client);
 require("./configs/commando")(client);
@@ -26,7 +31,8 @@ for (const file of eventFiles) {
 }
 
 agenda.define("animeTimer", async (job) => {
-  const { channelID, animeID, animeImage, animeTitle } = job.attrs.data;
+  const { channelID, animeID, animeImage, animeTitle, animeDay, animeTime } =
+    job.attrs.data;
 
   if (!channelID || !animeID || !animeImage || !animeTitle)
     return console.log(
@@ -36,7 +42,8 @@ agenda.define("animeTimer", async (job) => {
   const channel = client.channels.cache.get(channelID);
   if (!channel)
     return console.log("Could not fetch channel.\nAgenda Job: animeTimer");
-  animeTimer({ id: animeID, image: animeImage, title: animeTitle }, channel);
+  const id = job.attrs._id;
+  const attempts = 10;
+  const key = `animeJob-${id}-${attempts}`;
+  CacheSetex(key, 600, "true");
 });
-
-client.login(process.env.TOKEN);
