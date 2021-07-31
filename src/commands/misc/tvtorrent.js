@@ -40,7 +40,7 @@ module.exports = class AddCommand extends Commando.Command {
           { name: "Seeds", value: item.seed, inline: true },
           {
             name: "Download",
-            value: `[Link](https://udility.herokuapp.com/redirect/${item.slug})`,
+            value: `[Link](https://udility.netlify.app/download/${item.slug})`,
             inline: true,
           }
         );
