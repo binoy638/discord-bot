@@ -26,7 +26,7 @@ module.exports = class AddCommand extends Commando.Command {
 
     try {
       const { data } = await axios.get(
-        `https://udility.herokuapp.com/search?q=${query}`
+        `https://udility.herokuapp.com/search/anime?q=${query}`
       );
       if (!data || data?.results.length === 0)
         return ErrorEmbed(`No results found for ${query}.`, channel);
