@@ -41,7 +41,7 @@ module.exports = class AddCommand extends Commando.Command {
           { name: "Seeds", value: anime.seed, inline: true },
           {
             name: "Download",
-            value: `[Link](https://udility.herokuapp.com/redirect/${anime.slug})`,
+            value: `[Link](https://udility.netlify.app/download/${anime.slug})`,
             inline: true,
           }
         );
