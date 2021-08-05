@@ -2,6 +2,7 @@ const Commando = require("discord.js-commando");
 const Discord = require("discord.js");
 const { ErrorEmbed } = require("../../utils/embed");
 const axios = require("axios");
+const { baseUrl, dashboardUrl } = require("../../configs/api");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
@@ -25,23 +26,21 @@ module.exports = class AddCommand extends Commando.Command {
     const query = args.query;
 
     try {
-      const { data } = await axios.get(
-        `https://udility.herokuapp.com/search/anime?q=${query}`
-      );
+      const { data } = await axios.get(`${baseUrl}/search/anime?q=${query}`);
       if (!data || data?.results.length === 0)
         return ErrorEmbed(`No results found for ${query}.`, channel);
       const animes = data.results;
       const embed = new Discord.MessageEmbed().setTitle(
         `Search results for ${query}`
       );
-      animes.map((anime) => {
+      animes.slice(0, 5).map((anime) => {
         embed.addFields(
           { name: "\u200b", value: anime.title.substring(0, 80) },
           { name: "Size", value: anime.size, inline: true },
           { name: "Seeds", value: anime.seed, inline: true },
           {
             name: "Download",
-            value: `[Link](https://udility.netlify.app/download/${anime.slug})`,
+            value: `[Link](${dashboardUrl}/download/${anime.slug})`,
             inline: true,
           }
         );

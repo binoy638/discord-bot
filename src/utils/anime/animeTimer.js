@@ -2,15 +2,14 @@ const axios = require("axios");
 const Discord = require("discord.js");
 const animeButtons = require("../../buttons/animeButtons");
 const { agenda } = require("../../configs/agenda");
+const { baseUrl } = require("../../configs/api");
 const { CacheGet, CacheSetex } = require("../cache");
 
 module.exports = async (JobInfo, channel) => {
   const { id, image, title, Day, Time } = JobInfo;
 
   try {
-    const { data } = await axios.get(
-      `https://udility.herokuapp.com/anime/episode?q=${title}`
-    );
+    const { data } = await axios.get(`${baseUrl}/anime/episode?q=${title}`);
     if (data?.episode.length === 0) return false;
     const episodes = extractEpisodes(data.episode);
 

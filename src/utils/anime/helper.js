@@ -41,10 +41,4 @@ const retryJob = async (id, attempts, client) => {
   return isDone;
 };
 
-const testJob = async (channelID, client) => {
-  console.log("inside test job");
-  const channel = client.channels.cache.get(channelID);
-  console.log(channel);
-};
-
-module.exports = { extractIDIndex, retryJob, testJob };
+module.exports = { extractIDIndex, retryJob };

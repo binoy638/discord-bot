@@ -18,10 +18,6 @@ module.exports = (client) => {
           if (!isDone && attempts > 0) {
             pub.setex(`animeJob-${id}-${a}`, 600, "true");
           }
-        } else if (key.indexOf("testKey") === -1) {
-          const { testJob } = require("../utils/anime/helper");
-          const [prefix, id] = key.split("-");
-          testJob(id, client);
         }
       });
     });

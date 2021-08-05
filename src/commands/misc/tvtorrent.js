@@ -1,6 +1,7 @@
 const Commando = require("discord.js-commando");
 const Discord = require("discord.js");
 const { ErrorEmbed } = require("../../utils/embed");
+const { baseUrl, dashboardUrl } = require("../../configs/api");
 const axios = require("axios");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -24,9 +25,7 @@ module.exports = class AddCommand extends Commando.Command {
     const query = args.query;
 
     try {
-      const { data } = await axios.get(
-        `https://udility.herokuapp.com/search/tvshows?q=${query}`
-      );
+      const { data } = await axios.get(`${baseUrl}/search/tvshows?q=${query}`);
       if (!data || data?.results.length === 0)
         return ErrorEmbed(`No results found for ${query}.`, channel);
       const torrent = data.results;
@@ -40,7 +39,7 @@ module.exports = class AddCommand extends Commando.Command {
           { name: "Seeds", value: item.seed, inline: true },
           {
             name: "Download",
-            value: `[Link](https://udility.netlify.app/download/${item.slug})`,
+            value: `[Link](${dashboardUrl}/${item.slug})`,
             inline: true,
           }
         );
