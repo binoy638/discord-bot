@@ -24,6 +24,11 @@ module.exports = class AddCommand extends Commando.Command {
     const query = args.query;
 
     const searchResult = await search(query);
+    if (!searchResult)
+      return ErrorEmbed(
+        "Something went wrong,please try again later.",
+        message.channel
+      );
 
     const anime = searchResult[0];
 
