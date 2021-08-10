@@ -45,7 +45,7 @@ module.exports = async (JobInfo, channel) => {
       CacheSetex(`isAiring:${id}`, 7200, isAiring);
     }
 
-    if (airing === "false") {
+    if (isAiring === "false") {
       const removedJobCount = await agenda.cancel({
         name: "animeTimer",
         "data.animeID": id,
