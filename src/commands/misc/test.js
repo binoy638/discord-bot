@@ -1,6 +1,7 @@
 const Commando = require("discord.js-commando");
 const axios = require("axios");
 const Discord = require("discord.js");
+const { CacheSetex } = require("../../utils/cache");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -12,5 +13,7 @@ module.exports = class AddCommand extends Commando.Command {
       ownerOnly: true,
     });
   }
-  async run(message, args) {}
+  async run(message, args) {
+    CacheSetex("test:123", 60, "true");
+  }
 };

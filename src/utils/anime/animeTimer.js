@@ -34,6 +34,8 @@ module.exports = async (JobInfo, channel) => {
 
     return true;
   } catch (error) {
+    console.log("could not fetch anime");
+    console.error(error);
     let isAiring = await CacheGet(`isAiring:${id}`);
     if (isAiring === undefined) {
       const {
