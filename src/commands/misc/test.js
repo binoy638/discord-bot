@@ -14,7 +14,7 @@ module.exports = class AddCommand extends Commando.Command {
     });
   }
   async run(message, args) {
-    CacheSetex("test:123", 10, "true");
-    console.log("key added");
+    // CacheSetex("test:123", 10, "true");
+    // console.log("key added");
   }
 };

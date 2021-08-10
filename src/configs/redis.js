@@ -19,10 +19,10 @@ module.exports = (client) => {
             pub.setex(`animeJob-${id}-${a}`, 600, "true");
           }
         }
-        if (key.indexOf("test") !== -1) {
-          console.log("test key expired");
-          pub.setex("test:123", 60, "true");
-        }
+        // if (key.indexOf("test") !== -1) {
+        //   console.log("test key expired");
+        //   pub.setex("test:123", 60, "true");
+        // }
       });
     });
   };
