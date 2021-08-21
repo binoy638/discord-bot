@@ -1,5 +1,5 @@
 const Commando = require("discord.js-commando");
-const { CacheGet } = require("../../utils/cache");
+const { ErrorEmbed, SuccessEmbed } = require("../../utils/embed");
 const { find, remove } = require("../../utils/music/playlist/helper");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -23,26 +23,31 @@ module.exports = class AddCommand extends Commando.Command {
     const trackno = args.track - 1;
     const { id } = message.member.user;
     const prefix = message.guild._commandPrefix;
-    let playlist = await CacheGet(`Playlist-${id}`);
-    if (!playlist) {
-      playlist = await find(id);
-    }
+
+    const playlist = await find(id);
 
     if (!playlist) {
-      return message.reply(
-        `You don't have any playlist currently.\nUse \`${prefix}playlistadd\` to create a playlist.`
+      return ErrorEmbed(
+        `You don't have any playlist currently.\nUse \`${prefix}playlistadd\` to create a playlist.`,
+        message.channel
       );
     }
 
     const track = playlist[trackno];
     if (track) {
-      const resp = await remove(id, track, message.channel);
+      const resp = await remove(id, track);
       if (resp === true) {
-        return message.reply(`\`${track.track}\` removed`);
+        return SuccessEmbed(`\`${track.track}\` removed`, message.channel);
       } else {
-        return message.reply("Something went wrong couldn't remove track.");
+        return ErrorEmbed(
+          "Something went wrong couldn't remove track.",
+          message.channel
+        );
       }
     }
-    return message.reply(`Can't find track no ${args.track} in your playlist`);
+    return ErrorEmbed(
+      `Can't find track no ${args.track} in your playlist`,
+      message.channel
+    );
   }
 };

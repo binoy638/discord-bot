@@ -1,10 +1,8 @@
 const Commando = require("discord.js-commando");
-
 const Discord = require("discord.js");
-
 const { find } = require("../../utils/music/playlist/helper");
 const pagination = require("../../utils/misc/pagination");
-const { CacheGet, CacheSet } = require("../../utils/cache");
+const { ErrorEmbed } = require("../../utils/embed");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -31,15 +29,12 @@ module.exports = class AddCommand extends Commando.Command {
     const { username } = message.member.user;
     const { id } = message.member.user;
 
-    let playlist = await CacheGet(`Playlist-${id}`, true);
-    if (!playlist) {
-      playlist = await find(id);
-      CacheSet(`Playlist-${id}`, playlist);
-    }
+    const playlist = await find(id);
 
     if (!playlist) {
-      return message.reply(
-        `You don't have any playlist currently.\nUse \`${prefix}playlistadd\` to create a playlist.`
+      return ErrorEmbed(
+        `You don't have any playlist currently.\nUse \`${prefix}playlistadd\` to create a playlist.`,
+        message.channel
       );
     }
 

@@ -2,6 +2,7 @@ const Commando = require("discord.js-commando");
 const Discord = require("discord.js");
 const musicPlayerInstance = require("../../utils/music/musicPlayerInstance");
 const pagination = require("../../utils/misc/pagination");
+const { ErrorEmbed } = require("../../utils/embed");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -29,7 +30,7 @@ module.exports = class AddCommand extends Commando.Command {
     let playlist = musicPlayer.showQueue();
 
     if (playlist.length === 0) {
-      return message.reply("No tracks in queue.");
+      return ErrorEmbed("No tracks in queue.", message.channel);
     }
 
     const totaltracks = playlist.length;

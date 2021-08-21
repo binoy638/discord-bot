@@ -1,4 +1,5 @@
 const Commando = require("discord.js-commando");
+const { ErrorEmbed, SuccessEmbed } = require("../../utils/embed");
 
 const { find, clear } = require("../../utils/music/playlist/helper");
 
@@ -27,12 +28,13 @@ module.exports = class AddCommand extends Commando.Command {
     if (choice === "yes") {
       const playlist = await find(id);
       if (!playlist) {
-        return message.reply(
-          `You don't have any playlist currently.\nUse \`${prefix}playlistadd\` to create a playlist.`
+        return ErrorEmbed(
+          `You don't have any playlist currently.\nUse \`${prefix}playlistadd\` to create a playlist.`,
+          message.channel
         );
       }
-      await clear(id, message.channel);
-      message.reply("Playlist deleted.");
+      await clear(id);
+      SuccessEmbed("Playlist deleted.", message.channel);
     }
   }
 };

@@ -2,6 +2,7 @@ const Commando = require("discord.js-commando");
 const { add } = require("../../utils/music/playlist/helper");
 const { playlist: getplaylist } = require("../../utils/music/playlist/spotify");
 const musicPlayerInstance = require("../../utils/music/musicPlayerInstance");
+const { ErrorEmbed, SuccessEmbed } = require("../../utils/embed");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
     super(client, {
@@ -25,50 +26,46 @@ module.exports = class AddCommand extends Commando.Command {
     const prefix = message.guild._commandPrefix;
     const { id } = message.member.user;
     if (!url) {
-      try {
-        let musicPlayer = musicPlayerInstance(message.channel);
-        if (musicPlayer.isQueueEmpty()) {
-          return message.reply(
-            "No music is playing currently to add to your playlist.\nPlay a song before you use this command or provide a spotify playlist."
-          );
-        }
-        const currentTrack = musicPlayer.currentSong();
-
-        const response = await add(id, currentTrack, message.channel);
-
-        if (response) {
-          return message.reply(
-            `\`${currentTrack.track}\` added to your playlist.`
-          );
-        } else {
-          message.reply(
-            "Something went wrong,song not added to your playlist."
-          );
-        }
-      } catch {
-        return message.reply(
-          "No music is playing currently to add to your playlist.\nPlay a song before you use this command or provide a spotify playlist."
+      let musicPlayer = musicPlayerInstance(message.channel);
+      if (musicPlayer.isQueueEmpty()) {
+        return ErrorEmbed(
+          "No music is playing currently to add to your playlist.\nPlay a song before you use this command or provide a spotify playlist.",
+          message.channel
         );
       }
+      const currentTrack = musicPlayer.currentSong();
 
-      return message.channel.reply(
-        "Currently playing song added to your playlist"
+      const response = await add(id, currentTrack);
+
+      if (response) {
+        return SuccessEmbed(
+          `\`${currentTrack.track}\` added to your playlist.`,
+          message.channel
+        );
+      }
+      ErrorEmbed(
+        "Something went wrong,song not added to your playlist.",
+        message.channel
       );
     } else {
       const slug = url.split("/").pop();
       const playlist = await getplaylist(slug);
 
       if (!playlist) {
-        return message.reply("Can't fetch playlist.\nCheck your playlist url.");
+        return ErrorEmbed(
+          "Can't fetch playlist.\nCheck your playlist url.",
+          message.channel
+        );
       }
       const response = await add(id, playlist.tracks, message.channel);
 
       if (response) {
-        return message.reply(
-          `\`${playlist.tracks.length} tracks\` added to your playlist.\nUse \`${prefix}playlistshow\` to view your playlist.`
+        return SuccessEmbed(
+          `\`${playlist.tracks.length} tracks\` added to your playlist.\nUse \`${prefix}playlistshow\` to view your playlist.`,
+          message.channel
         );
       } else {
-        message.reply("Something went wrong,Playlist not added.");
+        ErrorEmbed("Something went wrong,Playlist not added.", message.channel);
       }
     }
   }

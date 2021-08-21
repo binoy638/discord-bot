@@ -3,7 +3,6 @@ const { find } = require("../../utils/music/playlist/helper");
 const musicPlayerInstance = require("../../utils/music/musicPlayerInstance");
 const Discordcollection = require("../../utils/misc/Discordcollection");
 const play = require("../../utils/music/play");
-const { CacheGet, CacheSet } = require("../../utils/cache");
 const { ErrorEmbed } = require("../../utils/embed");
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -28,15 +27,12 @@ module.exports = class AddCommand extends Commando.Command {
         channel
       );
 
-    let playlist = await CacheGet(`Playlist-${id}`, true);
-    if (!playlist) {
-      playlist = await find(id);
-      CacheSet(`Playlist-${id}`, playlist);
-    }
+    const playlist = await find(id);
 
     if (!playlist) {
-      return message.reply(
-        `You don't have any playlist currently.\nUse \`${prefix}playlistadd\` to create a playlist.`
+      return ErrorEmbed(
+        `You don't have any playlist currently.\nUse \`${prefix}playlistadd\` to create a playlist.`,
+        channel
       );
     }
 

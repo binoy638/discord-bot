@@ -1,21 +1,15 @@
 const mongo = require("../../../configs/mongo");
 const playlistSchema = require("../../../models/playlist");
-const { CacheGet, CacheSet, CacheDel } = require("../../cache");
 
-const musicPlayerInstance = require("../musicPlayerInstance");
-
-const add = async (id, playlist, channel) => {
-  let resp;
-  await mongo().then(async (mongoose) => {
+const add = async (id, playlist) => {
+  return await mongo().then(async (mongoose) => {
     try {
-      resp = await playlistSchema.findOneAndUpdate(
+      const resp = await playlistSchema.findOneAndUpdate(
         {
           user: id,
         },
-
         {
           user: id,
-
           $push: { playlist },
         },
         {
@@ -23,40 +17,22 @@ const add = async (id, playlist, channel) => {
           new: true,
         }
       );
-      const newPlaylist = resp.playlist;
-
-      CacheSet(`Playlist-${id}`, newPlaylist);
+      if (resp) return true;
+      else return false;
     } catch (e) {
       return false;
     } finally {
       mongoose.connection.close();
     }
   });
-
-  if (resp) {
-    let musicPlayer = musicPlayerInstance(channel);
-    if (musicPlayer) {
-      const plst = await CacheGet(`Playlist-${id}`, true);
-      musicPlayer.flushcache();
-      musicPlayer.addplaylist(plst);
-      if (musicPlayer.isShuffled === true) {
-        musicPlayer.shufflePlaylist();
-      }
-    }
-    return true;
-  }
-  return false;
 };
 
-const clear = async (id, channel) => {
-  await mongo().then(async (mongoose) => {
+const clear = async (id) => {
+  return await mongo().then(async (mongoose) => {
     try {
       await playlistSchema.findOneAndRemove({
         user: id,
       });
-      CacheDel(`Playlist-${id}`);
-      musicPlayer = musicPlayerInstance(channel);
-      musicPlayer.flushcache();
     } catch (e) {
       console.log(e);
     } finally {
@@ -84,11 +60,10 @@ const find = async (id) => {
   return playlist;
 };
 
-const remove = async (id, track, channel) => {
-  let resp;
-  await mongo().then(async (mongoose) => {
+const remove = async (id, track) => {
+  return await mongo().then(async (mongoose) => {
     try {
-      resp = await playlistSchema.findOneAndUpdate(
+      const resp = await playlistSchema.findOneAndUpdate(
         {
           user: id,
         },
@@ -102,29 +77,14 @@ const remove = async (id, track, channel) => {
           new: true,
         }
       );
-      const newPlaylist = resp.playlist;
-
-      CacheSet(`Playlist-${id}`, newPlaylist);
+      if (resp) return true;
+      else return false;
     } catch (e) {
       return false;
     } finally {
       mongoose.connection.close();
     }
   });
-
-  if (resp) {
-    let musicPlayer = musicPlayerInstance(channel);
-    if (musicPlayer) {
-      const plst = await CacheGet(`Playlist-${id}`, true);
-      musicPlayer.flushcache();
-      musicPlayer.addplaylist(plst);
-      if (musicPlayer.isShuffled === true) {
-        musicPlayer.shufflePlaylist();
-      }
-    }
-    return true;
-  }
-  return false;
 };
 
 const addplayerInfo = async (id, trackInfo) => {

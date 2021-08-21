@@ -38,7 +38,6 @@ module.exports = {
       case "music-player-next":
         button.reply.defer();
         if (!musicPlayer) return;
-        console.log(musicPlayer);
         if (musicPlayer?.message?.id !== message.id) return;
         const [skip] = client.registry.findCommands("skip", true);
         skip.run(message, button.clicker);
