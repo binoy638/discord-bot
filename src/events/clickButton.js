@@ -49,6 +49,13 @@ module.exports = {
         const [shuffle] = client.registry.findCommands("shuffle", true);
         shuffle.run(message, button.clicker);
         break;
+      case "music-player-lyrics":
+        button.reply.defer();
+        if (!musicPlayer) return;
+        if (musicPlayer.message.id !== message.id) return;
+        const [lyrics] = client.registry.findCommands("lyrics", true);
+        lyrics.run(message, { title: "", artist: "" });
+        break;
 
       case "anime-search-next":
         button.reply.defer();

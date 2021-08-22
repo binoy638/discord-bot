@@ -56,12 +56,16 @@ const animeEmbed = (anime, index) => {
 };
 
 const ErrorEmbed = (msg, channel) => {
-  const embed = new Discord.MessageEmbed().setDescription(`❌ ${msg}`);
+  const embed = new Discord.MessageEmbed()
+    .setDescription(`${msg}`)
+    .setColor("#e51013");
   channel.send(embed);
 };
 
 const SuccessEmbed = (msg, channel) => {
-  const embed = new Discord.MessageEmbed().setDescription(`✅ ${msg}`);
+  const embed = new Discord.MessageEmbed()
+    .setDescription(`${msg}`)
+    .setColor("#3cf42c");
   channel.send(embed);
 };
 

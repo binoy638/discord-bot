@@ -2,6 +2,8 @@ const Commando = require("discord.js-commando");
 const axios = require("axios");
 const Discord = require("discord.js");
 const { CacheSetex } = require("../../utils/cache");
+const musicPlayerInstance = require("../../utils/music/musicPlayerInstance");
+const lyricsFinder = require("lyrics-finder");
 
 module.exports = class AddCommand extends Commando.Command {
   constructor(client) {
@@ -14,7 +16,10 @@ module.exports = class AddCommand extends Commando.Command {
     });
   }
   async run(message, args) {
-    // CacheSetex("test:123", 10, "true");
-    // console.log("key added");
+    const musicPlayer = musicPlayerInstance(message.channel);
+    const currentSong = musicPlayer.currentSong();
+    const { track, artists } = currentSong;
+    let lyrics = await lyricsFinder(artists, track);
+    console.log(lyrics);
   }
 };

@@ -22,6 +22,11 @@ let shuffleButton = new MessageButton()
   .setEmoji("🔀")
   .setID("music-player-shuffle");
 
+let lyricsButton = new MessageButton()
+  .setStyle("green")
+  .setEmoji("📜")
+  .setID("music-player-lyrics");
+
 // let loopButton = new MessageButton()
 //   .setStyle("green")
 //   .setEmoji(":repeat:")
@@ -36,7 +41,7 @@ module.exports = (action) => {
     throw new Error("Unknown Action type");
   }
   return new MessageActionRow().addComponents([
-    PrevButton,
+    lyricsButton,
     PlayButton,
     NextButton,
     StopButton,
