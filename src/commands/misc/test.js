@@ -1,7 +1,7 @@
 const Commando = require("discord.js-commando");
 const axios = require("axios");
 const Discord = require("discord.js");
-const { CacheSetex } = require("../../utils/cache");
+// const { CacheSetex } = require("../../utils/cache");
 const musicPlayerInstance = require("../../utils/music/musicPlayerInstance");
 const lyricsFinder = require("lyrics-finder");
 
@@ -16,6 +16,6 @@ module.exports = class AddCommand extends Commando.Command {
     });
   }
   async run(message, args) {
-    CacheSetex("test", 10, "true");
+    // CacheSetex("test", 10, "true");
   }
 };
