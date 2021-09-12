@@ -27,11 +27,12 @@ module.exports = (client) => {
     });
   };
 
-  pub.send_command(
-    "config",
-    ["set", "notify-keyspace-events", "Ex"],
-    expired()
-  );
+  pub.config("SET", "notify-keyspace-events", "Ex");
+  // pub.send_command(
+  //   "config",
+  //   ["set", "notify-keyspace-events", "Ex"],
+  //   expired()
+  // );
 
   pub.on("error", function (err) {
     console.log("Error " + err);
