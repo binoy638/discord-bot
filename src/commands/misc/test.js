@@ -16,10 +16,6 @@ module.exports = class AddCommand extends Commando.Command {
     });
   }
   async run(message, args) {
-    const musicPlayer = musicPlayerInstance(message.channel);
-    const currentSong = musicPlayer.currentSong();
-    const { track, artists } = currentSong;
-    let lyrics = await lyricsFinder(artists, track);
-    console.log(lyrics);
+    CacheSetex("test", 10, "true");
   }
 };
