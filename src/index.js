@@ -38,7 +38,7 @@ const Animejob = async (attempts, args, channel, retryCount = 0) => {
   retryCount = retryCount + 1;
   if (!isSuccess) {
     console.log("Job failed retrying");
-    setTimeout(job, 600000, attempts, args, channel, retryCount);
+    setTimeout(Animejob, 600000, attempts, args, channel, retryCount);
   }
 };
 
