@@ -126,7 +126,7 @@ class MusicPlayer {
     return this.voiceChannel;
   }
 
-  loop() {
+  setLoop() {
     this.loop = !this.loop;
     return this.loop;
   }

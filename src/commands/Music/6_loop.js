@@ -33,18 +33,20 @@ module.exports = class AddCommand extends Commando.Command {
       );
 
     const musicPlayer = musicPlayerInstance(message.channel);
+    console.log(musicPlayer.loop);
     if (musicPlayer.isQueueEmpty() === true) {
       return ErrorEmbed("No tracks in queue to loop.", channel);
     }
-    const status = musicPlayer?.loop();
+    const status = musicPlayer.setLoop();
+    console.log(status);
     if (status) {
       SuccessEmbed(
-        "loop enabled for currently queued tracks.Use this command again to disable it.",
+        "Looping currently queued tracks.\nUse this command again to disable it.",
         channel
       );
     } else {
       SuccessEmbed(
-        "loop disabled for currently queued tracks.Use this command again to enable it.",
+        "loop disabled for currently queued tracks.\nUse this command again to enable it.",
         channel
       );
     }
