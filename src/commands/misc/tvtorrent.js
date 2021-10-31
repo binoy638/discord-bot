@@ -39,7 +39,7 @@ module.exports = class AddCommand extends Commando.Command {
           { name: "Seeds", value: item.seed, inline: true },
           {
             name: "Download",
-            value: `[Link](${dashboardUrl}/${item.slug})`,
+            value: `[Link](${dashboardUrl}/download/${item.slug})`,
             inline: true,
           }
         );
