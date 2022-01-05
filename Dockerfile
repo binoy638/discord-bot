@@ -1,6 +1,7 @@
-FROM node
-WORKDIR /app 
-COPY package.json ./app 
+FROM node:14-slim
+
+RUN mkdir -p /home/app
+COPY . /home/app 
+WORKDIR /home/app
 RUN npm install 
-COPY . /app
-CMD ["npm","start"]
+CMD ["node","/home/app/src/index.js"]
