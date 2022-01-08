@@ -3,10 +3,11 @@ const REDIS_URL = process.env.REDIS_URL;
 require("dotenv").config();
 
 // module.exports = (client) => {
-const pub = redis.createClient({
-  host: "redis",
-  port: 6379,
-});
+// const pub = redis.createClient({
+//   host: "redis",
+//   port: 6379,
+// });
+const pub = redis.createClient(REDIS_URL);
 
 // const expired = () => {
 //   const sub = redis.createClient(REDIS_URL);
